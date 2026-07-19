@@ -889,6 +889,41 @@ ul, ol {
   margin-bottom: var(--space-lg);
 }
 
+.project-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: var(--space-md);
+}
+
+.btn {
+  display: inline-block;
+  padding : 0.6rem 1.25rem;
+  font-family : var(--font-body);
+  font-size : 0.9rem;
+  font-weight : 500;
+  text-decoration : none;
+  text-align : center;
+  border-radius : 6px;
+  cursor : pointer;
+  transition : all 0.3s ease;
+}
+
+.btn-outline {
+  color : var(--accent);
+  background-color : transparent;
+  border : 1px solid var(--accent);
+}
+
+.btn-outline:hover,
+.btn-outline:focus {
+  color : var(--bg-primary);
+  background-color : var(--accent);
+  transform : translateY(-2px);
+  box-shadow : 0 4px 12px var(--accent-subtle);
+}
+
+
 /* Filter Bar */
 .filter-bar {
   display: flex;
