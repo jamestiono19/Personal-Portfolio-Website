@@ -76,12 +76,14 @@
                 <a href="#projects" class="btn-primary">Explore Projects</a>
                 <a href="#contact" class="btn-ghost">Start a Project</a>
             </div>
-            <button
-                class="btn btn-color-2"
-                onclick="window.open('./assets/James Tiono CV.pdf')"
-            >
-                Download CV
-            </button>
+            <div class="hero-cv-cta">
+                <a href="./assets/James Tiono CV.pdf" class="cv-cta" download>
+                    Download CV
+                    <svg class="cv-cta__icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
+                    </svg>
+                </a>
+            </div>
         </div>
 
         <div class="hero-visual">
@@ -184,6 +186,8 @@
              PROJECTS SECTION
              ═══════════════════════════════════════════════════ -->
         <section class="project-gallery" id="projects">
+            <span class="project-gallery-vertical project-gallery-vertical--left" aria-hidden="true">Featured Case Studies</span>
+            <span class="project-gallery-vertical project-gallery-vertical--right" aria-hidden="true">Digital Experiences</span>
             <div class="projects-slide">
                 <div class="projects-sidebar">
                     <div class="project-gallery-header reveal">
@@ -203,6 +207,7 @@
 
                 <!-- Project 1: EcoRangers -->
                 <article class="project-card reveal reveal-delay-1" data-category="app-development" id="project-ecorangers">
+                    <span class="project-card-index" aria-hidden="true">01</span>
                     <div class="project-card-image">
                         <img src="./Assets/Ecorangers.png" alt="EcoRangers Game UI" loading="lazy" decoding="async">
                         <div class="card-overlay"></div>
@@ -210,7 +215,12 @@
                     <div class="project-card-body">
                         <span class="project-meta">Group Project · App Development</span>
                         <h3>EcoRangers</h3>
-                        <p>A game-based educational app helping children ages 9–12 learn waste sorting habits through interactive gameplay.</p>
+                        <div class="project-detail-meta" aria-label="Project details">
+                            <span>2024</span>
+                            <span>Developer &amp; UI Designer</span>
+                            <span>2-Month Sprint</span>
+                        </div>
+                        <p class="project-insight">Designed to turn waste sorting into a repeatable daily habit for young learners, using progressive challenges and instant feedback to keep the lesson engaging.</p>
                         <div class="project-blocks">
                             <div class="project-block">
                                 <h4>01 Problem</h4>
@@ -237,6 +247,7 @@
 
                 <!-- Project 2: Matcha E-commerce Website -->
                 <article class="project-card reveal reveal-delay-2" data-category="app-development" id="project-dashboard">
+                    <span class="project-card-index" aria-hidden="true">02</span>
                     <div class="project-card-image">
                         <img src="./Assets/Matcha.png" alt="Ecommerce Website" loading="lazy" decoding="async">
                         <div class="card-overlay"></div>
@@ -244,7 +255,12 @@
                     <div class="project-card-body">
                         <span class="project-meta">Group Project · App Development</span>
                         <h3>Matcha E-commerce Website</h3>
-                        <p>An elegant e-commerce website for matcha lovers to explore, shop, and enjoy authentic matcha products.</p>
+                        <div class="project-detail-meta" aria-label="Project details">
+                            <span>2024</span>
+                            <span>Frontend Developer</span>
+                            <span>1-Month Sprint</span>
+                        </div>
+                        <p class="project-insight">Built around a clearer path from discovery to checkout, helping matcha enthusiasts compare products confidently and shop with less friction.</p>
                         <div class="project-blocks">
                             <div class="project-block">
                                 <h4>01 Problem</h4>
@@ -271,6 +287,7 @@
 
                 <!-- Project 3: ML Prediction Engine -->
                 <article class="project-card reveal reveal-delay-3" data-category="machine-learning" id="project-ml-engine">
+                    <span class="project-card-index" aria-hidden="true">03</span>
                     <div class="project-card-image">
                         <img src="./Assets/Bodyfat.png" alt="ML Prediction Engine" loading="lazy" decoding="async">
                         <div class="card-overlay"></div>
@@ -278,7 +295,12 @@
                     <div class="project-card-body">
                         <span class="project-meta">Research Project · Machine Learning</span>
                         <h3>Predictive Model Engine</h3>
-                        <p>A machine learning pipeline for customer churn prediction using ensemble methods and feature engineering.</p>
+                        <div class="project-detail-meta" aria-label="Project details">
+                            <span>2024</span>
+                            <span>ML Engineer</span>
+                            <span>2-Month Sprint</span>
+                        </div>
+                        <p class="project-insight">An ensemble workflow that surfaces at-risk customers before churn, reaching 89% prediction accuracy to support earlier, more focused retention decisions.</p>
                         <div class="project-blocks">
                             <div class="project-block">
                                 <h4>01 Problem</h4>
@@ -305,6 +327,7 @@
 
                 <!-- Project 4: Linkvestor -->
                 <article class="project-card reveal reveal-delay-3" data-category="analytics" id="project-linkvestor">
+                    <span class="project-card-index" aria-hidden="true">04</span>
                     <div class="project-card-image">
                         <img src="./Assets/Linkvestor.png" alt="Linkvestor" loading="lazy" decoding="async">
                         <div class="card-overlay"></div>
@@ -312,7 +335,12 @@
                     <div class="project-card-body">
                         <span class="project-meta">Group Project · Analytics</span>
                         <h3>Finance App</h3>
-                        <p>Linkvestor empowers users to invest in trusted MSMEs with transparency, real insights, and shared growth.</p>
+                        <div class="project-detail-meta" aria-label="Project details">
+                            <span>2024</span>
+                            <span>Product Designer</span>
+                            <span>3-Month Sprint</span>
+                        </div>
+                        <p class="project-insight">Created to make MSME investment opportunities easier to evaluate, pairing transparent business context with meaningful signals for more confident decisions.</p>
                         <div class="project-blocks">
                             <div class="project-block">
                                 <h4>01 Problem</h4>

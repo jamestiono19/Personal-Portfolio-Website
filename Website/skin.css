@@ -645,6 +645,12 @@ ul, ol {
   align-items: center;
 }
 
+.hero-cv-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
 /* Hero Visual (Right Pane) */
 .hero-visual {
   position: relative;
@@ -667,11 +673,9 @@ ul, ol {
   position: relative;
   isolation: isolate;
   container-type: inline-size;
-  inline-size: min(100%, clamp(14rem, 60vw, 30rem));
   inline-size: min(100%, clamp(14rem, 60vw, 30rem), 58svh);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   margin-inline: auto;
-  height: 380px;
 }
 
 .portrait-frame {
@@ -679,6 +683,7 @@ ul, ol {
   z-index: 0;
   inline-size: 100%;
   block-size: 100%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 
@@ -724,6 +729,52 @@ ul, ol {
   letter-spacing: 0.15em;
   padding: 0.5em 1.2em;
   border-radius: var(--radius-sm);
+}
+
+.cv-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem 0.75rem;
+  color: var(--bg-primary);
+  background: var(--text-muted);
+  border: 1px solid var(--text-muted);
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  will-change: transform;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+}
+
+.cv-cta__icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.cv-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.cv-cta:hover .cv-cta__icon {
+  transform: translateY(3px);
+}
+
+.cv-cta:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 /* --- About Section --- */
@@ -967,6 +1018,8 @@ ul, ol {
 
 /* Project Card */
 .project-card {
+  position: relative;
+  isolation: isolate;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -983,6 +1036,43 @@ ul, ol {
 
 .project-card.hidden {
   display: none;
+}
+
+.project-card > :not(.project-card-index) {
+  position: relative;
+  z-index: 1;
+}
+
+.project-card-index {
+  position: absolute;
+  z-index: 0;
+  top: 1rem;
+  right: 1.2rem;
+  color: rgba(212, 163, 115, 0.08);
+  font-family: var(--font-heading);
+  font-size: clamp(5.5rem, 12vw, 9rem);
+  font-style: italic;
+  font-weight: 400;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+}
+
+.project-card-index::after {
+  content: 'Case Study';
+  position: absolute;
+  right: 0.15rem;
+  bottom: -0.8rem;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .project-card-image {
