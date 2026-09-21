@@ -3,179 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="description" content="James Tiono — Data Analytics, Machine Learning & App Developer. Portfolio showcasing data-driven projects and innovative digital solutions.">
-    <meta property="og:title" content="James Tiono | Editorial Portfolio">
-    <meta property="og:description" content="Data Analytics, Machine Learning & App Developer portfolio.">
+    <meta name="theme-color" content="#0d0c0b">
+    <meta name="description" content="James Tiono — Data Analytics, Machine Learning & App Developer. An editorial portfolio of data-driven projects and intelligent digital experiences.">
+    <meta property="og:title" content="James Tiono — Building ideas into intelligent experiences">
+    <meta property="og:description" content="Data Analytics, Machine Learning & App Development. Selected work by James Tiono.">
     <meta property="og:type" content="website">
-    <title>James Tiono | Editorial Portfolio</title>
+    <title>James Tiono — Building ideas into intelligent experiences</title>
 
-    <!-- Preconnect for Google Fonts performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap">
 
     <link rel="stylesheet" href="skin.css">
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
-    <div class="page-progress" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         NAVBAR
-         ═══════════════════════════════════════════════════════ -->
-    <nav class="navbar" id="navbar">
-        <a href="#home" class="nav-brand">JT</a>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-        <ul class="nav-links">
-            <li><a href="#home" class="nav-item active">Home</a></li>
-            <li><a href="#about" class="nav-item">About</a></li>
-            <li><a href="#projects" class="nav-item">Projects</a></li>
-            <li><a href="#contact" class="nav-item">Contact</a></li>
-        </ul>
+    <!-- ══ Atmosphere: film grain, structural grid rails, cursor ══ -->
+    <div class="grain" aria-hidden="true"></div>
+    <div class="rails" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span></div>
 
-        <div class="nav-tools">
-            <button id="theme-toggle" type="button" class="theme-toggle" aria-label="Toggle theme">☀</button>
-            <button type="button" class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-controls="mobile-menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+    <!-- ══ Opening curtain ══ -->
+    <div class="curtain" aria-hidden="true">
+        <div class="curtain__inner">
+            <span class="curtain__name">James&nbsp;Tiono</span>
+            <span class="curtain__count mono"><b class="curtain__num">00</b> / 100</span>
         </div>
-    </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-        <a href="#home" class="mobile-nav-item">Home</a>
-        <a href="#about" class="mobile-nav-item">About</a>
-        <a href="#projects" class="mobile-nav-item">Projects</a>
-        <a href="#contact" class="mobile-nav-item">Contact</a>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
-         HERO SECTION
+         MASTHEAD
          ═══════════════════════════════════════════════════════ -->
-    <header class="hero" id="home">
-        <span class="hero-float hero-float--small" aria-hidden="true"></span>
-        <span class="hero-float hero-float--wide" aria-hidden="true"></span>
-        <div class="hero-content">
-            <p class="hero-eyebrow">Data Analytics — Machine Learning — App Developer</p>
+    <header class="masthead" id="masthead">
+        <a href="#home" class="masthead__brand" aria-label="James Tiono — home">
+            <span class="masthead__mark">JT</span>
+            <span class="masthead__brandmeta mono">James&nbsp;Tiono<i>Portfolio&nbsp;’26</i></span>
+        </a>
 
-            <h1 class="hero-title">
-                James<br><span class="accent-text">Tiono</span>
-            </h1>
+        <nav class="masthead__nav" aria-label="Primary">
+            <ul>
+                <li><a href="#home" class="navlink is-active"><span class="mono">00</span>Index</a></li>
+                <li><a href="#about" class="navlink"><span class="mono">01</span>About</a></li>
+                <li><a href="#projects" class="navlink"><span class="mono">02</span>Work</a></li>
+                <li><a href="#contact" class="navlink"><span class="mono">03</span>Contact</a></li>
+            </ul>
+        </nav>
 
-            <p class="hero-subtitle">
-                Transforming raw data into actionable insights and intuitive digital products.
-            </p>
-
-            <div class="typewriter-wrapper">
-                Building something <span id="typewriter-text" class="typewriter-text" aria-live="polite" aria-atomic="true"></span><span class="typewriter-cursor"></span>
-            </div>
-
-            <div class="hero-cta">
-                <a href="#projects" class="btn-primary">Explore Projects</a>
-                <a href="#contact" class="btn-ghost">Start a Project</a>
-            </div>
-            <div class="hero-cv-cta">
-                <a href="./assets/James Tiono CV.pdf" class="cv-cta" download>
-                    Download CV
-                    <svg class="cv-cta__icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-
-        <div class="hero-visual">
-            <div class="portrait-container">
-                <div class="portrait-frame">
-                    <img src="./Assets/Hero.jpeg" alt="James Tiono — Portfolio Portrait" id="hero-portrait" loading="eager" decoding="async">
-                </div>
-                <span class="portrait-accent" aria-hidden="true"></span>
-                <span class="portrait-label">Est. 2026</span>
-            </div>
+        <div class="masthead__tools">
+            <button id="theme-toggle" type="button" class="toggle" aria-label="Switch to light mode"></button>
+            <button type="button" class="burger" aria-label="Open navigation menu" aria-controls="menu" aria-expanded="false">
+                <span></span><span></span>
+            </button>
         </div>
     </header>
 
-    <main id="main-content">
+    <!-- ══ Fullscreen menu ══ -->
+    <div class="menu" id="menu" aria-hidden="true">
+        <nav class="menu__nav" aria-label="Mobile">
+            <a href="#home" class="menu__link"><span class="mono">00</span>Index</a>
+            <a href="#about" class="menu__link"><span class="mono">01</span>About</a>
+            <a href="#projects" class="menu__link"><span class="mono">02</span>Work</a>
+            <a href="#contact" class="menu__link"><span class="mono">03</span>Contact</a>
+        </nav>
+        <div class="menu__foot mono">
+            <a href="mailto:jamestiono02@gmail.com">jamestiono02@gmail.com</a>
+            <span>Open for collaboration</span>
+        </div>
+    </div>
+
+    <!-- ══ Edge rails ══ -->
+    <div class="edge edge--left" aria-hidden="true">
+        <span class="edge__text mono">James Tiono — Selected Work</span>
+    </div>
+    <div class="edge edge--right" aria-hidden="true">
+        <div class="ticks">
+            <button type="button" class="tick is-active" data-goto="#home"><span class="mono">00</span></button>
+            <button type="button" class="tick" data-goto="#about"><span class="mono">01</span></button>
+            <button type="button" class="tick" data-goto="#projects"><span class="mono">02</span></button>
+            <button type="button" class="tick" data-goto="#contact"><span class="mono">03</span></button>
+        </div>
+        <div class="edge__meter"><span class="edge__fill"></span></div>
+    </div>
+
+    <main id="main">
 
         <!-- ═══════════════════════════════════════════════════
-             ABOUT SECTION
+             HERO — 00
              ═══════════════════════════════════════════════════ -->
-        <section class="about-section" id="about">
-            <div class="about-slide">
-                <div class="about-content reveal">
-                    <span class="section-eyebrow">02 — About</span>
-                    <h2 class="section-title">Where Curiosity<br>Begins</h2>
-                    <blockquote class="quote">
-                        "Curiosity inspires idea, learning builds skill, and action turns it into impact."
-                    </blockquote>
-                    <p>
-                        I am an undergraduate Computer Science student at BINUS University with a strong interest in 
-                        data analytics, machine learning, and application development. I enjoy transforming ideas and 
-                        data into practical solutions that make a real difference.
-                    </p>
+        <section class="hero" id="home">
+
+            <span class="hero__orb hero__orb--a" data-parallax="-0.10" aria-hidden="true"></span>
+            <span class="hero__orb hero__orb--b" data-parallax="0.16" aria-hidden="true"></span>
+            <span class="hero__ghost" data-parallax="0.05" aria-hidden="true">00</span>
+
+            <div class="hero__head">
+                <p class="hero__eyebrow mono">
+                    <span>James Tiono</span>
+                    <i>Data Analytics — Machine Learning — App Development</i>
+                </p>
+
+                <h1 class="hero__title">
+                    <span class="ln" style="--i:0"><span>Building ideas</span></span>
+                    <span class="ln" style="--i:1"><span>into <em>intelligent</em></span></span>
+                    <span class="ln" style="--i:2"><span>experiences.</span></span>
+                </h1>
+            </div>
+
+            <div class="hero__aside">
+                <p class="hero__lede">
+                    Transforming raw data into actionable insights and intuitive digital products.
+                </p>
+
+                <p class="typer">
+                    Building something
+                    <span id="typewriter-text" class="typer__word" aria-live="polite" aria-atomic="true"></span><span class="typer__caret" aria-hidden="true"></span>
+                </p>
+
+                <div class="hero__actions">
+                    <a href="#projects" class="cta" data-magnetic>
+                        <span class="cta__label">Explore Projects</span>
+                        <span class="cta__arrow" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </span>
+                    </a>
+                    <a href="#contact" class="cta cta--line" data-magnetic>
+                        <span class="cta__label">Start a Project</span>
+                        <span class="cta__arrow" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </span>
+                    </a>
+                    <a href="./Assets/James Tiono CV.pdf" class="cvlink" download>
+                        <span>Download CV</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero__visual">
+                <figure class="portrait" data-tilt data-parallax="-0.07">
+                    <div class="portrait__frame">
+                        <img src="./Assets/Hero.jpeg" alt="Portrait of James Tiono" id="hero-portrait" width="900" height="900" loading="eager" decoding="async" fetchpriority="high">
+                    </div>
+                    <figcaption class="portrait__tag mono">Est. 2026</figcaption>
+                    <span class="portrait__rule" aria-hidden="true"></span>
+                </figure>
+            </div>
+
+            <dl class="hero__facts">
+                <div class="fact reveal" style="--i:1">
+                    <dt class="mono">Discipline</dt>
+                    <dd>Data &amp; Product</dd>
+                </div>
+                <div class="fact reveal" style="--i:2">
+                    <dt class="mono">Selected Work</dt>
+                    <dd>Four Projects</dd>
+                </div>
+                <div class="fact reveal" style="--i:3">
+                    <dt class="mono">Studying</dt>
+                    <dd>CS at BINUS</dd>
+                </div>
+                <div class="fact reveal" style="--i:4">
+                    <dt class="mono">Status</dt>
+                    <dd><span class="pulse" aria-hidden="true"></span>Open for collaboration</dd>
+                </div>
+            </dl>
+
+            <div class="ticker" aria-hidden="true">
+                <div class="ticker__track">
+                    <span>Data Analytics<i>✳</i>Machine Learning<i>✳</i>App Development<i>✳</i>Data Visualisation<i>✳</i>Product Design<i>✳</i></span>
+                    <span>Data Analytics<i>✳</i>Machine Learning<i>✳</i>App Development<i>✳</i>Data Visualisation<i>✳</i>Product Design<i>✳</i></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════
+             ABOUT — 01
+             ═══════════════════════════════════════════════════ -->
+        <section class="about" id="about">
+            <span class="ghost" data-parallax="0.07" aria-hidden="true">01</span>
+
+            <header class="shead">
+                <span class="shead__label mono reveal"><i>01</i>About</span>
+                <span class="shead__rule reveal" style="--i:1" aria-hidden="true"></span>
+            </header>
+
+            <div class="about__lead">
+                <blockquote class="statement reveal" style="--i:1">
+                    <span class="ln"><span>“Curiosity inspires idea,</span></span>
+                    <span class="ln"><span>learning builds skill, and</span></span>
+                    <span class="ln"><span>action turns it into <em>impact</em>.”</span></span>
+                </blockquote>
+            </div>
+
+            <div class="about__body">
+                <h2 class="about__title reveal" style="--i:1">Where curiosity begins</h2>
+                <p class="about__copy reveal" style="--i:2">
+                    I am an undergraduate Computer Science student at BINUS University with a strong interest in
+                    data analytics, machine learning, and application development. I enjoy transforming ideas and
+                    data into practical solutions that make a real difference.
+                </p>
+            </div>
+
+            <div class="about__focus">
+                <h3 class="sublabel mono reveal">Focus Areas</h3>
+                <ul class="focus">
+                    <li class="focus__row reveal" style="--i:1">
+                        <span class="focus__num mono">01</span>
+                        <strong class="focus__name">Data Analytics</strong>
+                        <span class="focus__desc">Uncovering insights from complex data</span>
+                        <span class="focus__mark" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </span>
+                    </li>
+                    <li class="focus__row reveal" style="--i:2">
+                        <span class="focus__num mono">02</span>
+                        <strong class="focus__name">Machine Learning</strong>
+                        <span class="focus__desc">Building predictive and intelligent systems</span>
+                        <span class="focus__mark" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </span>
+                    </li>
+                    <li class="focus__row reveal" style="--i:3">
+                        <span class="focus__num mono">03</span>
+                        <strong class="focus__name">App Development</strong>
+                        <span class="focus__desc">Crafting interactive and scalable digital products</span>
+                        <span class="focus__mark" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="about__meta">
+                <div class="metablock">
+                    <h3 class="sublabel mono reveal">Technical Stack</h3>
+                    <ul class="tags tags--lg reveal" style="--i:1">
+                        <li class="tag">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            Python
+                        </li>
+                        <li class="tag">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                            Pandas
+                        </li>
+                        <li class="tag">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                            SQL
+                        </li>
+                        <li class="tag">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                            C#
+                        </li>
+                        <li class="tag">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="21 16 12 21 3 16 3 8 12 3 21 8 21 16"/><polyline points="3 8 12 13 21 8"/><line x1="12" y1="21" x2="12" y2="13"/></svg>
+                            Unity
+                        </li>
+                        <li class="tag">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                            Figma
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="about-specs reveal reveal-delay-2">
-                    <div class="spec-block">
-                        <h4>Focus Areas</h4>
-                        <ul class="focus-list">
-                            <li>
-                                <strong>Data Analytics</strong>
-                                <span>Uncovering insights from complex data</span>
-                            </li>
-                            <li>
-                                <strong>Machine Learning</strong>
-                                <span>Building predictive and intelligent systems</span>
-                            </li>
-                            <li>
-                                <strong>App Development</strong>
-                                <span>Crafting interactive and scalable digital products</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="spec-block">
-                        <h4>Technical Stack</h4>
-                        <div class="tech-stack-container">
-                            <span class="tech-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                                Python
-                            </span>
-                            <span class="tech-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                                Pandas
-                            </span>
-                            <span class="tech-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-                                SQL
-                            </span>
-                            <span class="tech-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                                C#
-                            </span>
-                            <span class="tech-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="21 16 12 21 3 16 3 8 12 3 21 8 21 16"></polygon><polyline points="3 8 12 13 21 8"></polyline><line x1="12" y1="21" x2="12" y2="13"></line></svg>
-                                Unity
-                            </span>
-                            <span class="tech-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
-                                Figma
-                            </span>
+                <div class="metablock">
+                    <h3 class="sublabel mono reveal">Education</h3>
+                    <div class="edu reveal" style="--i:1">
+                        <!-- Decorative: the adjacent text already names the
+                             institution, and alt="" keeps a failed remote
+                             load from injecting overflowing alt text. -->
+                        <div class="edu__logo">
+                            <img src="https://socs.binus.ac.id/wp-content/uploads/2013/02/Logo-SoCS-Black-Blue.png" alt="" width="54" height="54" loading="lazy" decoding="async">
                         </div>
-                    </div>
-
-                    <div class="spec-block">
-                        <h4>Education</h4>
-                        <div class="education-item">
-                            <div class="edu-logo">
-                                <img src="https://socs.binus.ac.id/wp-content/uploads/2013/02/Logo-SoCS-Black-Blue.png" alt="BINUS University Logo" loading="lazy">
-                            </div>
-                            <div class="edu-details">
-                                <span class="edu-name">BINUS University</span>
-                                <span class="edu-degree">B.S. Computer Science</span>
-                            </div>
+                        <div class="edu__text">
+                            <span class="edu__name">BINUS University</span>
+                            <span class="edu__degree mono">B.S. Computer Science</span>
                         </div>
                     </div>
                 </div>
@@ -183,268 +286,328 @@
         </section>
 
         <!-- ═══════════════════════════════════════════════════
-             PROJECTS SECTION
+             WORK — 02
              ═══════════════════════════════════════════════════ -->
-        <section class="project-gallery" id="projects">
-            <span class="project-gallery-vertical project-gallery-vertical--left" aria-hidden="true">Featured Case Studies</span>
-            <span class="project-gallery-vertical project-gallery-vertical--right" aria-hidden="true">Digital Experiences</span>
-            <div class="projects-slide">
-                <div class="projects-sidebar">
-                    <div class="project-gallery-header reveal">
-                        <span class="section-eyebrow">03 — Projects</span>
-                        <h2 class="section-title">Selected Work</h2>
+        <section class="work-section" id="projects">
+            <span class="ghost" data-parallax="0.07" aria-hidden="true">02</span>
 
-                        <div class="filter-bar">
-                            <button class="filter-btn active" data-filter="all">All</button>
-                            <button class="filter-btn" data-filter="analytics">Analytics</button>
-                            <button class="filter-btn" data-filter="machine-learning">Machine Learning</button>
-                            <button class="filter-btn" data-filter="app-development">App Development</button>
-                        </div>
+            <header class="shead">
+                <span class="shead__label mono reveal"><i>02</i>Work</span>
+                <span class="shead__rule reveal" style="--i:1" aria-hidden="true"></span>
+            </header>
+
+            <div class="work-intro">
+                <h2 class="work-intro__title reveal" style="--i:1">Selected<br><em>Work</em></h2>
+                <div class="work-intro__side">
+                    <p class="work-intro__copy reveal" style="--i:2">
+                        Four projects spanning analytics, machine learning and product — each one
+                        a study in turning a messy problem into something people can actually use.
+                    </p>
+                    <div class="filters reveal" style="--i:3" role="group" aria-label="Filter projects by discipline">
+                        <button class="filter is-active" data-filter="all">All<sup class="mono">4</sup></button>
+                        <button class="filter" data-filter="analytics">Analytics<sup class="mono">1</sup></button>
+                        <button class="filter" data-filter="machine-learning">Machine Learning<sup class="mono">1</sup></button>
+                        <button class="filter" data-filter="app-development">App Development<sup class="mono">2</sup></button>
                     </div>
+                    <p class="filters__status mono" aria-live="polite">Showing all four projects</p>
                 </div>
+            </div>
 
-                <div class="project-grid">
+            <div class="gallery">
 
-                <!-- Project 1: EcoRangers -->
-                <article class="project-card reveal reveal-delay-1" data-category="app-development" id="project-ecorangers">
-                    <span class="project-card-index" aria-hidden="true">01</span>
-                    <div class="project-card-image">
-                        <img src="./Assets/Ecorangers.png" alt="EcoRangers Game UI" loading="lazy" decoding="async">
-                        <div class="card-overlay"></div>
-                    </div>
-                    <div class="project-card-body">
-                        <span class="project-meta">Group Project · App Development</span>
-                        <h3>EcoRangers</h3>
-                        <div class="project-detail-meta" aria-label="Project details">
-                            <span>2024</span>
-                            <span>Developer &amp; UI Designer</span>
-                            <span>2-Month Sprint</span>
+                <!-- 01 — EcoRangers (lead) -->
+                <article class="work work--lead reveal" data-category="app-development" id="project-ecorangers">
+                    <a class="work__media" href="https://akj16.itch.io/ecorangers" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the EcoRangers project">
+                        <img src="./Assets/Ecorangers.png" alt="EcoRangers waste-sorting game interface" loading="lazy" decoding="async">
+                        <span class="work__shade" aria-hidden="true"></span>
+                        <span class="work__view mono" aria-hidden="true">View</span>
+                    </a>
+                    <div class="work__body">
+                        <div class="work__top">
+                            <span class="work__index mono">01</span>
+                            <span class="work__kicker mono">Group Project · App Development</span>
                         </div>
-                        <p class="project-insight">Designed to turn waste sorting into a repeatable daily habit for young learners, using progressive challenges and instant feedback to keep the lesson engaging.</p>
-                        <div class="project-blocks">
-                            <div class="project-block">
-                                <h4>01 Problem</h4>
+                        <h3 class="work__title">EcoRangers</h3>
+                        <ul class="work__facts mono">
+                            <li>2024</li>
+                            <li>Developer &amp; UI Designer</li>
+                            <li>2-Month Sprint</li>
+                        </ul>
+                        <p class="work__insight">
+                            Designed to turn waste sorting into a repeatable daily habit for young learners,
+                            using progressive challenges and instant feedback to keep the lesson engaging.
+                        </p>
+                        <div class="work__notes">
+                            <div class="note">
+                                <h4 class="mono"><i>01</i>Problem</h4>
                                 <p>Lack of early introduction to waste sorting habits, leading to poor environmental awareness.</p>
                             </div>
-                            <div class="project-block">
-                                <h4>02 Solution</h4>
+                            <div class="note">
+                                <h4 class="mono"><i>02</i>Solution</h4>
                                 <p>Gamified learning through fun gameplay, progressive challenges, and educational feedback loops.</p>
                             </div>
                         </div>
-                        <div class="tech-stack-container">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Figma</span>
-                        </div>
-
-                        <div class="project-actions">
-                                <a href="https://akj16.itch.io/ecorangers" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                                    View Project
-                                </a>
-                        </div>
+                        <ul class="tags">
+                            <li class="tag">Unity</li>
+                            <li class="tag">C#</li>
+                            <li class="tag">Figma</li>
+                        </ul>
+                        <a href="https://akj16.itch.io/ecorangers" target="_blank" rel="noopener noreferrer" class="arrowlink">
+                            <span>View Project</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </a>
                     </div>
+                    <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
-                <!-- Project 2: Matcha E-commerce Website -->
-                <article class="project-card reveal reveal-delay-2" data-category="app-development" id="project-dashboard">
-                    <span class="project-card-index" aria-hidden="true">02</span>
-                    <div class="project-card-image">
-                        <img src="./Assets/Matcha.png" alt="Ecommerce Website" loading="lazy" decoding="async">
-                        <div class="card-overlay"></div>
-                    </div>
-                    <div class="project-card-body">
-                        <span class="project-meta">Group Project · App Development</span>
-                        <h3>Matcha E-commerce Website</h3>
-                        <div class="project-detail-meta" aria-label="Project details">
-                            <span>2024</span>
-                            <span>Frontend Developer</span>
-                            <span>1-Month Sprint</span>
+                <!-- 02 — Matcha -->
+                <article class="work reveal" data-category="app-development" id="project-dashboard">
+                    <a class="work__media" href="https://matchadelight.netlify.app/" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the Matcha E-commerce Website project">
+                        <img src="./Assets/Matcha.png" alt="Matcha e-commerce website interface" loading="lazy" decoding="async">
+                        <span class="work__shade" aria-hidden="true"></span>
+                        <span class="work__view mono" aria-hidden="true">View</span>
+                    </a>
+                    <div class="work__body">
+                        <div class="work__top">
+                            <span class="work__index mono">02</span>
+                            <span class="work__kicker mono">Group Project · App Development</span>
                         </div>
-                        <p class="project-insight">Built around a clearer path from discovery to checkout, helping matcha enthusiasts compare products confidently and shop with less friction.</p>
-                        <div class="project-blocks">
-                            <div class="project-block">
-                                <h4>01 Problem</h4>
+                        <h3 class="work__title">Matcha E-commerce Website</h3>
+                        <ul class="work__facts mono">
+                            <li>2024</li>
+                            <li>Frontend Developer</li>
+                            <li>1-Month Sprint</li>
+                        </ul>
+                        <p class="work__insight">
+                            Built around a clearer path from discovery to checkout, helping matcha enthusiasts
+                            compare products confidently and shop with less friction.
+                        </p>
+                        <div class="work__notes">
+                            <div class="note">
+                                <h4 class="mono"><i>01</i>Problem</h4>
                                 <p>Matcha enthusiasts often struggle to find high-quality matcha products with clear information and a smooth shopping experience.</p>
                             </div>
-                            <div class="project-block">
-                                <h4>02 Impact</h4>
+                            <div class="note">
+                                <h4 class="mono"><i>02</i>Impact</h4>
                                 <p>Provides customers with a delightful shopping experience while building trust and increasing engagement for matcha lovers.</p>
                             </div>
                         </div>
-                        <div class="tech-stack-container">
-                            <span class="tech-tag">HTML</span>
-                            <span class="tech-tag">CSS</span>
-                            <span class="tech-tag">Node JS</span>
-                        </div>
-
-                        <div class="project-actions">
-                                <a href="https://matchadelight.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                                    View Project
-                                </a>
-                        </div>
+                        <ul class="tags">
+                            <li class="tag">HTML</li>
+                            <li class="tag">CSS</li>
+                            <li class="tag">Node JS</li>
+                        </ul>
+                        <a href="https://matchadelight.netlify.app/" target="_blank" rel="noopener noreferrer" class="arrowlink">
+                            <span>View Project</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </a>
                     </div>
+                    <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
-                <!-- Project 3: ML Prediction Engine -->
-                <article class="project-card reveal reveal-delay-3" data-category="machine-learning" id="project-ml-engine">
-                    <span class="project-card-index" aria-hidden="true">03</span>
-                    <div class="project-card-image">
-                        <img src="./Assets/Bodyfat.png" alt="ML Prediction Engine" loading="lazy" decoding="async">
-                        <div class="card-overlay"></div>
-                    </div>
-                    <div class="project-card-body">
-                        <span class="project-meta">Research Project · Machine Learning</span>
-                        <h3>Predictive Model Engine</h3>
-                        <div class="project-detail-meta" aria-label="Project details">
-                            <span>2024</span>
-                            <span>ML Engineer</span>
-                            <span>2-Month Sprint</span>
+                <!-- 03 — Predictive Model Engine -->
+                <article class="work reveal" data-category="machine-learning" id="project-ml-engine">
+                    <a class="work__media" href="https://bodyfat-app.streamlit.app/" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the Predictive Model Engine project">
+                        <img src="./Assets/Bodyfat.png" alt="Predictive model engine dashboard" loading="lazy" decoding="async">
+                        <span class="work__shade" aria-hidden="true"></span>
+                        <span class="work__view mono" aria-hidden="true">View</span>
+                    </a>
+                    <div class="work__body">
+                        <div class="work__top">
+                            <span class="work__index mono">03</span>
+                            <span class="work__kicker mono">Research Project · Machine Learning</span>
                         </div>
-                        <p class="project-insight">An ensemble workflow that surfaces at-risk customers before churn, reaching 89% prediction accuracy to support earlier, more focused retention decisions.</p>
-                        <div class="project-blocks">
-                            <div class="project-block">
-                                <h4>01 Problem</h4>
+                        <h3 class="work__title">Predictive Model Engine</h3>
+                        <ul class="work__facts mono">
+                            <li>2024</li>
+                            <li>ML Engineer</li>
+                            <li>2-Month Sprint</li>
+                        </ul>
+                        <p class="work__insight">
+                            An ensemble workflow that surfaces at-risk customers before churn, reaching 89%
+                            prediction accuracy to support earlier, more focused retention decisions.
+                        </p>
+                        <div class="work__notes">
+                            <div class="note">
+                                <h4 class="mono"><i>01</i>Problem</h4>
                                 <p>High customer churn with no systematic approach to identify at-risk users before they leave.</p>
                             </div>
-                            <div class="project-block">
-                                <h4>02 Impact</h4>
+                            <div class="note">
+                                <h4 class="mono"><i>02</i>Impact</h4>
                                 <p>Achieved 89% prediction accuracy, enabling proactive retention strategies for the business.</p>
                             </div>
                         </div>
-                        <div class="tech-stack-container">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Scikit-learn</span>
-                            <span class="tech-tag">TensorFlow</span>
-                        </div>
-
-                        <div class="project-actions">
-                                <a href="https://bodyfat-app.streamlit.app/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                                    View Project
-                                </a>
-                        </div>
+                        <ul class="tags">
+                            <li class="tag">Python</li>
+                            <li class="tag">Scikit-learn</li>
+                            <li class="tag">TensorFlow</li>
+                        </ul>
+                        <a href="https://bodyfat-app.streamlit.app/" target="_blank" rel="noopener noreferrer" class="arrowlink">
+                            <span>View Project</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </a>
                     </div>
+                    <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
-                <!-- Project 4: Linkvestor -->
-                <article class="project-card reveal reveal-delay-3" data-category="analytics" id="project-linkvestor">
-                    <span class="project-card-index" aria-hidden="true">04</span>
-                    <div class="project-card-image">
-                        <img src="./Assets/Linkvestor.png" alt="Linkvestor" loading="lazy" decoding="async">
-                        <div class="card-overlay"></div>
-                    </div>
-                    <div class="project-card-body">
-                        <span class="project-meta">Group Project · Analytics</span>
-                        <h3>Finance App</h3>
-                        <div class="project-detail-meta" aria-label="Project details">
-                            <span>2024</span>
-                            <span>Product Designer</span>
-                            <span>3-Month Sprint</span>
+                <!-- 04 — Linkvestor -->
+                <article class="work reveal" data-category="analytics" id="project-linkvestor">
+                    <a class="work__media" href="https://www.figma.com/proto/iarMFBCaKiP1DYb6ab7NQ2/LinkVestor?node-id=13-310&amp;t=Jz6dqvdizMlXJt9G-1" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the Linkvestor finance app project">
+                        <img src="./Assets/Linkvestor.png" alt="Linkvestor finance app interface" loading="lazy" decoding="async">
+                        <span class="work__shade" aria-hidden="true"></span>
+                        <span class="work__view mono" aria-hidden="true">View</span>
+                    </a>
+                    <div class="work__body">
+                        <div class="work__top">
+                            <span class="work__index mono">04</span>
+                            <span class="work__kicker mono">Group Project · Analytics</span>
                         </div>
-                        <p class="project-insight">Created to make MSME investment opportunities easier to evaluate, pairing transparent business context with meaningful signals for more confident decisions.</p>
-                        <div class="project-blocks">
-                            <div class="project-block">
-                                <h4>01 Problem</h4>
+                        <h3 class="work__title">Finance App</h3>
+                        <ul class="work__facts mono">
+                            <li>2024</li>
+                            <li>Product Designer</li>
+                            <li>3-Month Sprint</li>
+                        </ul>
+                        <p class="work__insight">
+                            Created to make MSME investment opportunities easier to evaluate, pairing transparent
+                            business context with meaningful signals for more confident decisions.
+                        </p>
+                        <div class="work__notes">
+                            <div class="note">
+                                <h4 class="mono"><i>01</i>Problem</h4>
                                 <p>Many promising UMKM lack access to capital, while investors struggle to find trustworthy and transparent opportunities.</p>
                             </div>
-                            <div class="project-block">
-                                <h4>02 Impact</h4>
+                            <div class="note">
+                                <h4 class="mono"><i>02</i>Impact</h4>
                                 <p>Opening new growth opportunities for UMKM and delivering meaningful returns for investors through responsible investing.</p>
                             </div>
                         </div>
-                        <div class="tech-stack-container">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Scikit-learn</span>
-                            <span class="tech-tag">TensorFlow</span>
-                        </div>
-
-                        <div class="project-actions">
-                                <a href="https://www.figma.com/proto/iarMFBCaKiP1DYb6ab7NQ2/LinkVestor?node-id=13-310&t=Jz6dqvdizMlXJt9G-1" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                                    View Project
-                                </a>
-                        </div>
+                        <ul class="tags">
+                            <li class="tag">Python</li>
+                            <li class="tag">Scikit-learn</li>
+                            <li class="tag">TensorFlow</li>
+                        </ul>
+                        <a href="https://www.figma.com/proto/iarMFBCaKiP1DYb6ab7NQ2/LinkVestor?node-id=13-310&amp;t=Jz6dqvdizMlXJt9G-1" target="_blank" rel="noopener noreferrer" class="arrowlink">
+                            <span>View Project</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </a>
                     </div>
+                    <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
-            </div>
+                <p class="gallery__empty mono" hidden>No projects in this discipline yet.</p>
             </div>
         </section>
 
         <!-- ═══════════════════════════════════════════════════
-             CONTACT SECTION
+             CONTACT — 03
              ═══════════════════════════════════════════════════ -->
-        <section class="contact-section" id="contact">
-            <div class="reveal">
-                <span class="section-eyebrow">04 — Contact</span>
-                <h2 class="section-title">Let's Connect</h2>
-            </div>
+        <section class="contact" id="contact">
+            <span class="ghost" data-parallax="0.07" aria-hidden="true">03</span>
 
-            <div class="contact-grid">
-                <form class="contact-form reveal reveal-delay-1" id="contact-form" action="mailto:jamestiono02@gmail.com" method="post" enctype="text/plain">
-                    <div class="form-group">
-                        <input type="text" id="contact-name" name="name" required autocomplete="name">
+            <header class="shead">
+                <span class="shead__label mono reveal"><i>03</i>Contact</span>
+                <span class="shead__rule reveal" style="--i:1" aria-hidden="true"></span>
+            </header>
+
+            <h2 class="contact__title">
+                <span class="ln reveal" style="--i:0"><span>Let’s build</span></span>
+                <span class="ln reveal" style="--i:1"><span>something <em>worth</em></span></span>
+                <span class="ln reveal" style="--i:2"><span>remembering.</span></span>
+            </h2>
+
+            <div class="contact__grid">
+                <form class="form reveal" id="contact-form" action="mailto:jamestiono02@gmail.com" method="post" enctype="text/plain" novalidate>
+                    <div class="field">
+                        <input type="text" id="contact-name" name="name" required autocomplete="name" placeholder=" ">
                         <label for="contact-name">Your Name</label>
+                        <span class="field__line" aria-hidden="true"></span>
                     </div>
 
-                    <div class="form-group">
-                        <input type="email" id="contact-email" name="email" required autocomplete="email">
+                    <div class="field">
+                        <input type="email" id="contact-email" name="email" required autocomplete="email" placeholder=" ">
                         <label for="contact-email">Your Email</label>
+                        <span class="field__line" aria-hidden="true"></span>
                     </div>
 
-                    <div class="form-group">
-                        <textarea id="contact-message" name="message" rows="4" required></textarea>
+                    <div class="field">
+                        <textarea id="contact-message" name="message" rows="4" required placeholder=" "></textarea>
                         <label for="contact-message">Your Message</label>
+                        <span class="field__line" aria-hidden="true"></span>
                     </div>
 
-                    <div class="form-submit">
-                        <button type="submit" class="btn-primary">Send Message</button>
-                    </div>
-                    <div class="form-feedback" aria-live="polite"></div>
+                    <button type="submit" class="cta" data-magnetic>
+                        <span class="cta__label">Send Message</span>
+                        <span class="cta__arrow" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </span>
+                    </button>
+                    <p class="form__feedback mono" aria-live="polite"></p>
                 </form>
 
-                <div class="contact-info-panel reveal reveal-delay-2">
-                    <h3>Have a project in mind?</h3>
-                    <p>
-                        I'm always open to discussing new opportunities, data-driven ideas, 
+                <aside class="contact__panel reveal" style="--i:2">
+                    <h3 class="contact__paneltitle">Have a project in mind?</h3>
+                    <p class="contact__panelcopy">
+                        I’m always open to discussing new opportunities, data-driven ideas,
                         or just having a conversation about technology and innovation.
                     </p>
 
-                    <div class="contact-links">
-                        <a href="mailto:jamestiono02@gmail.com" class="contact-link-item" id="contact-email-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                            jamestiono02@gmail.com
-                        </a>
-                        <a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer" class="contact-link-item" id="contact-github-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-                            jamestiono19
-                        </a>
-                        <a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer" class="contact-link-item" id="contact-instagram-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                            james.tiono
-                        </a>
-                        <a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer" class="contact-link-item" id="contact-linkedin-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-12h4v2a4 4 0 0 1 2-1z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                            James Tiono
-                        </a>
-                    </div>
-                </div>
+                    <ul class="channels">
+                        <li>
+                            <a href="mailto:jamestiono02@gmail.com" class="channel" id="contact-email-link">
+                                <span class="channel__key mono">Email</span>
+                                <span class="channel__val">jamestiono02@gmail.com</span>
+                                <svg class="channel__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer" class="channel" id="contact-github-link">
+                                <span class="channel__key mono">GitHub</span>
+                                <span class="channel__val">jamestiono19</span>
+                                <svg class="channel__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer" class="channel" id="contact-linkedin-link">
+                                <span class="channel__key mono">LinkedIn</span>
+                                <span class="channel__val">James Tiono</span>
+                                <svg class="channel__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer" class="channel" id="contact-instagram-link">
+                                <span class="channel__key mono">Instagram</span>
+                                <span class="channel__val">james.tiono</span>
+                                <svg class="channel__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
             </div>
         </section>
 
     </main>
 
-    <button class="back-to-top" type="button" aria-label="Scroll back to top">↑</button>
-
     <!-- ═══════════════════════════════════════════════════════
          FOOTER
          ═══════════════════════════════════════════════════════ -->
-    <footer class="footer-section">
-        <div class="footer-inner">
-            <span class="footer-brand">JT</span>
-            <p class="footer-copy">
-                &copy; 2026 James Tiono. Built with care and purpose.
-            </p>
+    <footer class="footer">
+        <div class="footer__top">
+            <span class="footer__mark">JT</span>
+            <a href="mailto:jamestiono02@gmail.com" class="footer__mail">
+                <span>jamestiono02@gmail.com</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+            </a>
+        </div>
+        <div class="footer__bottom mono">
+            <p>&copy; 2026 James Tiono. Built with care and purpose.</p>
+            <p class="footer__cred">Editorial Index — Designed &amp; developed in-house</p>
         </div>
     </footer>
+
+    <button class="totop" type="button" aria-label="Scroll back to top">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5m0 0-5.5 5.5M12 5l5.5 5.5"/></svg>
+    </button>
 
     <script src="nervous.js"></script>
 </body>
