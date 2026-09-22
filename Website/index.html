@@ -20,10 +20,22 @@
 
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- ══ Atmosphere: film grain, structural grid rails, cursor ══ -->
+    <!-- ══ Atmosphere: living canvas, film grain, structural rails ══ -->
+    <div class="ambient" aria-hidden="true">
+        <canvas class="ambient__canvas"></canvas>
+        <span class="ambient__glow"></span>
+        <span class="ambient__halo ambient__halo--one"></span>
+        <span class="ambient__halo ambient__halo--two"></span>
+    </div>
     <div class="grain" aria-hidden="true"></div>
     <div class="rails" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span></div>
+
+    <!-- Supplemental pointer signal: the native cursor remains available. -->
+    <div class="cursor" data-state="default" aria-hidden="true">
+        <span class="cursor__dot"></span>
+        <span class="cursor__ring"><span class="cursor__label"></span></span>
+    </div>
+    <div class="cursor-ripples" aria-hidden="true"></div>
 
     <!-- ══ Opening curtain ══ -->
     <div class="curtain" aria-hidden="true">
@@ -44,11 +56,12 @@
 
         <nav class="masthead__nav" aria-label="Primary">
             <ul>
-                <li><a href="#home" class="navlink is-active"><span class="mono">00</span>Index</a></li>
-                <li><a href="#about" class="navlink"><span class="mono">01</span>About</a></li>
-                <li><a href="#projects" class="navlink"><span class="mono">02</span>Work</a></li>
-                <li><a href="#contact" class="navlink"><span class="mono">03</span>Contact</a></li>
+                <li><a href="#home" class="navlink is-active" data-magnetic="soft"><span class="mono">00</span>Index</a></li>
+                <li><a href="#about" class="navlink" data-magnetic="soft"><span class="mono">01</span>About</a></li>
+                <li><a href="#projects" class="navlink" data-magnetic="soft"><span class="mono">02</span>Work</a></li>
+                <li><a href="#contact" class="navlink" data-magnetic="soft"><span class="mono">03</span>Contact</a></li>
             </ul>
+            <span class="nav-signal" aria-hidden="true"><i></i></span>
         </nav>
 
         <div class="masthead__tools">
