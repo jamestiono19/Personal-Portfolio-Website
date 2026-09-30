@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap">
 
     <link rel="stylesheet" href="skin.css">
+
+    <!-- Flags JS before first paint so the intro door can cover the
+         page immediately; without JS the door never renders. -->
+    <script>(function(d){d.classList.add("js");try{if(localStorage.getItem("portfolio-theme")==="light")d.setAttribute("data-theme","light")}catch(e){}})(document.documentElement);</script>
+    <noscript><style>.ln > span { transform: none; } .reveal { opacity: 1; transform: none; }</style></noscript>
 </head>
 <body>
 
@@ -23,13 +28,55 @@
     <!-- ══ Atmosphere: film grain, structural grid rails, cursor ══ -->
     <div class="grain" aria-hidden="true"></div>
     <div class="rails" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <!-- Living background: faint data points plotted along the grid rails -->
+    <canvas class="ambient" aria-hidden="true"></canvas>
     <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span></div>
 
-    <!-- ══ Opening curtain ══ -->
-    <div class="curtain" aria-hidden="true">
-        <div class="curtain__inner">
-            <span class="curtain__name">James&nbsp;Tiono</span>
-            <span class="curtain__count mono"><b class="curtain__num">00</b> / 100</span>
+    <!-- ══ Intro — the door into the portfolio ══
+         01 Arrival · 02 Identity · 03 Threshold · 04 Opening · 05 Enter
+         Two panels carry the name ("James" | "Tiono") and swing open
+         on their outer hinges to reveal the Index behind them. -->
+    <div class="intro" id="intro">
+        <div class="intro__door intro__door--l" aria-hidden="true">
+            <div class="intro__rails"><i></i><i></i></div>
+            <div class="intro__face">
+                <div class="intro__brand">
+                    <span class="masthead__mark">JT</span>
+                    <span class="masthead__brandmeta mono">James&nbsp;Tiono<i>Portfolio&nbsp;’26</i></span>
+                </div>
+                <div class="intro__id intro__id--l">
+                    <span class="intro__name" data-split>James</span>
+                    <span class="intro__desc mono">Data Analytics — Machine Learning</span>
+                </div>
+                <span class="intro__count mono"><b class="intro__num">00</b> / 100</span>
+            </div>
+            <span class="intro__handle" aria-hidden="true"></span>
+        </div>
+
+        <div class="intro__door intro__door--r" aria-hidden="true">
+            <div class="intro__rails"><i></i><i></i></div>
+            <div class="intro__face">
+                <span class="intro__frame mono"><b>01</b><span class="intro__framename">Arrival</span></span>
+                <div class="intro__id intro__id--r">
+                    <span class="intro__name" data-split>Tiono</span>
+                    <span class="intro__desc mono">— App Development</span>
+                </div>
+                <figure class="intro__portrait">
+                    <img src="./Assets/Hero.webp" alt="" width="719" height="1600" decoding="async">
+                    <figcaption class="mono">Est. 2026</figcaption>
+                </figure>
+            </div>
+            <span class="intro__handle" aria-hidden="true"></span>
+        </div>
+
+        <span class="intro__seam" aria-hidden="true"></span>
+
+        <div class="intro__gate">
+            <button type="button" class="intro__enter mono" aria-label="Enter the portfolio and skip the intro">
+                <span>Enter</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+            </button>
+            <span class="intro__hint mono" aria-hidden="true">Click · Scroll · Press Enter</span>
         </div>
     </div>
 
@@ -144,7 +191,7 @@
             <div class="hero__visual">
                 <figure class="portrait" data-tilt data-parallax="-0.07">
                     <div class="portrait__frame">
-                        <img src="./Assets/Hero.jpeg" alt="Portrait of James Tiono" id="hero-portrait" width="900" height="900" loading="eager" decoding="async" fetchpriority="high">
+                        <picture><source srcset="./Assets/Hero.webp" type="image/webp"><img src="./Assets/Hero.jpeg" alt="Portrait of James Tiono" id="hero-portrait" width="719" height="1600" loading="eager" decoding="async" fetchpriority="high"></picture>
                     </div>
                     <figcaption class="portrait__tag mono">Est. 2026</figcaption>
                     <span class="portrait__rule" aria-hidden="true"></span>
@@ -158,7 +205,7 @@
                 </div>
                 <div class="fact reveal" style="--i:2">
                     <dt class="mono">Selected Work</dt>
-                    <dd>Four Projects</dd>
+                    <dd>Five Projects</dd>
                 </div>
                 <div class="fact reveal" style="--i:3">
                     <dt class="mono">Studying</dt>
@@ -300,16 +347,16 @@
                 <h2 class="work-intro__title reveal" style="--i:1">Selected<br><em>Work</em></h2>
                 <div class="work-intro__side">
                     <p class="work-intro__copy reveal" style="--i:2">
-                        Four projects spanning analytics, machine learning and product — each one
+                        Five projects spanning analytics, machine learning and product — each one
                         a study in turning a messy problem into something people can actually use.
                     </p>
                     <div class="filters reveal" style="--i:3" role="group" aria-label="Filter projects by discipline">
-                        <button class="filter is-active" data-filter="all">All<sup class="mono">4</sup></button>
-                        <button class="filter" data-filter="analytics">Analytics<sup class="mono">1</sup></button>
+                        <button class="filter is-active" data-filter="all">All<sup class="mono">5</sup></button>
+                        <button class="filter" data-filter="analytics">Analytics<sup class="mono">2</sup></button>
                         <button class="filter" data-filter="machine-learning">Machine Learning<sup class="mono">1</sup></button>
                         <button class="filter" data-filter="app-development">App Development<sup class="mono">2</sup></button>
                     </div>
-                    <p class="filters__status mono" aria-live="polite">Showing all four projects</p>
+                    <p class="filters__status mono" aria-live="polite">Showing all 5 projects</p>
                 </div>
             </div>
 
@@ -318,7 +365,7 @@
                 <!-- 01 — EcoRangers (lead) -->
                 <article class="work work--lead reveal" data-category="app-development" id="project-ecorangers">
                     <a class="work__media" href="https://akj16.itch.io/ecorangers" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the EcoRangers project">
-                        <img src="./Assets/Ecorangers.png" alt="EcoRangers waste-sorting game interface" loading="lazy" decoding="async">
+                        <picture><source srcset="./Assets/Ecorangers.webp" type="image/webp"><img src="./Assets/Ecorangers.png" alt="EcoRangers waste-sorting game interface" width="1600" height="898" loading="lazy" decoding="async"></picture>
                         <span class="work__shade" aria-hidden="true"></span>
                         <span class="work__view mono" aria-hidden="true">View</span>
                     </a>
@@ -357,13 +404,42 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
                         </a>
                     </div>
+                    <aside class="hl" aria-label="EcoRangers — project highlights">
+                        <h4 class="hl__head mono reveal">Highlights<span class="hl__count">04</span></h4>
+                        <ol class="hl__list">
+                        <li class="hl__item reveal" style="--i:1" tabindex="0">
+                            <span class="hl__num mono">01</span>
+                            <span class="hl__key mono">Method</span>
+                            <strong class="hl__val">Gamified learning</strong>
+                            <span class="hl__note">Progressive challenges paired with instant, educational feedback.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:2" tabindex="0">
+                            <span class="hl__num mono">02</span>
+                            <span class="hl__key mono">Audience</span>
+                            <strong class="hl__val">Young learners</strong>
+                            <span class="hl__note">Built to form waste-sorting habits early.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:3" tabindex="0">
+                            <span class="hl__num mono">03</span>
+                            <span class="hl__key mono">Role</span>
+                            <strong class="hl__val">Developer &amp; UI Designer</strong>
+                            <span class="hl__note">Gameplay in Unity and C#, interface designed in Figma.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:4" tabindex="0">
+                            <span class="hl__num mono">04</span>
+                            <span class="hl__key mono">Status</span>
+                            <strong class="hl__val">Playable on itch.io</strong>
+                            <span class="hl__note">Published as a browser-accessible game build.</span>
+                        </li>
+                        </ol>
+                    </aside>
                     <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
                 <!-- 02 — Matcha -->
                 <article class="work reveal" data-category="app-development" id="project-dashboard">
                     <a class="work__media" href="https://matchadelight.netlify.app/" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the Matcha E-commerce Website project">
-                        <img src="./Assets/Matcha.png" alt="Matcha e-commerce website interface" loading="lazy" decoding="async">
+                        <picture><source srcset="./Assets/Matcha.webp" type="image/webp"><img src="./Assets/Matcha.png" alt="Matcha e-commerce website interface" width="1536" height="1024" loading="lazy" decoding="async"></picture>
                         <span class="work__shade" aria-hidden="true"></span>
                         <span class="work__view mono" aria-hidden="true">View</span>
                     </a>
@@ -402,13 +478,42 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
                         </a>
                     </div>
+                    <aside class="hl" aria-label="Matcha E-commerce Website — project highlights">
+                        <h4 class="hl__head mono reveal">Highlights<span class="hl__count">04</span></h4>
+                        <ol class="hl__list">
+                        <li class="hl__item reveal" style="--i:1" tabindex="0">
+                            <span class="hl__num mono">01</span>
+                            <span class="hl__key mono">Focus</span>
+                            <strong class="hl__val">Discovery to checkout</strong>
+                            <span class="hl__note">A clearer path from browsing to purchase.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:2" tabindex="0">
+                            <span class="hl__num mono">02</span>
+                            <span class="hl__key mono">Experience</span>
+                            <strong class="hl__val">Confident comparison</strong>
+                            <span class="hl__note">Clear product information for matcha enthusiasts.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:3" tabindex="0">
+                            <span class="hl__num mono">03</span>
+                            <span class="hl__key mono">Role</span>
+                            <strong class="hl__val">Frontend Developer</strong>
+                            <span class="hl__note">HTML and CSS interface on a Node JS setup.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:4" tabindex="0">
+                            <span class="hl__num mono">04</span>
+                            <span class="hl__key mono">Status</span>
+                            <strong class="hl__val">Live on Netlify</strong>
+                            <span class="hl__note">Deployed and publicly browsable.</span>
+                        </li>
+                        </ol>
+                    </aside>
                     <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
                 <!-- 03 — Predictive Model Engine -->
                 <article class="work reveal" data-category="machine-learning" id="project-ml-engine">
                     <a class="work__media" href="https://bodyfat-app.streamlit.app/" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the Predictive Model Engine project">
-                        <img src="./Assets/Bodyfat.png" alt="Predictive model engine dashboard" loading="lazy" decoding="async">
+                        <picture><source srcset="./Assets/Bodyfat.webp" type="image/webp"><img src="./Assets/Bodyfat.png" alt="Predictive model engine dashboard" width="1600" height="1033" loading="lazy" decoding="async"></picture>
                         <span class="work__shade" aria-hidden="true"></span>
                         <span class="work__view mono" aria-hidden="true">View</span>
                     </a>
@@ -447,13 +552,42 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
                         </a>
                     </div>
+                    <aside class="hl" aria-label="Predictive Model Engine — project highlights">
+                        <h4 class="hl__head mono reveal">Highlights<span class="hl__count">04</span></h4>
+                        <ol class="hl__list">
+                        <li class="hl__item reveal" style="--i:1" tabindex="0">
+                            <span class="hl__num mono">01</span>
+                            <span class="hl__key mono">Method</span>
+                            <strong class="hl__val">Ensemble modelling</strong>
+                            <span class="hl__note">Combines models to flag at-risk customers early.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:2" tabindex="0">
+                            <span class="hl__num mono">02</span>
+                            <span class="hl__key mono">Outcome</span>
+                            <strong class="hl__val">89% accuracy</strong>
+                            <span class="hl__note">Prediction accuracy reported for the final workflow.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:3" tabindex="0">
+                            <span class="hl__num mono">03</span>
+                            <span class="hl__key mono">Stack</span>
+                            <strong class="hl__val">Scikit-learn · TensorFlow</strong>
+                            <span class="hl__note">Python-based training and evaluation.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:4" tabindex="0">
+                            <span class="hl__num mono">04</span>
+                            <span class="hl__key mono">Status</span>
+                            <strong class="hl__val">Streamlit app</strong>
+                            <span class="hl__note">Deployed as an interactive web app.</span>
+                        </li>
+                        </ol>
+                    </aside>
                     <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
                 <!-- 04 — Linkvestor -->
                 <article class="work reveal" data-category="analytics" id="project-linkvestor">
                     <a class="work__media" href="https://www.figma.com/proto/iarMFBCaKiP1DYb6ab7NQ2/LinkVestor?node-id=13-310&amp;t=Jz6dqvdizMlXJt9G-1" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the Linkvestor finance app project">
-                        <img src="./Assets/Linkvestor.png" alt="Linkvestor finance app interface" loading="lazy" decoding="async">
+                        <picture><source srcset="./Assets/Linkvestor.webp" type="image/webp"><img src="./Assets/Linkvestor.png" alt="Linkvestor finance app interface" width="1600" height="900" loading="lazy" decoding="async"></picture>
                         <span class="work__shade" aria-hidden="true"></span>
                         <span class="work__view mono" aria-hidden="true">View</span>
                     </a>
@@ -492,6 +626,118 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
                         </a>
                     </div>
+                    <aside class="hl" aria-label="Finance App — project highlights">
+                        <h4 class="hl__head mono reveal">Highlights<span class="hl__count">04</span></h4>
+                        <ol class="hl__list">
+                        <li class="hl__item reveal" style="--i:1" tabindex="0">
+                            <span class="hl__num mono">01</span>
+                            <span class="hl__key mono">Audience</span>
+                            <strong class="hl__val">UMKM &amp; investors</strong>
+                            <span class="hl__note">Connecting small businesses with investment capital.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:2" tabindex="0">
+                            <span class="hl__num mono">02</span>
+                            <span class="hl__key mono">Principle</span>
+                            <strong class="hl__val">Transparency</strong>
+                            <span class="hl__note">Business context shown alongside meaningful signals.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:3" tabindex="0">
+                            <span class="hl__num mono">03</span>
+                            <span class="hl__key mono">Role</span>
+                            <strong class="hl__val">Product Designer</strong>
+                            <span class="hl__note">Three-month design sprint.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:4" tabindex="0">
+                            <span class="hl__num mono">04</span>
+                            <span class="hl__key mono">Status</span>
+                            <strong class="hl__val">Figma prototype</strong>
+                            <span class="hl__note">Interactive, clickable prototype.</span>
+                        </li>
+                        </ol>
+                    </aside>
+                    <span class="work__glow" aria-hidden="true"></span>
+                </article>
+
+                <!-- 05 — ASA DataFest 2026 · Penjelajah Sejarah
+                     All figures below are printed outputs of the notebooks in the
+                     repository; the cover is the team's own feature-importance chart. -->
+                <article class="work reveal" data-category="analytics" id="project-datafest">
+                    <a class="work__media" href="https://github.com/jamestiono19/ASA-Datafest-Competition2026-PenjelajahSejarah" target="_blank" rel="noopener noreferrer" data-tilt aria-label="View the ASA DataFest 2026 project on GitHub">
+                        <img src="./Assets/Datafest.webp" alt="Bar chart: high-impact drivers of patient dropout, led by chronic status at 32.4% feature importance" width="1600" height="1000" loading="lazy" decoding="async">
+                        <span class="work__shade" aria-hidden="true"></span>
+                        <span class="work__view mono" aria-hidden="true">View</span>
+                    </a>
+                    <div class="work__body">
+                        <div class="work__top">
+                            <span class="work__index mono">05</span>
+                            <span class="work__kicker mono">Competition · Analytics</span>
+                        </div>
+                        <h3 class="work__title">ASA DataFest 2026</h3>
+                        <ul class="work__facts mono">
+                            <li>2026</li>
+                            <li>Team Penjelajah Sejarah</li>
+                            <li>Healthcare Data</li>
+                        </ul>
+                        <p class="work__insight">
+                            A study of why chronic patients drop out of care, linking millions of
+                            clinical encounters to social-determinant surveys to see where
+                            economic hardship — and missing data — hide the patients most at risk.
+                        </p>
+                        <div class="work__notes">
+                            <div class="note">
+                                <h4 class="mono"><i>01</i>Problem</h4>
+                                <p>Chronic patients who never return leave little trace — 92.5% had no economic-hardship survey answers on record.</p>
+                            </div>
+                            <div class="note">
+                                <h4 class="mono"><i>02</i>Insight</h4>
+                                <p>Emergency or urgent visits rose from 31% to 53% as paying for basics went from “not hard at all” to “very hard”.</p>
+                            </div>
+                        </div>
+                        <ul class="tags">
+                            <li class="tag">Python</li>
+                            <li class="tag">Pandas</li>
+                            <li class="tag">Scikit-learn</li>
+                        </ul>
+                        <a href="https://github.com/jamestiono19/ASA-Datafest-Competition2026-PenjelajahSejarah" target="_blank" rel="noopener noreferrer" class="arrowlink">
+                            <span>View Repository</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg>
+                        </a>
+                    </div>
+                    <aside class="hl" aria-label="ASA DataFest 2026 — project highlights">
+                        <h4 class="hl__head mono reveal">Highlights<span class="hl__count">05</span></h4>
+                        <ol class="hl__list">
+                        <li class="hl__item reveal" style="--i:1" tabindex="0">
+                            <span class="hl__num mono">01</span>
+                            <span class="hl__key mono">Question</span>
+                            <strong class="hl__val">Chronic-care dropout</strong>
+                            <span class="hl__note">Which patients with chronic conditions record only a single visit — and why.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:2" tabindex="0">
+                            <span class="hl__num mono">02</span>
+                            <span class="hl__key mono">Data</span>
+                            <strong class="hl__val">7.68M encounters</strong>
+                            <span class="hl__note">Plus 3.98M social-determinant survey answers, AHRQ CCIR v2026.1 and Kansas county GDP.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:3" tabindex="0">
+                            <span class="hl__num mono">03</span>
+                            <span class="hl__key mono">Model</span>
+                            <strong class="hl__val">Random forest</strong>
+                            <span class="hl__note">Class-balanced, 5-fold stratified CV, F1-tuned threshold — 84% accuracy, 0.61 dropout recall.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:4" tabindex="0">
+                            <span class="hl__num mono">04</span>
+                            <span class="hl__key mono">Finding</span>
+                            <strong class="hl__val">47% vs 18%</strong>
+                            <span class="hl__note">Surveyed chronic dropouts reporting economic hardship, versus all other surveyed patients.</span>
+                        </li>
+                        <li class="hl__item reveal" style="--i:5" tabindex="0">
+                            <span class="hl__num mono">05</span>
+                            <span class="hl__key mono">Stack</span>
+                            <strong class="hl__val">Python · Pandas · Scikit-learn</strong>
+                            <span class="hl__note">Jupyter notebooks with Seaborn and Matplotlib visuals.</span>
+                        </li>
+                        </ol>
+                    </aside>
                     <span class="work__glow" aria-hidden="true"></span>
                 </article>
 
