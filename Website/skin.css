@@ -41,6 +41,7 @@
   --pad: clamp(1.25rem, 5vw, 3rem);
   --gap: clamp(1rem, 2.2vw, 2rem);
   --bay: clamp(5rem, 12vw, 11rem);      /* vertical section rhythm */
+  --rail-inset: var(--pad);             /* where the grid rails sit */
 
   /* Motion */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -141,7 +142,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round
 .grain {
   position: fixed;
   inset: -50%;
-  z-index: 9998;
+  z-index: 10002;
   pointer-events: none;
   opacity: var(--grain-opacity);
   mix-blend-mode: var(--grain-blend);
@@ -164,7 +165,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round
   position: fixed;
   inset: 0;
   z-index: 0;
-  margin-inline: var(--pad);
+  margin-inline: var(--rail-inset);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border-inline: 1px solid var(--rule-soft);
@@ -177,7 +178,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 10003;
   display: none;
   pointer-events: none;
   will-change: transform;
@@ -207,44 +208,299 @@ body.cursor-hot .cursor__ring {
 }
 body.cursor-hide .cursor__ring { opacity: 0; }
 
-/* Opening curtain */
-.curtain {
+/* Living background — faint data points plotted along the rails.
+   Drawn by JS on a single canvas; purely decorative. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease-soft);
+}
+.ambient.is-live { opacity: 1; }
+
+/* ── INTRO — the door into the portfolio ─────────────────────
+   Two panels share the page's own rails, type and ink. They
+   carry the name, then swing open on their outer hinges. JS
+   drives --open (0 → 1) at ~15 fps so the swing reads as
+   hand-advanced frames rather than a tween. */
+.intro { display: none; }
+html.js { --open: 0; }
+html.js .intro {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  display: grid;
-  place-items: center;
-  background: var(--bg);
-  transition: transform 0.9s var(--ease);
+  display: block;
+  perspective: 1700px;
+  perspective-origin: 50% 45%;
+  cursor: pointer;
 }
-.curtain__inner {
+.intro.is-gone { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s steps(3), visibility 0s 0.3s; }
+
+.intro__door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.2%;                     /* a hair of overlap hides the seam gap */
+  overflow: hidden;
+  background: var(--bg);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+.intro__door--l {
+  left: 0;
+  transform-origin: left center;
+  transform: rotateY(calc(var(--open) * -96deg + var(--jl, 0deg)));
+}
+.intro__door--r {
+  right: 0;
+  transform-origin: right center;
+  transform: rotateY(calc(var(--open) * 96deg + var(--jr, 0deg)));
+}
+/* Shade deepens toward the hinge as the panel turns away */
+.intro__door::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: calc(var(--open) * 0.9);
+}
+.intro__door--l::after { background: linear-gradient(90deg, rgba(0, 0, 0, 0.55), transparent 70%); }
+.intro__door--r::after { background: linear-gradient(270deg, rgba(0, 0, 0, 0.55), transparent 70%); }
+
+/* The page's grid rails, continued across each panel */
+.intro__rails {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.5s steps(5);
+}
+.intro__door--l .intro__rails { left: var(--rail-inset); right: 0.4%; border-left: 1px solid var(--rule-soft); }
+.intro__door--r .intro__rails { right: var(--rail-inset); left: 0.4%; border-right: 1px solid var(--rule-soft); }
+.intro__rails i + i { border-left: 1px solid var(--rule-soft); }
+.intro.f1 .intro__rails { transform: none; }
+
+.intro__face {
+  position: absolute;
+  inset: 0;
+  padding: 1.6rem var(--pad) 2rem;
+}
+.intro__door--l .intro__face { padding-right: clamp(0.9rem, 2.5vw, 2.25rem); }
+.intro__door--r .intro__face { padding-left: clamp(0.9rem, 2.5vw, 2.25rem); }
+
+.intro__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  opacity: 0;
+}
+.intro.f1 .intro__brand { opacity: 1; transition: opacity 0.3s steps(3); }
+
+.intro__frame {
+  position: absolute;
+  top: 2rem;
+  right: var(--pad);
+  display: flex;
+  gap: 0.7rem;
+  font-size: 0.6rem;
+  color: var(--fg-faint);
+}
+.intro__frame b { color: var(--accent); font-weight: 500; }
+
+/* Identity — the name splits across the seam */
+.intro__id {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  translate: 0 -55%;
+}
+.intro__id--l { right: clamp(0.9rem, 2.5vw, 2.25rem); align-items: flex-end; text-align: right; }
+.intro__id--r { left: clamp(0.9rem, 2.5vw, 2.25rem); align-items: flex-start; }
+.intro__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 11vw, 10.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+  color: var(--fg);
+}
+.intro__id--r .intro__name { font-style: italic; color: var(--accent); }
+/* Letters land one frame at a time, slightly off-register,
+   then snap into place in three cuts. */
+.intro__name .ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translate(var(--jx, 0), var(--jy, 0)) rotate(var(--jr, 0deg));
+}
+.intro__name .ch.is-on { opacity: 1; }
+.intro.f3 .intro__name .ch { transform: none; transition: transform 0.24s steps(3); }
+
+.intro__desc {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-faint);
+  white-space: nowrap;
+  opacity: 0;
+}
+.intro.f2b .intro__desc { opacity: 1; transition: opacity 0.2s steps(2); }
+
+.intro__count {
+  position: absolute;
+  left: var(--pad);
+  bottom: 2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: var(--fg-faint);
+}
+.intro__num { color: var(--accent); font-weight: 500; }
+
+/* Portrait — revealed as a sequence of frame cuts */
+.intro__portrait {
+  position: absolute;
+  right: var(--pad);
+  bottom: 2rem;
+  width: clamp(5.5rem, 11vw, 10.5rem);
+  aspect-ratio: 3 / 4.3;
+  background: var(--bg-sink);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.42s steps(6);
+}
+.intro__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: var(--portrait-filter);
+}
+.intro__portrait figcaption {
+  position: absolute;
+  bottom: 0.6rem;
+  left: -0.4rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+}
+.intro.f2b .intro__portrait { clip-path: inset(0 0 0 0); }
+
+/* Threshold: seam and handles make the panels read as a door */
+.intro__seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.36s steps(4);
+  pointer-events: none;
+}
+.intro.f3 .intro__seam { transform: none; }
+.intro.f4 .intro__seam { opacity: 0; transition: opacity 0.2s steps(2); }
+
+.intro__handle {
+  position: absolute;
+  top: 50%;
+  width: 1px;
+  height: clamp(3rem, 9vh, 5.5rem);
+  background: var(--accent);
+  translate: 0 -50%;
+  transform: scaleY(0);
+  transition: transform 0.3s steps(3);
+}
+.intro__handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -3px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--bg);
+  translate: 0 -50%;
+}
+.intro__door--l .intro__handle { right: 0.5rem; }
+.intro__door--r .intro__handle { left: 0.5rem; }
+.intro.f3 .intro__handle { transform: none; }
+
+/* Enter — always available, so nobody is held at the door */
+.intro__gate {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 5vh, 2.5rem);
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.7rem;
+  translate: -50% 0;
+  transition: opacity 0.25s steps(3);
 }
-.curtain__name {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 7vw, 4.5rem);
-  letter-spacing: -0.03em;
-  overflow: hidden;
-  animation: curtainIn 0.8s var(--ease) both;
+.intro.f4 .intro__gate { opacity: 0; pointer-events: none; }
+.intro__enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.75rem 1.2rem;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  color: var(--fg);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
 }
-.curtain__count {
-  font-size: 0.7rem;
-  color: var(--fg-faint);
-  letter-spacing: 0.3em;
+.intro__enter svg { width: 1rem; height: 1rem; transition: transform var(--t-mid) var(--ease); }
+.intro__enter:hover, .intro__enter:focus-visible { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.intro__enter:hover svg, .intro__enter:focus-visible svg { transform: translateX(0.3rem); }
+.intro__hint { font-size: 0.52rem; letter-spacing: 0.22em; color: var(--fg-faint); }
+
+/* The page waits behind the door: set back in depth, then it
+   steps forward as the panels swing open. Only applied while
+   the intro runs so no transform lingers on <main>. */
+html.intro-on #main,
+html.intro-on .footer {
+  transform: scale(calc(0.94 + var(--open) * 0.06));
+  transform-origin: 50% 40vh;
+  filter: brightness(calc(0.45 + var(--open) * 0.55));
 }
-.curtain__num { color: var(--accent); font-weight: 500; }
-@keyframes curtainIn {
-  from { opacity: 0; transform: translateY(0.4em); }
-  to   { opacity: 1; transform: none; }
+html.intro-on .masthead,
+html.intro-on .edge { opacity: var(--open); }
+
+/* Hero entrance animations hold until the door opens */
+html.js body:not(.is-open) .hero__eyebrow,
+html.js body:not(.is-open) .hero__lede,
+html.js body:not(.is-open) .typer,
+html.js body:not(.is-open) .hero__actions,
+html.js body:not(.is-open) .hero__visual { animation-play-state: paused; }
+html.js body:not(.is-open) .hero .reveal.is-in { opacity: 0; transform: translateY(1.75rem); }
+
+@media (max-width: 860px) {
+  .intro__brand .masthead__brandmeta { display: none; }
+  .intro__name { font-size: clamp(2.4rem, 14vw, 6rem); }
+  .intro__desc { font-size: 0.5rem; letter-spacing: 0.14em; white-space: normal; max-width: 12ch; }
+  .intro__frame { top: 2.2rem; }
 }
-/* Also drop pointer-events immediately so the curtain can never
-   swallow a click during its exit, even before it is removed. */
-body.is-open .curtain {
-  transform: translateY(-101%);
-  pointer-events: none;
+@media (max-width: 560px) {
+  /* Narrow doors: keep only the name, the frame and the way in */
+  .intro__desc, .intro__hint { display: none; }
+  .intro__portrait { width: 4.75rem; bottom: 1.5rem; }
+  .intro__count { bottom: 1.5rem; }
+}
+@media (max-height: 520px) {
+  .intro__portrait, .intro__hint { display: none; }
 }
 
 /* ── 04 · PRIMITIVES ─────────────────────────────────────── */
@@ -1324,6 +1580,119 @@ body.is-open .hero__title .ln > span { transform: none; }
 .work.is-flip .work__media { grid-column: 7 / 13; }
 .work.is-flip .work__body { grid-column: 1 / 6; }
 
+/* <picture> wrappers must not interrupt the sizing chain */
+.work__media picture, .portrait__frame picture { display: contents; }
+
+/* Project highlights — an editorial index strip beneath each
+   project: numbered attributes, one idea per column. Hovering
+   (or focusing) an attribute annotates the project image. */
+.hl {
+  grid-column: 1 / 13;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: minmax(7rem, 9rem) minmax(0, 1fr);
+  column-gap: var(--gap);
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-top: 1px solid var(--rule);
+}
+.hl__head {
+  align-self: start;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-top: 1.1rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--fg-faint);
+}
+.hl__head::before {
+  content: '';
+  flex: none;
+  width: 1.25rem;
+  height: 1px;
+  background: var(--accent);
+  transform: translateY(-0.3em);
+}
+.hl__count { font-size: 0.85em; color: var(--fg-faint); opacity: 0.8; }
+.hl__count::before { content: '/'; margin-right: 0.35rem; }
+
+.hl__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+}
+.hl__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  column-gap: 0.6rem;
+  row-gap: 0.35rem;
+  padding: 1.1rem 1rem 0.4rem;
+  border-left: 1px solid var(--rule-soft);
+  outline-offset: -2px;
+  cursor: default;
+}
+/* Accent rule draws across the top edge on hover */
+.hl__item::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-mid) var(--ease);
+}
+.hl__num { font-size: 0.55rem; color: var(--accent); letter-spacing: 0.08em; }
+.hl__key { font-size: 0.55rem; color: var(--fg-faint); letter-spacing: 0.18em; }
+.hl__val {
+  grid-column: 1 / -1;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 1.35vw, 1.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  transition: transform var(--t-mid) var(--ease), color var(--t-fast) var(--ease);
+}
+.hl__note {
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--fg-faint);
+  transition: color var(--t-fast) var(--ease);
+}
+.hl__item:hover::before, .hl__item:focus-visible::before { transform: none; }
+.hl__item:hover .hl__val, .hl__item:focus-visible .hl__val { transform: translateX(0.25rem); color: var(--accent); }
+.hl__item:hover .hl__note, .hl__item:focus-visible .hl__note { color: var(--fg-dim); }
+
+/* The annotation that appears on the image (injected by JS) */
+.work__probe {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  gap: 0.6rem;
+  max-width: calc(100% - 2rem);
+  padding: 0.45rem 0.8rem;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  color: var(--fg);
+  opacity: 0;
+  transform: translateY(-0.4rem);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-mid) var(--ease);
+  pointer-events: none;
+}
+.work__probe b { font-weight: 500; color: var(--accent); }
+.work.is-probing .work__probe { opacity: 1; transform: none; }
+.work.is-probing .work__media { border-color: var(--accent); }
+.work.is-probing .work__media img { transform: scale(1.1); filter: none; }
+
 /* ── 09 · CONTACT ────────────────────────────────────────── */
 .contact {
   position: relative;
@@ -1490,7 +1859,7 @@ body.is-open .hero__title .ln > span { transform: none; }
 @media (min-width: 1200px) {
   :root { --pad: clamp(4rem, 7vw, 8rem); }
   .edge { display: flex; }
-  .rails { margin-inline: calc(var(--pad) * 0.55); }
+  :root { --rail-inset: calc(var(--pad) * 0.55); }
 }
 
 @media (max-width: 1100px) {
@@ -1524,6 +1893,7 @@ body.is-open .hero__title .ln > span { transform: none; }
     margin-top: -3rem;
     align-self: start;
   }
+  .work--lead .hl { grid-row: 3; }
 
   .form { grid-column: 1 / 8; }
   .contact__panel { grid-column: 1 / 8; }
@@ -1582,6 +1952,9 @@ body.is-open .hero__title .ln > span { transform: none; }
     align-self: start;
   }
   .work--lead .work__body { padding: 0; background: none; border: 0; box-shadow: none; }
+  .hl, .work--lead .hl { grid-row: 3; grid-template-columns: 1fr; margin-top: 0.5rem; }
+  .hl__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hl__item:nth-child(odd) { border-left: 0; padding-left: 0; }
   .work--lead .work__top::after { display: none; }
   .work:hover .work__title { transform: none; }
 
@@ -1593,6 +1966,17 @@ body.is-open .hero__title .ln > span { transform: none; }
 
 @media (max-width: 560px) {
   .work__notes { grid-template-columns: 1fr; gap: 1.1rem; }
+  /* Highlights collapse into compact index rows */
+  .hl__list { grid-template-columns: 1fr; }
+  .hl__item {
+    grid-template-columns: 1.75rem 5.5rem minmax(0, 1fr);
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .hl__val { grid-column: 3; grid-row: 1; font-size: 1.05rem; }
+  .hl__note { grid-column: 3; }
   .hero__facts { grid-template-columns: 1fr; }
   .hero__eyebrow i { display: none; }
   .hero__actions { gap: 0.85rem; }
@@ -1626,7 +2010,12 @@ body.is-open .hero__title .ln > span { transform: none; }
   .ln > span { transform: none; }
   .shead__rule { transform: scaleX(1); }
   .hero__eyebrow, .hero__lede, .typer, .hero__actions, .hero__visual { opacity: 1; animation: none; }
-  .curtain { display: none; }
+  html.js .intro { display: none; }
+  .ambient { display: none; }
+  html.js body:not(.is-open) .hero__eyebrow, html.js body:not(.is-open) .hero__lede,
+  html.js body:not(.is-open) .typer, html.js body:not(.is-open) .hero__actions,
+  html.js body:not(.is-open) .hero__visual { animation-play-state: running; }
+  .hl__item { transform: none !important; }
   .grain { animation: none; }
   .ticker__track { animation: none; }
   .portrait__frame, .work__media { transform: none !important; }

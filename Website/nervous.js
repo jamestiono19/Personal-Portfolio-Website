@@ -1,9 +1,10 @@
 /* ============================================================
    NERVOUS.JS — Interaction layer for "Editorial Index"
 
-   Curtain · Theme · Typewriter · Staggered reveals · Filters
+   Intro door · Theme · Typewriter · Staggered reveals · Filters
    Cursor ring · Magnetic CTAs · Card spotlight · Tilt
    Parallax · Scroll state · Menu · Contact form
+   Project highlights · Living background
    ============================================================ */
 
 (() => {
@@ -20,36 +21,179 @@
 
   document.addEventListener("DOMContentLoaded", () => {
 
-    /* ── 1 · OPENING CURTAIN ───────────────────────────────
-       Short and non-blocking: it exists to set the tone, not
-       to make anyone wait. Always resolves, even if slow. */
-    const curtain = $(".curtain");
-    const curtainNum = $(".curtain__num");
+    /* ── 1 · INTRO — THE DOOR ──────────────────────────────
+       01 Arrival · 02 Identity · 03 Threshold · 04 Opening · 05 Enter
+       ~3.3 s in full, ~1.2 s for returning visitors or weak
+       devices, skipped under reduced motion. Any click, key,
+       wheel or swipe opens the door at once. The swing is
+       advanced in discrete ~15 fps frames with a little
+       jitter, so it reads as crafted rather than tweened. */
+    const intro = $("#intro");
+    const html = document.documentElement;
 
     const openPage = () => {
       if (document.body.classList.contains("is-open")) return;
       document.body.classList.add("is-open");
-      if (curtain) setTimeout(() => curtain.remove(), 1200);
     };
 
-    if (curtain && !calm()) {
-      const duration = 700;
-      const start = performance.now();
-      const count = (now) => {
-        const p = clamp((now - start) / duration, 0, 1);
-        // ease-out so the number decelerates into 100
-        const eased = 1 - Math.pow(1 - p, 2);
-        if (curtainNum) {
-          curtainNum.textContent = String(Math.round(eased * 100)).padStart(2, "0");
-        }
-        if (p < 1) requestAnimationFrame(count);
-        else setTimeout(openPage, 120);
+    const introState = { done: !intro };
+    const whenEntered = [];
+    const afterIntro = (fn) => { if (introState.done) fn(); else whenEntered.push(fn); };
+
+    const runIntro = () => {
+      if (!intro) { openPage(); return; }
+      if (calm()) {
+        intro.remove();
+        introState.done = true;
+        openPage();
+        return;
+      }
+
+      let seen = false;
+      try { seen = sessionStorage.getItem("jt-door") === "1"; } catch (e) { /* ignore */ }
+      const conn = navigator.connection;
+      const weak = (navigator.hardwareConcurrency || 4) <= 2 || Boolean(conn && conn.saveData);
+      const short = seen || weak || location.hash.length > 1;
+
+      html.classList.add("intro-on");
+      html.style.setProperty("--open", "0");
+      document.body.classList.add("is-locked");
+
+      // Split each half of the name into individually timed letters
+      const letters = [];
+      $$("[data-split]", intro).forEach((el) => {
+        const text = el.textContent;
+        el.textContent = "";
+        [...text].forEach((chr) => {
+          const s = document.createElement("span");
+          s.className = "ch";
+          s.textContent = chr;
+          const r = (m) => ((Math.random() * 2 - 1) * m).toFixed(3);
+          s.style.setProperty("--jx", `${r(0.06)}em`);
+          s.style.setProperty("--jy", `${r(0.09)}em`);
+          s.style.setProperty("--jr", `${r(3.5)}deg`);
+          el.appendChild(s);
+          letters.push(s);
+        });
+      });
+
+      const frameNum = $(".intro__frame b", intro);
+      const frameName = $(".intro__framename", intro);
+      const countNum = $(".intro__num", intro);
+      const setFrame = (n, name) => {
+        if (frameNum) frameNum.textContent = String(n).padStart(2, "0");
+        if (frameName) frameName.textContent = name;
       };
-      requestAnimationFrame(count);
-      setTimeout(openPage, 2200); // hard safety net
-    } else {
-      openPage();
-    }
+
+      const timers = [];
+      const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+      let phase = "playing";
+
+      // Counter ticks in whole frames, not a smooth roll
+      const countTo = (from, to, ms) => {
+        const steps = Math.max(1, Math.round(ms / 90));
+        for (let k = 1; k <= steps; k += 1) {
+          at((ms / steps) * k, () => {
+            if (countNum) countNum.textContent = String(Math.round(from + (to - from) * (k / steps))).padStart(2, "0");
+          });
+        }
+      };
+
+      const finish = () => {
+        if (phase === "done") return;
+        phase = "done";
+        setFrame(5, "Enter");
+        const hadFocus = intro.contains(document.activeElement);
+        intro.classList.add("is-gone");
+        html.classList.remove("intro-on");
+        html.style.removeProperty("--open");
+        document.body.classList.remove("is-locked");
+        try { sessionStorage.setItem("jt-door", "1"); } catch (e) { /* ignore */ }
+        if (hadFocus) {
+          const brand = $(".masthead__brand");
+          if (brand) brand.focus({ preventScroll: true });
+        }
+        setTimeout(() => intro.remove(), 450);
+        introState.done = true;
+        whenEntered.splice(0).forEach((fn) => fn());
+      };
+
+      const open = (duration) => {
+        if (phase !== "playing") return;
+        phase = "opening";
+        timers.forEach(clearTimeout);
+        letters.forEach((l) => l.classList.add("is-on"));
+        intro.classList.add("f1", "f2b", "f3", "f4");
+        if (countNum) countNum.textContent = "100";
+        setFrame(4, "Opening");
+        openPage();
+
+        const FPS = 15;
+        const start = performance.now();
+        let last = -1;
+        const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+        const step = (now) => {
+          const t = clamp((now - start) / duration, 0, 1);
+          const frame = Math.floor(((now - start) / 1000) * FPS);
+          if (frame !== last || t === 1) {
+            last = frame;
+            const q = t === 1 ? 1 : Math.min(1, (frame + 1) / (duration / 1000 * FPS));
+            const p = ease(q);
+            const wobble = (1 - p) * 0.6;
+            html.style.setProperty("--open", p.toFixed(4));
+            intro.style.setProperty("--jl", `${((Math.random() * 2 - 1) * wobble).toFixed(2)}deg`);
+            intro.style.setProperty("--jr", `${((Math.random() * 2 - 1) * wobble).toFixed(2)}deg`);
+          }
+          if (t < 1) requestAnimationFrame(step);
+          else finish();
+        };
+        requestAnimationFrame(step);
+      };
+
+      // Skip / enter — the visitor is never held at the door
+      const enterNow = () => open(650);
+      intro.addEventListener("click", enterNow);
+      window.addEventListener("keydown", (e) => {
+        if (phase !== "playing") return;
+        if (["Enter", " ", "Escape", "ArrowDown", "PageDown", "End"].includes(e.key)) {
+          e.preventDefault();
+          enterNow();
+        }
+      });
+      window.addEventListener("wheel", () => { if (phase === "playing") enterNow(); }, { passive: true });
+      window.addEventListener("touchmove", () => { if (phase === "playing") enterNow(); }, { passive: true });
+
+      if (short) {
+        letters.forEach((l) => l.classList.add("is-on"));
+        intro.classList.add("f1", "f2b");
+        setFrame(3, "Threshold");
+        at(60, () => intro.classList.add("f3"));
+        countTo(0, 100, 320);
+        at(380, () => open(820));
+      } else {
+        // 01 Arrival
+        at(40, () => intro.classList.add("f1"));
+        countTo(0, 100, 2000);
+        // 02 Identity — one letter per frame, timing slightly uneven
+        at(380, () => setFrame(2, "Identity"));
+        let t = 420;
+        letters.forEach((l) => {
+          at(t, () => l.classList.add("is-on"));
+          t += 58 + Math.round(Math.random() * 34);
+        });
+        at(t + 60, () => intro.classList.add("f2b"));
+        // 03 Threshold — seam and handles appear, letters settle
+        at(1560, () => { setFrame(3, "Threshold"); intro.classList.add("f3"); });
+        // 04 Opening → 05 Enter
+        at(2180, () => open(1150));
+      }
+
+      // Hard safety net: the page always opens
+      setTimeout(() => { if (phase !== "done") { open(400); setTimeout(finish, 600); } }, 6500);
+    };
+
+    runIntro();
 
     /* ── 2 · THEME ─────────────────────────────────────────── */
     const themeToggle = $("#theme-toggle");
@@ -484,6 +628,164 @@
     if (toTop) {
       toTop.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: calm() ? "auto" : "smooth" });
+      });
+    }
+
+    /* ── 16 · PROJECT HIGHLIGHTS ───────────────────────────
+       Hovering or focusing a highlight annotates the project
+       image with it, tying the metadata to the visual. */
+    works.forEach((work) => {
+      const media = $(".work__media", work);
+      const items = $$(".hl__item", work);
+      if (!media || !items.length) return;
+
+      const probe = document.createElement("span");
+      probe.className = "work__probe mono";
+      probe.setAttribute("aria-hidden", "true");
+      const probeNum = document.createElement("b");
+      const probeVal = document.createElement("span");
+      probe.append(probeNum, probeVal);
+      media.appendChild(probe);
+
+      const show = (item) => {
+        probeNum.textContent = $(".hl__num", item).textContent;
+        probeVal.textContent = $(".hl__val", item).textContent;
+        work.classList.add("is-probing");
+      };
+      const hide = () => work.classList.remove("is-probing");
+
+      items.forEach((item) => {
+        item.addEventListener("pointerenter", (e) => { if (e.pointerType !== "touch") show(item); });
+        item.addEventListener("pointerleave", hide);
+        item.addEventListener("focus", () => show(item));
+        item.addEventListener("blur", hide);
+      });
+    });
+
+    /* ── 17 · LIVING BACKGROUND ────────────────────────────
+       A few data points drift along the page's own grid rails,
+       joined by one faint line — a slow, live chart behind the
+       content. Points nearest the cursor brighten. Capped at
+       30 fps, paused when hidden, off for reduced motion. */
+    const canvas = $(".ambient");
+    const railsEl = $(".rails");
+    if (canvas && railsEl && canvas.getContext && !calm()) {
+      const ctx = canvas.getContext("2d");
+      let W = 0, H = 0, xs = [], cols = { fg: "243,238,231", accent: "226,84,44" };
+      let points = [];
+      let mx = -9999, my = -9999;
+
+      const toRgb = (value) => {
+        const v = value.trim();
+        const m = v.match(/^#([0-9a-f]{6})$/i);
+        if (!m) return null;
+        const n = parseInt(m[1], 16);
+        return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`;
+      };
+      const readColours = () => {
+        const cs = getComputedStyle(document.documentElement);
+        cols = {
+          fg: toRgb(cs.getPropertyValue("--fg")) || cols.fg,
+          accent: toRgb(cs.getPropertyValue("--accent")) || cols.accent
+        };
+      };
+
+      const measure = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const r = railsEl.getBoundingClientRect();
+        const found = [r.left];
+        $$("i", railsEl).forEach((i, idx) => {
+          if (idx === 0 || getComputedStyle(i).display === "none") return;
+          found.push(i.getBoundingClientRect().left);
+        });
+        found.push(r.right);
+        xs = found.map((x) => Math.round(x) + 0.5);
+
+        const perRail = W < 700 ? 2 : 3;
+        points = [];
+        xs.forEach((x, rail) => {
+          for (let k = 0; k < perRail; k += 1) {
+            points.push({
+              rail, x, lead: k === 0,
+              y: Math.random() * H,
+              v: 5 + Math.random() * 11,          // px per second
+              depth: 0.03 + Math.random() * 0.09  // scroll parallax
+            });
+          }
+        });
+        readColours();
+      };
+
+      let last = 0, running = false;
+      const draw = (now) => {
+        if (!running) return;
+        requestAnimationFrame(draw);
+        if (now - last < 33) return;
+        const dt = Math.min((now - last) / 1000, 0.1);
+        last = now;
+
+        ctx.clearRect(0, 0, W, H);
+        const sy = window.scrollY;
+        const leads = [];
+
+        points.forEach((p) => {
+          p.y = (p.y + p.v * dt) % H;
+          const y = (((p.y - sy * p.depth) % H) + H) % H;
+          const d = Math.hypot(p.x - mx, y - my);
+          const near = clamp(1 - d / 160, 0, 1);
+          const alpha = (p.lead ? 0.32 : 0.16) + near * 0.55;
+          const tick = 3 + near * 7;
+
+          ctx.fillStyle = `rgba(${p.lead ? cols.accent : cols.fg},${alpha.toFixed(3)})`;
+          ctx.fillRect(p.x - 1.5, y - 1.5, 3, 3);
+          ctx.fillRect(p.x + 4, y - 0.5, tick, 1);
+          if (p.lead) leads[p.rail] = y;
+        });
+
+        if (leads.length > 1) {
+          ctx.beginPath();
+          xs.forEach((x, i) => {
+            if (leads[i] === undefined) return;
+            if (i === 0) ctx.moveTo(x, leads[i]); else ctx.lineTo(x, leads[i]);
+          });
+          ctx.strokeStyle = `rgba(${cols.accent},0.07)`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      };
+
+      const start = () => {
+        if (running || document.hidden) return;
+        running = true;
+        last = performance.now();
+        requestAnimationFrame(draw);
+      };
+      const stop = () => { running = false; };
+
+      measure();
+      afterIntro(() => { canvas.classList.add("is-live"); start(); });
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(measure, 150);
+      }, { passive: true });
+      window.addEventListener("pointermove", (e) => {
+        if (e.pointerType === "touch") return;
+        mx = e.clientX; my = e.clientY;
+      }, { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stop(); else if (introState.done) start();
+      });
+      if (themeToggle) themeToggle.addEventListener("click", () => requestAnimationFrame(readColours));
+      reduceMotion.addEventListener?.("change", (e) => {
+        if (e.matches) { stop(); ctx.clearRect(0, 0, W, H); }
       });
     }
   });
