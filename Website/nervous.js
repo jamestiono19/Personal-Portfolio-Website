@@ -1,15 +1,28 @@
 /* ============================================================
    NERVOUS.JS — Interaction layer for "Editorial Index"
 
-   Intro door · Theme · Typewriter · Staggered reveals · Filters
-   Cursor ring · Magnetic CTAs · Card spotlight · Tilt
-   Parallax · Scroll state · Menu · Contact form
-   Project highlights · Living background
+   Small, self-contained modules. Each one is started on its
+   own inside a guard, so a failure in one cannot take the rest
+   of the page down with it.
+
+     intro        the door into the portfolio
+     theme        paper (default) / ink, remembered
+     typewriter   the rotating word in the hero
+     reveals      staggered scroll reveals
+     gallery      discipline filters and alternating rhythm
+     figures      key-figure count-up and frame annotations
+     tilt         a slight lean on the portrait
+     magnetic     CTAs that drift toward the pointer
+     cursor       trailing ring for fine pointers
+     scrollState  masthead, progress, active section, parallax
+     navigation   smooth anchors and the fullscreen menu
+     contactForm  validated mailto hand-off
    ============================================================ */
 
 (() => {
   "use strict";
 
+  /* ── Shared helpers ────────────────────────────────────── */
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
@@ -19,184 +32,177 @@
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   const calm = () => reduceMotion.matches;
 
-  document.addEventListener("DOMContentLoaded", () => {
+  /* Opens the page (starts the hero entrance). Idempotent. */
+  const openPage = () => document.body.classList.add("is-open");
 
-    /* ── 1 · INTRO — THE DOOR ──────────────────────────────
-       01 Arrival · 02 Identity · 03 Threshold · 04 Opening · 05 Enter
-       ~3.3 s in full, ~1.2 s for returning visitors or weak
-       devices, skipped under reduced motion. Any click, key,
-       wheel or swipe opens the door at once. The swing is
-       advanced in discrete ~15 fps frames with a little
-       jitter, so it reads as crafted rather than tweened. */
-    const intro = $("#intro");
+  /* ── intro · THE DOOR ──────────────────────────────────────
+     01 Arrival · 02 Identity · 03 Threshold · 04 Opening · 05 Enter
+     ~3.3 s in full, ~1.2 s for returning visitors, weak devices
+     or deep links, skipped under reduced motion. Any click, key,
+     wheel or swipe opens the door at once. The swing is
+     advanced in discrete ~15 fps frames with a little jitter,
+     so it reads as crafted rather than tweened. */
+  function intro() {
+    const door = $("#intro");
     const html = document.documentElement;
+    if (!door) { openPage(); return; }
+    if (calm()) { door.remove(); openPage(); return; }
 
-    const openPage = () => {
-      if (document.body.classList.contains("is-open")) return;
-      document.body.classList.add("is-open");
+    let seen = false;
+    try { seen = sessionStorage.getItem("jt-door") === "1"; } catch (e) { /* ignore */ }
+    const conn = navigator.connection;
+    const weak = (navigator.hardwareConcurrency || 4) <= 2 || Boolean(conn && conn.saveData);
+    const short = seen || weak || location.hash.length > 1;
+
+    html.classList.add("intro-on");
+    html.style.setProperty("--open", "0");
+    document.body.classList.add("is-locked");
+
+    // Split each half of the name into individually timed letters
+    const letters = [];
+    $$("[data-split]", door).forEach((el) => {
+      const text = el.textContent;
+      el.textContent = "";
+      [...text].forEach((chr) => {
+        const s = document.createElement("span");
+        s.className = "ch";
+        s.textContent = chr;
+        const r = (m) => ((Math.random() * 2 - 1) * m).toFixed(3);
+        s.style.setProperty("--jx", `${r(0.06)}em`);
+        s.style.setProperty("--jy", `${r(0.09)}em`);
+        s.style.setProperty("--jr", `${r(3.5)}deg`);
+        el.appendChild(s);
+        letters.push(s);
+      });
+    });
+
+    const frameNum = $(".intro__frame b", door);
+    const frameName = $(".intro__framename", door);
+    const countNum = $(".intro__num", door);
+    const setFrame = (n, name) => {
+      if (frameNum) frameNum.textContent = String(n).padStart(2, "0");
+      if (frameName) frameName.textContent = name;
     };
 
-    const introState = { done: !intro };
-    const whenEntered = [];
-    const afterIntro = (fn) => { if (introState.done) fn(); else whenEntered.push(fn); };
+    const timers = [];
+    const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+    let phase = "playing";
 
-    const runIntro = () => {
-      if (!intro) { openPage(); return; }
-      if (calm()) {
-        intro.remove();
-        introState.done = true;
-        openPage();
-        return;
-      }
-
-      let seen = false;
-      try { seen = sessionStorage.getItem("jt-door") === "1"; } catch (e) { /* ignore */ }
-      const conn = navigator.connection;
-      const weak = (navigator.hardwareConcurrency || 4) <= 2 || Boolean(conn && conn.saveData);
-      const short = seen || weak || location.hash.length > 1;
-
-      html.classList.add("intro-on");
-      html.style.setProperty("--open", "0");
-      document.body.classList.add("is-locked");
-
-      // Split each half of the name into individually timed letters
-      const letters = [];
-      $$("[data-split]", intro).forEach((el) => {
-        const text = el.textContent;
-        el.textContent = "";
-        [...text].forEach((chr) => {
-          const s = document.createElement("span");
-          s.className = "ch";
-          s.textContent = chr;
-          const r = (m) => ((Math.random() * 2 - 1) * m).toFixed(3);
-          s.style.setProperty("--jx", `${r(0.06)}em`);
-          s.style.setProperty("--jy", `${r(0.09)}em`);
-          s.style.setProperty("--jr", `${r(3.5)}deg`);
-          el.appendChild(s);
-          letters.push(s);
+    // The counter ticks in whole frames, not a smooth roll
+    const countTo = (from, to, ms) => {
+      const steps = Math.max(1, Math.round(ms / 90));
+      for (let k = 1; k <= steps; k += 1) {
+        at((ms / steps) * k, () => {
+          if (countNum) countNum.textContent = String(Math.round(from + (to - from) * (k / steps))).padStart(2, "0");
         });
-      });
-
-      const frameNum = $(".intro__frame b", intro);
-      const frameName = $(".intro__framename", intro);
-      const countNum = $(".intro__num", intro);
-      const setFrame = (n, name) => {
-        if (frameNum) frameNum.textContent = String(n).padStart(2, "0");
-        if (frameName) frameName.textContent = name;
-      };
-
-      const timers = [];
-      const at = (ms, fn) => timers.push(setTimeout(fn, ms));
-      let phase = "playing";
-
-      // Counter ticks in whole frames, not a smooth roll
-      const countTo = (from, to, ms) => {
-        const steps = Math.max(1, Math.round(ms / 90));
-        for (let k = 1; k <= steps; k += 1) {
-          at((ms / steps) * k, () => {
-            if (countNum) countNum.textContent = String(Math.round(from + (to - from) * (k / steps))).padStart(2, "0");
-          });
-        }
-      };
-
-      const finish = () => {
-        if (phase === "done") return;
-        phase = "done";
-        setFrame(5, "Enter");
-        const hadFocus = intro.contains(document.activeElement);
-        intro.classList.add("is-gone");
-        html.classList.remove("intro-on");
-        html.style.removeProperty("--open");
-        document.body.classList.remove("is-locked");
-        try { sessionStorage.setItem("jt-door", "1"); } catch (e) { /* ignore */ }
-        if (hadFocus) {
-          const brand = $(".masthead__brand");
-          if (brand) brand.focus({ preventScroll: true });
-        }
-        setTimeout(() => intro.remove(), 450);
-        introState.done = true;
-        whenEntered.splice(0).forEach((fn) => fn());
-      };
-
-      const open = (duration) => {
-        if (phase !== "playing") return;
-        phase = "opening";
-        timers.forEach(clearTimeout);
-        letters.forEach((l) => l.classList.add("is-on"));
-        intro.classList.add("f1", "f2b", "f3", "f4");
-        if (countNum) countNum.textContent = "100";
-        setFrame(4, "Opening");
-        openPage();
-
-        const FPS = 15;
-        const start = performance.now();
-        let last = -1;
-        const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-        const step = (now) => {
-          const t = clamp((now - start) / duration, 0, 1);
-          const frame = Math.floor(((now - start) / 1000) * FPS);
-          if (frame !== last || t === 1) {
-            last = frame;
-            const q = t === 1 ? 1 : Math.min(1, (frame + 1) / (duration / 1000 * FPS));
-            const p = ease(q);
-            const wobble = (1 - p) * 0.6;
-            html.style.setProperty("--open", p.toFixed(4));
-            intro.style.setProperty("--jl", `${((Math.random() * 2 - 1) * wobble).toFixed(2)}deg`);
-            intro.style.setProperty("--jr", `${((Math.random() * 2 - 1) * wobble).toFixed(2)}deg`);
-          }
-          if (t < 1) requestAnimationFrame(step);
-          else finish();
-        };
-        requestAnimationFrame(step);
-      };
-
-      // Skip / enter — the visitor is never held at the door
-      const enterNow = () => open(650);
-      intro.addEventListener("click", enterNow);
-      window.addEventListener("keydown", (e) => {
-        if (phase !== "playing") return;
-        if (["Enter", " ", "Escape", "ArrowDown", "PageDown", "End"].includes(e.key)) {
-          e.preventDefault();
-          enterNow();
-        }
-      });
-      window.addEventListener("wheel", () => { if (phase === "playing") enterNow(); }, { passive: true });
-      window.addEventListener("touchmove", () => { if (phase === "playing") enterNow(); }, { passive: true });
-
-      if (short) {
-        letters.forEach((l) => l.classList.add("is-on"));
-        intro.classList.add("f1", "f2b");
-        setFrame(3, "Threshold");
-        at(60, () => intro.classList.add("f3"));
-        countTo(0, 100, 320);
-        at(380, () => open(820));
-      } else {
-        // 01 Arrival
-        at(40, () => intro.classList.add("f1"));
-        countTo(0, 100, 2000);
-        // 02 Identity — one letter per frame, timing slightly uneven
-        at(380, () => setFrame(2, "Identity"));
-        let t = 420;
-        letters.forEach((l) => {
-          at(t, () => l.classList.add("is-on"));
-          t += 58 + Math.round(Math.random() * 34);
-        });
-        at(t + 60, () => intro.classList.add("f2b"));
-        // 03 Threshold — seam and handles appear, letters settle
-        at(1560, () => { setFrame(3, "Threshold"); intro.classList.add("f3"); });
-        // 04 Opening → 05 Enter
-        at(2180, () => open(1150));
       }
-
-      // Hard safety net: the page always opens
-      setTimeout(() => { if (phase !== "done") { open(400); setTimeout(finish, 600); } }, 6500);
     };
 
-    runIntro();
+    const finish = () => {
+      if (phase === "done") return;
+      phase = "done";
+      setFrame(5, "Enter");
+      const hadFocus = door.contains(document.activeElement);
+      door.classList.add("is-gone");
+      html.classList.remove("intro-on");
+      html.style.removeProperty("--open");
+      document.body.classList.remove("is-locked");
+      try { sessionStorage.setItem("jt-door", "1"); } catch (e) { /* ignore */ }
+      if (hadFocus) {
+        const brand = $(".masthead__brand");
+        if (brand) brand.focus({ preventScroll: true });
+      }
+      setTimeout(() => door.remove(), 450);
+    };
 
-    /* ── 2 · THEME ─────────────────────────────────────────── */
-    const themeToggle = $("#theme-toggle");
+    const open = (duration) => {
+      if (phase !== "playing") return;
+      phase = "opening";
+      timers.forEach(clearTimeout);
+      letters.forEach((l) => l.classList.add("is-on"));
+      door.classList.add("f1", "f2b", "f3", "f4");
+      if (countNum) countNum.textContent = "100";
+      setFrame(4, "Opening");
+      openPage();
+
+      const FPS = 15;
+      const start = performance.now();
+      let last = -1;
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+      const step = (now) => {
+        const t = clamp((now - start) / duration, 0, 1);
+        const frame = Math.floor(((now - start) / 1000) * FPS);
+        if (frame !== last || t === 1) {
+          last = frame;
+          const q = t === 1 ? 1 : Math.min(1, (frame + 1) / (duration / 1000 * FPS));
+          const p = ease(q);
+          const wobble = (1 - p) * 0.6;
+          html.style.setProperty("--open", p.toFixed(4));
+          door.style.setProperty("--jl", `${((Math.random() * 2 - 1) * wobble).toFixed(2)}deg`);
+          door.style.setProperty("--jr", `${((Math.random() * 2 - 1) * wobble).toFixed(2)}deg`);
+        }
+        if (t < 1) requestAnimationFrame(step);
+        else finish();
+      };
+      requestAnimationFrame(step);
+    };
+
+    // Skip / enter — the visitor is never held at the door
+    const enterNow = () => open(650);
+    door.addEventListener("click", enterNow);
+    window.addEventListener("keydown", (e) => {
+      if (phase !== "playing") return;
+      if (["Enter", " ", "Escape", "ArrowDown", "PageDown", "End"].includes(e.key)) {
+        e.preventDefault();
+        enterNow();
+      }
+    });
+    window.addEventListener("wheel", () => { if (phase === "playing") enterNow(); }, { passive: true });
+    window.addEventListener("touchmove", () => { if (phase === "playing") enterNow(); }, { passive: true });
+
+    if (short) {
+      letters.forEach((l) => l.classList.add("is-on"));
+      door.classList.add("f1", "f2b");
+      setFrame(3, "Threshold");
+      at(60, () => door.classList.add("f3"));
+      countTo(0, 100, 320);
+      at(380, () => open(820));
+    } else {
+      // 01 Arrival
+      at(40, () => door.classList.add("f1"));
+      countTo(0, 100, 2000);
+      // 02 Identity — one letter per frame, timing slightly uneven
+      at(380, () => setFrame(2, "Identity"));
+      let t = 420;
+      letters.forEach((l) => {
+        at(t, () => l.classList.add("is-on"));
+        t += 58 + Math.round(Math.random() * 34);
+      });
+      at(t + 60, () => door.classList.add("f2b"));
+      // 03 Threshold — seam and handles appear, letters settle
+      at(1560, () => { setFrame(3, "Threshold"); door.classList.add("f3"); });
+      // 04 Opening → 05 Enter
+      at(2180, () => open(1150));
+    }
+
+    // Hard safety net: the page always opens
+    setTimeout(() => { if (phase !== "done") { open(400); setTimeout(finish, 600); } }, 6500);
+  }
+
+  /* Emergency exit used if the intro module itself throws */
+  function forceOpen() {
+    const door = $("#intro");
+    if (door) door.remove();
+    document.documentElement.classList.remove("intro-on");
+    document.documentElement.style.removeProperty("--open");
+    document.body.classList.remove("is-locked");
+    openPage();
+  }
+
+  /* ── theme · paper (default) or ink ──────────────────────── */
+  function theme() {
+    const toggle = $("#theme-toggle");
     const root = document.documentElement;
     const metaTheme = $('meta[name="theme-color"]');
 
@@ -205,111 +211,99 @@
       moon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>'
     };
 
-    const applyTheme = (theme) => {
-      const light = theme === "light";
-      if (light) root.setAttribute("data-theme", "light");
+    const apply = (mode) => {
+      const dark = mode === "dark";
+      if (dark) root.setAttribute("data-theme", "dark");
       else root.removeAttribute("data-theme");
-
-      if (themeToggle) {
-        themeToggle.innerHTML = light ? icons.moon : icons.sun;
-        themeToggle.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+      if (toggle) {
+        toggle.innerHTML = dark ? icons.sun : icons.moon;
+        toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
       }
-      if (metaTheme) metaTheme.setAttribute("content", light ? "#f2eee6" : "#0d0c0b");
+      if (metaTheme) metaTheme.setAttribute("content", dark ? "#0d0c0b" : "#f3efea");
     };
 
-    let storedTheme = null;
-    try { storedTheme = localStorage.getItem("portfolio-theme"); } catch (e) { /* private mode */ }
-    applyTheme(storedTheme || "dark");
+    let stored = null;
+    try { stored = localStorage.getItem("portfolio-theme"); } catch (e) { /* private mode */ }
+    apply(stored === "dark" ? "dark" : "light");
 
-    if (themeToggle) {
-      themeToggle.addEventListener("click", () => {
-        const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+    if (toggle) {
+      toggle.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
         try { localStorage.setItem("portfolio-theme", next); } catch (e) { /* ignore */ }
-        applyTheme(next);
+        apply(next);
       });
     }
+  }
 
-    /* ── 3 · TYPEWRITER ────────────────────────────────────── */
+  /* ── typewriter ────────────────────────────────────────── */
+  function typewriter() {
     const typer = $("#typewriter-text");
-    if (typer) {
-      const words = ["data-driven", "interactive", "innovative", "impactful"];
-      let w = 0, c = 0, deleting = false;
+    if (!typer) return;
+    const words = ["data-driven", "interactive", "innovative", "impactful"];
+    if (calm()) { typer.textContent = words[0]; return; }
 
-      if (calm()) {
-        typer.textContent = words[0];
-      } else {
-        const tick = () => {
-          const word = words[w];
-          let delay;
+    let w = 0, c = 0, deleting = false;
+    const tick = () => {
+      const word = words[w];
+      c += deleting ? -1 : 1;
+      typer.textContent = word.slice(0, c);
+      let delay = deleting ? 45 : 95;
 
-          if (deleting) {
-            c -= 1;
-            typer.textContent = word.slice(0, c);
-            delay = 45;
-          } else {
-            c += 1;
-            typer.textContent = word.slice(0, c);
-            delay = 95;
-          }
-
-          if (!deleting && c === word.length) {
-            deleting = true;
-            delay = 1900;
-          } else if (deleting && c === 0) {
-            deleting = false;
-            w = (w + 1) % words.length;
-            delay = 380;
-          }
-          setTimeout(tick, delay);
-        };
-        setTimeout(tick, 1400);
+      if (!deleting && c === word.length) {
+        deleting = true;
+        delay = 1900;
+      } else if (deleting && c === 0) {
+        deleting = false;
+        w = (w + 1) % words.length;
+        delay = 380;
       }
-    }
+      setTimeout(tick, delay);
+    };
+    setTimeout(tick, 1400);
+  }
 
-    /* ── 4 · STAGGERED SCROLL REVEALS ──────────────────────
-       Each headline's lines get sequential indices so they
-       cascade rather than arriving all at once. */
+  /* ── reveals · staggered scroll reveals ────────────────────
+     Each headline's lines get sequential indices so they
+     cascade rather than arriving all at once. */
+  function reveals() {
     $$(".ln").forEach((line) => {
       const parent = line.parentElement;
       if (!parent || line.style.getPropertyValue("--i")) return;
       const siblings = $$(":scope > .ln", parent);
-      if (siblings.length > 1) {
-        line.style.setProperty("--i", String(siblings.indexOf(line)));
-      }
+      if (siblings.length > 1) line.style.setProperty("--i", String(siblings.indexOf(line)));
     });
 
-    const revealTargets = $$(".reveal, .statement, .contact__title .ln");
-
+    const targets = $$(".reveal, .statement, .contact__title .ln");
     if (calm() || !("IntersectionObserver" in window)) {
-      revealTargets.forEach((el) => el.classList.add("is-in"));
-    } else {
-      /* threshold must stay near zero: a ratio like 0.15 never
-         resolves for elements taller than the viewport (a project
-         card can exceed 100vh), leaving them permanently hidden.
-         The negative bottom margin is what delays the trigger. */
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-in");
-          revealObserver.unobserve(entry.target);
-        });
-      }, { threshold: 0.01, rootMargin: "0px 0px -10% 0px" });
-
-      revealTargets.forEach((el) => revealObserver.observe(el));
+      targets.forEach((el) => el.classList.add("is-in"));
+      return;
     }
+    /* threshold must stay near zero: a ratio like 0.15 never
+       resolves for elements taller than the viewport (a project
+       card can exceed 100vh), leaving them permanently hidden.
+       The negative bottom margin is what delays the trigger. */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.01, rootMargin: "0px 0px -10% 0px" });
+    targets.forEach((el) => io.observe(el));
+  }
 
-    /* ── 5 · PROJECT FILTER ────────────────────────────────── */
+  /* ── gallery · filters and alternating rhythm ─────────────── */
+  function gallery() {
     const filters = $$(".filter");
     const works = $$(".work");
     const emptyNote = $(".gallery__empty");
-    const filterStatus = $(".filters__status");
+    const status = $(".filters__status");
 
-    // Keeps the alternating left/right rhythm correct after filtering
+    // Keeps the left/right alternation correct after filtering
     const restripe = () => {
       let n = 0;
       works.forEach((work) => {
-        if (work.classList.contains("is-hidden")) return;
-        if (work.classList.contains("work--lead")) return;
+        if (work.classList.contains("is-hidden") || work.classList.contains("work--lead")) return;
         work.classList.toggle("is-flip", n % 2 === 1);
         n += 1;
       });
@@ -318,81 +312,153 @@
     const describe = (count, label) => {
       if (count === 0) return "No projects in this discipline";
       const noun = count === 1 ? "project" : "projects";
-      return label === "all"
-        ? `Showing all ${count} ${noun}`
-        : `Showing ${count} ${noun}`;
+      return label === "all" ? `Showing all ${count} ${noun}` : `Showing ${count} ${noun}`;
     };
 
     filters.forEach((btn) => {
       btn.addEventListener("click", () => {
-        filters.forEach((b) => b.classList.remove("is-active"));
-        btn.classList.add("is-active");
+        filters.forEach((b) => {
+          b.classList.toggle("is-active", b === btn);
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
 
         const want = btn.dataset.filter;
         let shown = 0;
-
         works.forEach((work) => {
           const match = want === "all" || work.dataset.category === want;
           if (match) shown += 1;
           work.classList.toggle("is-hidden", !match);
-
           if (match) {
             // Re-run the entrance so filtered results feel deliberate
             work.classList.remove("is-in");
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => work.classList.add("is-in"));
-            });
+            requestAnimationFrame(() => requestAnimationFrame(() => work.classList.add("is-in")));
           }
         });
 
         if (emptyNote) emptyNote.hidden = shown !== 0;
-        if (filterStatus) filterStatus.textContent = describe(shown, want);
+        if (status) status.textContent = describe(shown, want);
         restripe();
       });
     });
 
     restripe();
+  }
 
-    /* ── 6 · CARD SPOTLIGHT ────────────────────────────────
-       A faint light that tracks the cursor inside each card. */
-    works.forEach((work) => {
-      work.addEventListener("pointermove", (e) => {
-        if (e.pointerType === "touch" || calm()) return;
-        const r = work.getBoundingClientRect();
-        work.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
-        work.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+  /* ── figures · key-figure count-up and frame annotation ─────
+     Numbers count up once when their block scrolls into view.
+     Screen readers get the final value straight away from a
+     visually hidden copy; the animated digits are hidden from
+     them. Hovering a figure pins its label onto the frame. */
+  function figures() {
+    const unitText = (num) => {
+      const unit = num.parentElement && $(".spec__unit", num.parentElement);
+      if (!unit) return "";
+      const u = unit.textContent.trim();
+      return u.length > 1 ? ` ${u}` : u;
+    };
+
+    // Frame annotation
+    $$(".work").forEach((work) => {
+      const media = $(".work__media", work);
+      const cells = $$(".spec__cell", work);
+      if (!media || !cells.length) return;
+
+      const probe = document.createElement("span");
+      probe.className = "work__probe mono";
+      probe.setAttribute("aria-hidden", "true");
+      const probeLabel = document.createElement("b");
+      const probeValue = document.createElement("span");
+      probe.append(probeLabel, probeValue);
+      media.appendChild(probe);
+
+      cells.forEach((cell) => {
+        cell.addEventListener("pointerenter", (e) => {
+          if (e.pointerType === "touch") return;
+          const label = $(".spec__label", cell);
+          const num = $(".spec__num", cell);
+          const figure = $(".spec__figure", cell);
+          probeLabel.textContent = label ? label.textContent : "";
+          probeValue.textContent = num ? `${num.dataset.final || num.textContent}${unitText(num)}` : (figure ? figure.textContent.trim() : "");
+          work.classList.add("is-probing");
+        });
+        cell.addEventListener("pointerleave", () => work.classList.remove("is-probing"));
       });
     });
 
-    /* ── 7 · TILT ──────────────────────────────────────────
-       Elements lean a couple of degrees toward the cursor.
-       Deliberately small — the page must never feel unstable. */
+    // Count-up
+    const nums = $$(".spec__num[data-count]");
+    if (!nums.length || calm() || !("IntersectionObserver" in window)) return;
+
+    nums.forEach((num) => {
+      const final = num.textContent.trim();
+      if (!/^\d+(\.\d+)?$/.test(final)) return;
+      num.dataset.final = final;
+      const sr = document.createElement("span");
+      sr.className = "sr-only";
+      sr.textContent = final;
+      num.after(sr);
+      num.setAttribute("aria-hidden", "true");
+      num.textContent = (0).toFixed((final.split(".")[1] || "").length);
+    });
+
+    const settle = (num) => { if (num.dataset.final) num.textContent = num.dataset.final; };
+    const run = (num, delay) => {
+      const target = parseFloat(num.dataset.final);
+      const decimals = (num.dataset.final.split(".")[1] || "").length;
+      const duration = 1200;
+      const easeOut = (t) => 1 - Math.pow(1 - t, 4);
+      setTimeout(() => {
+        const t0 = performance.now();
+        const step = (now) => {
+          const t = clamp((now - t0) / duration, 0, 1);
+          num.textContent = (target * easeOut(t)).toFixed(decimals);
+          if (t < 1) requestAnimationFrame(step);
+          else settle(num);
+        };
+        requestAnimationFrame(step);
+      }, delay);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        $$(".spec__num[data-final]", entry.target).forEach((num, i) => run(num, i * 110));
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.35 });
+    $$(".spec").forEach((spec) => io.observe(spec));
+
+    // Printing before scrolling must never show zeros
+    window.addEventListener("beforeprint", () => nums.forEach(settle));
+  }
+
+  /* ── tilt · the portrait leans toward the pointer ──────────
+     Deliberately small; the page must never feel unstable. */
+  function tilt() {
     $$("[data-tilt]").forEach((el) => {
-      const MAX = 3.2;
+      const MAX = 3;
+      const target = el.matches(".portrait") ? $(".portrait__frame", el) : el;
+      if (!target) return;
 
       el.addEventListener("pointermove", (e) => {
         if (e.pointerType === "touch" || calm()) return;
         const r = el.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width - 0.5;
         const py = (e.clientY - r.top) / r.height - 0.5;
-        const target = el.matches(".portrait") ? $(".portrait__frame", el) : el;
-        if (!target) return;
         target.style.setProperty("--ry", `${px * MAX * 2}deg`);
         target.style.setProperty("--rx", `${-py * MAX * 2}deg`);
       });
-
       el.addEventListener("pointerleave", () => {
-        const target = el.matches(".portrait") ? $(".portrait__frame", el) : el;
-        if (!target) return;
         target.style.setProperty("--ry", "0deg");
         target.style.setProperty("--rx", "0deg");
       });
     });
+  }
 
-    /* ── 8 · MAGNETIC BUTTONS ──────────────────────────────── */
+  /* ── magnetic · CTAs drift a few pixels toward the pointer ── */
+  function magnetic() {
     $$("[data-magnetic]").forEach((el) => {
       const PULL = 5;
-
       el.addEventListener("pointermove", (e) => {
         if (e.pointerType === "touch" || calm()) return;
         const r = el.getBoundingClientRect();
@@ -400,55 +466,70 @@
         const py = (e.clientY - r.top) / r.height - 0.5;
         el.style.transform = `translate(${px * PULL * 2}px, ${py * PULL}px)`;
       });
-
       el.addEventListener("pointerleave", () => { el.style.transform = ""; });
       el.addEventListener("blur", () => { el.style.transform = ""; });
     });
+  }
 
-    /* ── 9 · TRAILING CURSOR RING ──────────────────────────── */
-    const cursor = $(".cursor");
-    if (cursor && finePointer.matches && !calm()) {
-      document.body.classList.add("cursor-on");
+  /* ── cursor · trailing ring for fine pointers ──────────────── */
+  function cursor() {
+    const ring = $(".cursor");
+    if (!ring || !finePointer.matches || calm()) return;
+    document.body.classList.add("cursor-on");
 
-      let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
-      let cx = tx, cy = ty;
-      let running = false;
+    let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+    let cx = tx, cy = ty;
+    let running = false;
 
-      // Park it centre-screen so it never flashes in the corner
-      cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    // Park it centre-screen so it never flashes in the corner
+    ring.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
 
-      const frame = () => {
-        cx = lerp(cx, tx, 0.16);
-        cy = lerp(cy, ty, 0.16);
-        cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-        if (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) {
-          requestAnimationFrame(frame);
-        } else {
-          running = false;
-        }
-      };
+    const frame = () => {
+      cx = lerp(cx, tx, 0.18);
+      cy = lerp(cy, ty, 0.18);
+      ring.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      if (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) requestAnimationFrame(frame);
+      else running = false;
+    };
 
-      window.addEventListener("pointermove", (e) => {
-        if (e.pointerType === "touch") return;
-        tx = e.clientX;
-        ty = e.clientY;
-        document.body.classList.add("cursor-ready");
-        if (!running) { running = true; requestAnimationFrame(frame); }
+    const HOT = "a, button, input, textarea, label, [data-magnetic]";
+    window.addEventListener("pointermove", (e) => {
+      if (e.pointerType === "touch") return;
+      tx = e.clientX;
+      ty = e.clientY;
+      document.body.classList.add("cursor-ready");
+      if (!running) { running = true; requestAnimationFrame(frame); }
+      document.body.classList.toggle("cursor-hot", Boolean(e.target.closest && e.target.closest(HOT)));
+    }, { passive: true });
 
-        const hot = e.target.closest(
-          'a, button, .work, .focus__row, input, textarea, [data-magnetic]'
-        );
-        document.body.classList.toggle("cursor-hot", Boolean(hot));
-      }, { passive: true });
+    document.addEventListener("pointerleave", () => document.body.classList.add("cursor-hide"));
+    document.addEventListener("pointerenter", () => document.body.classList.remove("cursor-hide"));
+  }
 
-      document.addEventListener("pointerleave", () => document.body.classList.add("cursor-hide"));
-      document.addEventListener("pointerenter", () => document.body.classList.remove("cursor-hide"));
-    }
-
-    /* ── 10 · PARALLAX ─────────────────────────────────────
-       Layers drift at different rates to build depth. The
-       differences are small on purpose. */
+  /* ── scrollState · masthead, progress, sections, parallax ──
+     Parallax layers drift at slightly different rates to build
+     depth; the topographic paper moves least of all, so it reads
+     as a plane behind everything else. */
+  function scrollState() {
+    const masthead = $("#masthead");
+    const meterFill = $(".edge__fill");
+    const toTop = $(".totop");
+    const topo = $(".topo");
+    const navlinks = $$(".navlink");
+    const ticks = $$(".tick");
     const layers = $$("[data-parallax]");
+    const sections = ["#home", "#about", "#projects", "#contact"]
+      .map((id) => ({ id, el: $(id) }))
+      .filter((s) => s.el);
+
+    const setActive = (id) => {
+      navlinks.forEach((l) => {
+        const on = l.getAttribute("href") === id;
+        l.classList.toggle("is-active", on);
+        if (on) l.setAttribute("aria-current", "true"); else l.removeAttribute("aria-current");
+      });
+      ticks.forEach((t) => t.classList.toggle("is-active", t.dataset.goto === id));
+    };
 
     const runParallax = () => {
       if (calm()) return;
@@ -457,47 +538,35 @@
         const r = el.getBoundingClientRect();
         if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
         const speed = parseFloat(el.dataset.parallax) || 0;
-        const offset = (r.top + r.height / 2 - mid) * speed;
-        el.style.setProperty("--py", offset.toFixed(2));
+        el.style.setProperty("--py", ((r.top + r.height / 2 - mid) * speed).toFixed(2));
       });
     };
 
-    /* ── 11 · SCROLL STATE ─────────────────────────────────── */
-    const masthead = $("#masthead");
-    const meterFill = $(".edge__fill");
-    const toTop = $(".totop");
-    const navlinks = $$(".navlink");
-    const ticks = $$(".tick");
-    const sections = ["#home", "#about", "#projects", "#contact"]
-      .map((id) => ({ id, el: $(id) }))
-      .filter((s) => s.el);
-
-    const setActive = (id) => {
-      navlinks.forEach((l) => l.classList.toggle("is-active", l.getAttribute("href") === id));
-      ticks.forEach((t) => t.classList.toggle("is-active", t.dataset.goto === id));
+    // The layer is 118vh tall; it travels its spare 18vh over the
+    // whole page. Desktop only: on touch it simply stays put.
+    const runTopo = (progress) => {
+      if (!topo) return;
+      if (calm() || !finePointer.matches) { topo.style.transform = ""; return; }
+      topo.style.transform = `translate3d(0, ${(-progress * window.innerHeight * 0.18).toFixed(1)}px, 0)`;
     };
 
     const onScroll = () => {
       const y = window.scrollY;
-
       if (masthead) masthead.classList.toggle("is-stuck", y > 40);
 
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (meterFill) {
-        meterFill.style.setProperty("--p", scrollable > 0 ? clamp(y / scrollable, 0, 1).toFixed(4) : "0");
-      }
-
+      const progress = scrollable > 0 ? clamp(y / scrollable, 0, 1) : 0;
+      if (meterFill) meterFill.style.setProperty("--p", progress.toFixed(4));
       if (toTop) toTop.classList.toggle("is-shown", y > window.innerHeight * 0.6);
 
       // The section occupying the upper third of the viewport wins
       const line = y + window.innerHeight * 0.33;
       let current = sections.length ? sections[0].id : null;
-      sections.forEach((s) => {
-        if (s.el.offsetTop <= line) current = s.id;
-      });
+      sections.forEach((s) => { if (s.el.offsetTop <= line) current = s.id; });
       if (current) setActive(current);
 
       runParallax();
+      runTopo(progress);
     };
 
     let ticking = false;
@@ -506,18 +575,33 @@
       ticking = true;
       requestAnimationFrame(() => { onScroll(); ticking = false; });
     }, { passive: true });
-
     window.addEventListener("resize", onScroll, { passive: true });
     onScroll();
 
-    /* ── 12 · SMOOTH SCROLL ────────────────────────────────── */
+    if (toTop) {
+      toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: calm() ? "auto" : "smooth" }));
+    }
+  }
+
+  /* ── navigation · smooth anchors and the fullscreen menu ──── */
+  function navigation() {
+    const burger = $(".burger");
+    const menu = $("#menu");
+
+    const closeMenu = () => {
+      if (!menu || !burger || !menu.classList.contains("is-open")) return;
+      menu.classList.remove("is-open");
+      burger.classList.remove("is-active");
+      burger.setAttribute("aria-expanded", "false");
+      burger.setAttribute("aria-label", "Open navigation menu");
+      menu.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-locked");
+    };
+
     const goTo = (selector) => {
       const target = $(selector);
       if (!target) return;
-      target.scrollIntoView({
-        behavior: calm() ? "auto" : "smooth",
-        block: "start"
-      });
+      target.scrollIntoView({ behavior: calm() ? "auto" : "smooth", block: "start" });
     };
 
     $$('a[href^="#"]').forEach((link) => {
@@ -531,21 +615,7 @@
       });
     });
 
-    ticks.forEach((t) => t.addEventListener("click", () => goTo(t.dataset.goto)));
-
-    /* ── 13 · FULLSCREEN MENU ──────────────────────────────── */
-    const burger = $(".burger");
-    const menu = $("#menu");
-
-    function closeMenu() {
-      if (!menu || !burger || !menu.classList.contains("is-open")) return;
-      menu.classList.remove("is-open");
-      burger.classList.remove("is-active");
-      burger.setAttribute("aria-expanded", "false");
-      burger.setAttribute("aria-label", "Open navigation menu");
-      menu.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("is-locked");
-    }
+    $$(".tick").forEach((t) => t.addEventListener("click", () => goTo(t.dataset.goto)));
 
     if (burger && menu) {
       burger.addEventListener("click", () => {
@@ -565,228 +635,97 @@
         }
       });
     }
+  }
 
-    /* ── 14 · CONTACT FORM ─────────────────────────────────
-       Same mailto handoff as before, with inline validation. */
+  /* ── contactForm · validated mailto hand-off ───────────────
+     Each field reports its own error, wired to the input with
+     aria-describedby and aria-invalid. Errors clear as soon as
+     the value becomes valid. */
+  function contactForm() {
     const form = $("#contact-form");
-    const feedback = $(".form__feedback");
+    if (!form) return;
+    const feedback = $(".form__feedback", form);
+    const submit = $('button[type="submit"]', form);
 
-    if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
+    const rules = {
+      name: { test: (v) => v.length > 0, message: "Please add your name." },
+      email: { test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: "Please use a valid email address." },
+      message: { test: (v) => v.length > 0, message: "Please write a short message." }
+    };
+    const keys = Object.keys(rules);
+    const input = (key) => form.elements[key];
+    const valid = (key) => rules[key].test(input(key).value.trim());
 
-        const nameEl = form.elements["name"];
-        const emailEl = form.elements["email"];
-        const messageEl = form.elements["message"];
-        const submit = form.querySelector('button[type="submit"]');
+    const mark = (key, invalid) => {
+      const el = input(key);
+      const field = el.closest(".field");
+      const error = field ? $(".field__error", field) : null;
+      if (field) field.classList.toggle("is-invalid", invalid);
+      el.setAttribute("aria-invalid", String(invalid));
+      if (error) error.textContent = invalid ? rules[key].message : "";
+    };
 
-        const name = nameEl.value.trim();
-        const email = emailEl.value.trim();
-        const message = messageEl.value.trim();
+    const say = (text, isError) => {
+      if (!feedback) return;
+      feedback.textContent = text;
+      feedback.classList.toggle("is-error", Boolean(isError));
+    };
 
-        const invalid = [];
-        if (!name) invalid.push(nameEl);
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) invalid.push(emailEl);
-        if (!message) invalid.push(messageEl);
-
-        [nameEl, emailEl, messageEl].forEach((el) => {
-          el.closest(".field").classList.toggle("is-invalid", invalid.includes(el));
-        });
-
-        if (invalid.length) {
-          if (feedback) feedback.textContent = "Please complete all fields with a valid email.";
-          invalid[0].focus();
-          return;
-        }
-
-        const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-        window.location.href = `mailto:jamestiono02@gmail.com?subject=${subject}&body=${body}`;
-
-        const label = submit ? submit.querySelector(".cta__label") : null;
-        const original = label ? label.textContent : "";
-        if (label) label.textContent = "Preparing email…";
-        if (submit) submit.disabled = true;
-
-        setTimeout(() => {
-          if (label) label.textContent = original;
-          if (submit) submit.disabled = false;
-          if (feedback) feedback.textContent = "Email draft opened in your mail app. Thank you for reaching out!";
-          form.reset();
-        }, 1500);
+    keys.forEach((key) => {
+      const el = input(key);
+      el.addEventListener("input", () => {
+        if (el.getAttribute("aria-invalid") === "true" && valid(key)) mark(key, false);
       });
-
-      // Clear the invalid state as soon as the visitor starts fixing it
-      $$(".field input, .field textarea", form).forEach((el) => {
-        el.addEventListener("input", () => {
-          el.closest(".field").classList.remove("is-invalid");
-        });
-      });
-    }
-
-    /* ── 15 · BACK TO TOP ──────────────────────────────────── */
-    if (toTop) {
-      toTop.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: calm() ? "auto" : "smooth" });
-      });
-    }
-
-    /* ── 16 · PROJECT HIGHLIGHTS ───────────────────────────
-       Hovering or focusing a highlight annotates the project
-       image with it, tying the metadata to the visual. */
-    works.forEach((work) => {
-      const media = $(".work__media", work);
-      const items = $$(".hl__item", work);
-      if (!media || !items.length) return;
-
-      const probe = document.createElement("span");
-      probe.className = "work__probe mono";
-      probe.setAttribute("aria-hidden", "true");
-      const probeNum = document.createElement("b");
-      const probeVal = document.createElement("span");
-      probe.append(probeNum, probeVal);
-      media.appendChild(probe);
-
-      const show = (item) => {
-        probeNum.textContent = $(".hl__num", item).textContent;
-        probeVal.textContent = $(".hl__val", item).textContent;
-        work.classList.add("is-probing");
-      };
-      const hide = () => work.classList.remove("is-probing");
-
-      items.forEach((item) => {
-        item.addEventListener("pointerenter", (e) => { if (e.pointerType !== "touch") show(item); });
-        item.addEventListener("pointerleave", hide);
-        item.addEventListener("focus", () => show(item));
-        item.addEventListener("blur", hide);
+      el.addEventListener("blur", () => {
+        if (el.value.trim() && !valid(key)) mark(key, true);
       });
     });
 
-    /* ── 17 · LIVING BACKGROUND ────────────────────────────
-       A few data points drift along the page's own grid rails,
-       joined by one faint line — a slow, live chart behind the
-       content. Points nearest the cursor brighten. Capped at
-       30 fps, paused when hidden, off for reduced motion. */
-    const canvas = $(".ambient");
-    const railsEl = $(".rails");
-    if (canvas && railsEl && canvas.getContext && !calm()) {
-      const ctx = canvas.getContext("2d");
-      let W = 0, H = 0, xs = [], cols = { fg: "243,238,231", accent: "226,84,44" };
-      let points = [];
-      let mx = -9999, my = -9999;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const bad = keys.filter((key) => !valid(key));
+      keys.forEach((key) => mark(key, bad.includes(key)));
 
-      const toRgb = (value) => {
-        const v = value.trim();
-        const m = v.match(/^#([0-9a-f]{6})$/i);
-        if (!m) return null;
-        const n = parseInt(m[1], 16);
-        return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`;
-      };
-      const readColours = () => {
-        const cs = getComputedStyle(document.documentElement);
-        cols = {
-          fg: toRgb(cs.getPropertyValue("--fg")) || cols.fg,
-          accent: toRgb(cs.getPropertyValue("--accent")) || cols.accent
-        };
-      };
+      if (bad.length) {
+        say(bad.length === 1 ? "One field needs attention." : `${bad.length} fields need attention.`, true);
+        input(bad[0]).focus();
+        return;
+      }
 
-      const measure = () => {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        W = window.innerWidth;
-        H = window.innerHeight;
-        canvas.width = Math.round(W * dpr);
-        canvas.height = Math.round(H * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const name = input("name").value.trim();
+      const email = input("email").value.trim();
+      const message = input("message").value.trim();
+      const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+      window.location.href = `mailto:jamestiono02@gmail.com?subject=${subject}&body=${body}`;
 
-        const r = railsEl.getBoundingClientRect();
-        const found = [r.left];
-        $$("i", railsEl).forEach((i, idx) => {
-          if (idx === 0 || getComputedStyle(i).display === "none") return;
-          found.push(i.getBoundingClientRect().left);
-        });
-        found.push(r.right);
-        xs = found.map((x) => Math.round(x) + 0.5);
+      const label = submit ? $(".cta__label", submit) : null;
+      const original = label ? label.textContent : "";
+      if (label) label.textContent = "Opening your email app";
+      if (submit) submit.disabled = true;
+      say("", false);
 
-        const perRail = W < 700 ? 2 : 3;
-        points = [];
-        xs.forEach((x, rail) => {
-          for (let k = 0; k < perRail; k += 1) {
-            points.push({
-              rail, x, lead: k === 0,
-              y: Math.random() * H,
-              v: 5 + Math.random() * 11,          // px per second
-              depth: 0.03 + Math.random() * 0.09  // scroll parallax
-            });
-          }
-        });
-        readColours();
-      };
+      setTimeout(() => {
+        if (label) label.textContent = original;
+        if (submit) submit.disabled = false;
+        say("Your email app should now have the message ready to send. Thank you for reaching out.", false);
+        form.reset();
+        keys.forEach((key) => input(key).removeAttribute("aria-invalid"));
+      }, 1500);
+    });
+  }
 
-      let last = 0, running = false;
-      const draw = (now) => {
-        if (!running) return;
-        requestAnimationFrame(draw);
-        if (now - last < 33) return;
-        const dt = Math.min((now - last) / 1000, 0.1);
-        last = now;
-
-        ctx.clearRect(0, 0, W, H);
-        const sy = window.scrollY;
-        const leads = [];
-
-        points.forEach((p) => {
-          p.y = (p.y + p.v * dt) % H;
-          const y = (((p.y - sy * p.depth) % H) + H) % H;
-          const d = Math.hypot(p.x - mx, y - my);
-          const near = clamp(1 - d / 160, 0, 1);
-          const alpha = (p.lead ? 0.32 : 0.16) + near * 0.55;
-          const tick = 3 + near * 7;
-
-          ctx.fillStyle = `rgba(${p.lead ? cols.accent : cols.fg},${alpha.toFixed(3)})`;
-          ctx.fillRect(p.x - 1.5, y - 1.5, 3, 3);
-          ctx.fillRect(p.x + 4, y - 0.5, tick, 1);
-          if (p.lead) leads[p.rail] = y;
-        });
-
-        if (leads.length > 1) {
-          ctx.beginPath();
-          xs.forEach((x, i) => {
-            if (leads[i] === undefined) return;
-            if (i === 0) ctx.moveTo(x, leads[i]); else ctx.lineTo(x, leads[i]);
-          });
-          ctx.strokeStyle = `rgba(${cols.accent},0.07)`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-      };
-
-      const start = () => {
-        if (running || document.hidden) return;
-        running = true;
-        last = performance.now();
-        requestAnimationFrame(draw);
-      };
-      const stop = () => { running = false; };
-
-      measure();
-      afterIntro(() => { canvas.classList.add("is-live"); start(); });
-
-      let resizeTimer;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(measure, 150);
-      }, { passive: true });
-      window.addEventListener("pointermove", (e) => {
-        if (e.pointerType === "touch") return;
-        mx = e.clientX; my = e.clientY;
-      }, { passive: true });
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) stop(); else if (introState.done) start();
-      });
-      if (themeToggle) themeToggle.addEventListener("click", () => requestAnimationFrame(readColours));
-      reduceMotion.addEventListener?.("change", (e) => {
-        if (e.matches) { stop(); ctx.clearRect(0, 0, W, H); }
-      });
-    }
+  /* ── Boot ──────────────────────────────────────────────── */
+  document.addEventListener("DOMContentLoaded", () => {
+    const modules = [intro, theme, typewriter, reveals, gallery, figures, tilt, magnetic, cursor, scrollState, navigation, contactForm];
+    modules.forEach((mod) => {
+      try {
+        mod();
+      } catch (err) {
+        if (mod === intro) forceOpen();
+        // eslint-disable-next-line no-console
+        console.error(`[nervous] ${mod.name} failed`, err);
+      }
+    });
   });
 })();
