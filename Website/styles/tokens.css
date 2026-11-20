@@ -1,0 +1,93 @@
+/* ============================================================
+   tokens.css: design tokens for the whole site.
+
+   Palette: pre-dawn forest teal and charcoal for the shadows,
+   bone for text, one warm sunrise gold for accents. Nothing
+   else is allowed to introduce a new colour.
+   ============================================================ */
+
+:root {
+  /* ── Colour ─────────────────────────────────────────────── */
+  --ink-950: #0a0e0d;          /* page base, deepest charcoal */
+  --ink-900: #0f1513;
+  --ink-850: #131b18;
+  --ink-800: #18221f;          /* raised surface */
+  --canopy-700: #1d2c28;       /* pre-dawn forest teal */
+  --canopy-600: #263a34;
+  --canopy-500: #34504a;
+
+  --bone-50:  #f4efe6;
+  --bone-100: #ece5d8;         /* primary text on dark */
+  --bone-300: #c9c0b0;         /* secondary text */
+  --fog-400:  #8d9a93;         /* tertiary text, labels (AA on ink-950) */
+
+  --gold-300: #ecca8f;
+  --gold-400: #dcab5f;         /* the single accent */
+  --gold-500: #b98838;
+
+  --hairline:        rgba(236, 229, 216, 0.12);
+  --hairline-strong: rgba(236, 229, 216, 0.22);
+  --gold-line:       rgba(220, 171, 95, 0.55);
+
+  --glass:        rgba(15, 21, 19, 0.58);
+  --glass-strong: rgba(12, 17, 15, 0.78);
+  --glass-blur:   16px;
+
+  /* Scrims keep text at AA contrast over photography */
+  --scrim-bottom: linear-gradient(180deg, rgba(10, 14, 13, 0) 0%, rgba(10, 14, 13, 0.55) 55%, rgba(10, 14, 13, 0.92) 100%);
+  --scrim-left:   linear-gradient(90deg, rgba(10, 14, 13, 0.82) 0%, rgba(10, 14, 13, 0.4) 55%, rgba(10, 14, 13, 0) 100%);
+
+  /* ── Type ───────────────────────────────────────────────── */
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --fs-mono:  0.75rem;                                   /* 12px data labels */
+  --fs-small: 0.875rem;
+  --fs-body:  1rem;
+  --fs-lead:  clamp(1.0625rem, 0.98rem + 0.35vw, 1.25rem);
+  --fs-h4:    clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-h3:    clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  --fs-h2:    clamp(2.5rem, 1.8rem + 3.2vw, 4.75rem);
+  --fs-h1:    clamp(3rem, 1.6rem + 6.4vw, 8rem);
+  --fs-statement: clamp(1.75rem, 1.2rem + 2.4vw, 3.25rem);
+
+  --track-display: -0.02em;
+  --track-mono: 0.06em;
+  --lh-tight: 0.95;
+  --lh-body: 1.6;
+
+  /* ── Space (8 px grid) ──────────────────────────────────── */
+  --s-1: 0.5rem;   /* 8  */
+  --s-2: 1rem;     /* 16 */
+  --s-3: 1.5rem;   /* 24 */
+  --s-4: 2rem;     /* 32 */
+  --s-5: 2.5rem;   /* 40 */
+  --s-6: 3rem;     /* 48 */
+  --s-8: 4rem;     /* 64 */
+  --s-10: 5rem;    /* 80 */
+  --s-12: 6rem;    /* 96 */
+  --s-16: 8rem;    /* 128 */
+
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --max-w: 1320px;
+  --section-pad: clamp(5rem, 3rem + 7vw, 10rem);
+
+  /* ── Shape ──────────────────────────────────────────────── */
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-3: 12px;
+  --shadow-inner: inset 0 1px 0 rgba(236, 229, 216, 0.06), inset 0 0 0 1px var(--hairline);
+  --shadow-lift: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 180ms;
+  --t-med: 420ms;
+  --t-slow: 900ms;
+  --stagger: 70ms;
+
+  /* Scroll-driven values, written by app.js */
+  --dawn: 0;       /* 0 = pre-dawn at the top, 1 = morning at the bottom */
+}
