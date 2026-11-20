@@ -1,0 +1,113 @@
+/* ════════════════════════════════════════════════════════════════
+   nature.css — the decorative layer: growing vine borders, corner
+   ornaments, the light-orb cursor, pollen particles and the intro's
+   pre-blurred door.
+
+   Rules for everything here: aria-hidden, pointer-events: none, and
+   static (fully grown, no sway) under prefers-reduced-motion.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Vine border ───────────────────────────────────────────────
+   js/motion/vines.js injects one <svg class="vine"> into every
+   [data-vine] host: a slightly wavy stem around the rounded border,
+   leaves and buds along it, and a corner ornament (data-orn). */
+[data-vine] { position: relative; }
+.vine {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+  color: var(--vine-color, var(--leaf));
+  --vein: rgba(4, 18, 15, 0.35);
+}
+.on-light .vine, .on-light.vine-host .vine { --vine-color: var(--leaf-deep); --vein: rgba(255, 255, 255, 0.4); }
+.vine__stem {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.75;
+  transition: stroke-dashoffset 2.6s var(--ease-in-out), stroke 600ms, opacity 600ms;
+}
+.vine__leaf {
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  scale: 0;
+  transition: scale 700ms var(--ease-spring), color 600ms;
+  transition-delay: calc(var(--d, 0) * 2.2s + 0.3s);
+}
+.vine__orn {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  scale: 0.6;
+  transition: opacity 900ms var(--ease-out), scale 900ms var(--ease-spring), color 600ms;
+  transition-delay: 1.6s;
+}
+.is-grown > .vine .vine__stem { stroke-dashoffset: 0; }
+.is-grown > .vine .vine__leaf { scale: 1; }
+.is-grown > .vine .vine__orn { opacity: 0.9; scale: 1; }
+
+/* Focus (always) and hover (real hover devices only, so a tap on a phone
+   doesn't leave the border stuck glowing): sunrise-gold glow + sway. */
+[data-vine]:focus-within > .vine { color: var(--dawn-gold); }
+.on-light[data-vine]:focus-within > .vine { color: #b8661b; }
+@media (hover: hover) {
+  [data-vine]:hover > .vine { color: var(--dawn-gold); }
+  .on-light[data-vine]:hover > .vine { color: #b8661b; }
+  [data-vine]:hover > .vine .vine__stem { opacity: 1; filter: drop-shadow(0 0 4px rgba(244, 182, 90, 0.8)); }
+  [data-vine]:hover > .vine .vine__leaf { animation: leaf-sway 2.4s ease-in-out infinite alternate; animation-delay: calc(var(--d, 0) * -3s); }
+}
+@keyframes leaf-sway { from { rotate: -10deg; } to { rotate: 12deg; } }
+
+/* Corners */
+.vine__orn { width: 64px; height: 64px; }
+
+/* ── Cursor orb (desktop with a fine pointer) ──────────────── */
+.orb, .pollen { display: none; }
+html.has-orb .orb {
+  display: block;
+  position: fixed; left: 0; top: 0; z-index: 300;
+  width: 0; height: 0;
+  pointer-events: none;
+}
+html.has-orb .orb::before {
+  content: ""; position: absolute;
+  width: 64px; height: 64px; left: -32px; top: -32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 236, 190, 0.55) 0%, rgba(244, 182, 90, 0.22) 40%, rgba(244, 182, 90, 0) 70%);
+  mix-blend-mode: screen;
+  transform: translate3d(var(--hx, -100px), var(--hy, -100px), 0) scale(var(--hs, 1));
+}
+.orb__core {
+  position: absolute; left: -4px; top: -4px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff4d8;
+  box-shadow: 0 0 10px 2px rgba(255, 214, 140, 0.9);
+  transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0);
+}
+html.has-orb, html.has-orb a, html.has-orb button, html.has-orb label { cursor: none; }
+html.has-orb input, html.has-orb textarea { cursor: text; }
+html.has-orb.gate-on, html.has-orb.gate-on * { cursor: none; }
+html.has-orb .orb.is-hidden { opacity: 0; }
+
+html.has-pollen .pollen {
+  display: block;
+  position: fixed; inset: 0; z-index: 250;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* ── Intro door blur copy ──────────────────────────────────── */
+.gateway__door--blur { opacity: 0; }
+.gateway__door--blur img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 64%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vine__stem { stroke-dashoffset: 0; transition: none; }
+  .vine__leaf { scale: 1; transition: none; }
+  .vine__orn { opacity: 0.9; scale: 1; transition: none; }
+  [data-vine]:hover > .vine .vine__leaf { animation: none; }
+}
