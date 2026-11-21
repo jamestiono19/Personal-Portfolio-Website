@@ -14,6 +14,18 @@ All photographs come from Wikimedia Commons. Four are under Creative Commons att
 | Intro canopy that parts | `Website/Assets/photos/canopy-*` | Aerial view of a forest (Unsplash) | Ozark Drones | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Aerial_view_of_a_forest_(Unsplash).jpg), originally [Unsplash](https://unsplash.com/photos/rkvI-ToeV40) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
 | Record section photo | `Website/Assets/photos/ridge-*` | Forest clearing from above 1 (Unsplash) | Anton Gudkov | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Forest_clearing_from_above_1_(Unsplash).jpg), originally [Unsplash](https://unsplash.com/photos/LuiPhkR3Mas) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
 
+### Stand-ins until `tools/fetch_aerial.py` is run
+
+The three CC0 aerial photographs above were chosen and their licences checked, but Wikimedia rate-limited the download from this machine. Until `python tools/fetch_aerial.py` has been run, the `edge-*`, `canopy-*` and `ridge-*` files are crops of photographs already credited here:
+
+| Files | Currently cut from | Becomes |
+|---|---|---|
+| `edge-*` | Foggy morning, PNN Valle de Cocora (Giulian Frisoni, CC BY 2.0) | Forest clearing from above (Nathan Anderson, CC0) |
+| `canopy-*` | Macro Rock Moss (Cory Denton, CC BY 2.0) | Aerial view of a forest (Ozark Drones, CC0) |
+| `ridge-*` | Light Through The Fog (Donnie Nunley, CC BY 3.0) | Forest clearing from above 1 (Anton Gudkov, CC0) |
+
+Direct files: [edge](https://upload.wikimedia.org/wikipedia/commons/4/44/Forest_clearing_from_above_%28Unsplash%29.jpg), [canopy](https://upload.wikimedia.org/wikipedia/commons/3/34/Aerial_view_of_a_forest_%28Unsplash%29.jpg), [ridge](https://upload.wikimedia.org/wikipedia/commons/0/0a/Forest_clearing_from_above_1_%28Unsplash%29.jpg). Delete this subsection once the script has run.
+
 ## Project images
 
 Project covers and charts are my own work, exported from each project's real outputs:
