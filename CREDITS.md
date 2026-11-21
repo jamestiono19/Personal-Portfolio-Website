@@ -1,47 +1,31 @@
 # Credits
 
-Everything the site ships with, and where it came from.
+## Photographs
 
-## Imagery
+All photographs come from Wikimedia Commons under Creative Commons licences that allow modified reuse with attribution. Each was resized, colour-graded toward teal shadows and warm highlights, and re-encoded as AVIF/WebP for this site. No share-alike licence applies to any of them.
 
-| File(s) | Source | License |
-|---|---|---|
-| `Website/Assets/scenery/ridge-*`, `canopy-*`, `river-*`, `gate-*`, `treeline-*.svg` | Original. Painted procedurally by [`tools/paint_scenery.py`](tools/paint_scenery.py) from noise, gradients and simple shapes (seed `2026`, reproducible). No stock photography. | Same as this repository |
-| `Website/Assets/og-sunrise.jpg` | Original. Rendered from the `ridge` painting plus the site's own type. | Same as this repository |
-| `Website/Assets/icons/*` (JT leaf monogram, favicon) | Original, drawn for this site. | Same as this repository |
-| `Website/Assets/Hero.jpeg` → `covers/portrait-*`, `covers/avatar-96.*` | James Tiono's own portrait (existing asset). | © James Tiono |
-| `Website/Assets/Ecorangers.png`, `Matcha.png`, `Bodyfat.png`, `Linkvestor.png` → `covers/*` | James Tiono's own project screenshots and presentation boards (existing assets). | © James Tiono and project teams |
-| `Website/Assets/Datafest.webp` → `covers/datafest-*` | Feature-importance chart produced by Team Penjelajah Sejarah's ASA DataFest 2026 notebooks (existing asset). | © Team Penjelajah Sejarah |
-| `Website/Assets/Topography.svg` | Carried over from the previous design (used faintly on the intro page). | Same as this repository |
-| Corner ornaments, vine leaf, bud (inline SVG in `index.html`) | Original, drawn for this site. | Same as this repository |
-| Social icons (inline SVG in `index.html`) | Drawn after the [Feather](https://feathericons.com) icon set's shapes. | MIT |
+| Used as | Files on this site | Title | Author | Source | Licence |
+|---|---|---|---|---|---|
+| Hero, gateway world, OG image | `Website/Assets/photos/path-*`, `Website/Assets/og-cover.jpg` | Walking on a misty forest path at Višňevnik | Dreamy Pixel | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Walking_on_a_misty_forest_path_at_Vi%C5%A1evnik.jpg) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) |
+| Background (pre-dawn layer), footer | `Website/Assets/photos/valley-*` | Foggy morning - PNN Valle de Cocora, Colombia | Giulian Frisoni | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Foggy_morning_-_PNN_Valle_de_Cocora,_Colombia.jpg) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) |
+| Background (morning layer), Record section, loading screen | `Website/Assets/photos/rays-*` | Light Through The Fog (59596778) | Donnie Nunley | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Light_Through_The_Fog_(59596778).jpeg) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0) |
+| Gateway wall texture, quote tile, cover setting | `Website/Assets/photos/moss-*` | Macro Rock Moss (14707027090) | Cory Denton from Saskatoon | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Macro_Rock_Moss_(14707027090).jpg) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) |
 
-Free-license photo hosts (Unsplash, Pexels) were not reachable from the environment the site was built in, so every nature image was painted in code instead. To swap in real photography later, keep the same file names and sizes in `Website/Assets/scenery/` and add the photographer and license here.
+## Project images
 
-## Type
+Project covers and charts are my own work, exported from each project's real outputs:
 
-Self-hosted from [Fontsource](https://fontsource.org) (`Website/fonts/`).
+- `traffic-scenarios.webp`, `traffic-learning.webp`: `results/figures` in the adaptive-traffic-light-drl repository.
+- `textmining-*.webp`: result figures from the Text Mining final project notebooks.
+- `bodyfat-abdomen.webp`: EDA artifacts of the Body Fat project.
+- `datafest-outreach.webp`, `Datafest.webp`: ASA DataFest 2026 notebooks.
+- `commonground-*.webp`: screenshots of the live CommonGround demo.
+- `Ecorangers`, `Matcha`, `Linkvestor`, `Bodyfat`, `Hero` images: carried over from the previous version of this site. The LinkVestor highlights are read from the project board shown in `Linkvestor.png`.
 
-| Font | Designer | License |
-|---|---|---|
-| Fraunces (variable, opsz + wght) | Undercase Type | SIL Open Font License 1.1 |
-| Manrope (variable) | Mikhail Sharanda | SIL Open Font License 1.1 |
-| JetBrains Mono (variable) | JetBrains | SIL Open Font License 1.1 |
+## Typefaces
 
-## Code libraries
+Instrument Serif, Hanken Grotesk and IBM Plex Mono, served by Google Fonts under the SIL Open Font License 1.1.
 
-Vendored in `Website/vendor/` (no CDN at runtime), loaded after the page's load event.
+## Code
 
-| Library | Version | License |
-|---|---|---|
-| [GSAP](https://gsap.com) + ScrollTrigger | 3.13.0 | GSAP Standard License (free for all uses, including commercial, from 3.13) |
-| [Lenis](https://github.com/darkroomengineering/lenis) | 1.1.13 | MIT |
-
-## Figures
-
-Every number on the site names its source file on the card it appears on. The project figures come from:
-
-- **Body Fat Prediction**: [`jamestiono19/Bodyfat-app`](https://github.com/jamestiono19/Bodyfat-app): `data/bodyfat.csv`, `artifacts/model_comparison.csv`, `artifacts/eda/strong_correlations.csv`, `notebook/mlopsbodyfat.ipynb`.
-- **ASA DataFest 2026**: [`jamestiono19/ASA-Datafest-Competition2026-PenjelajahSejarah`](https://github.com/jamestiono19/ASA-Datafest-Competition2026-PenjelajahSejarah): `FeatureImportanceModeling.ipynb`, `SocioEconomic-Emergency.ipynb`, `test1.ipynb` (printed notebook outputs).
-- **EcoRangers, Matcha, LinkVestor**: carried over from the previous site (itch.io listing, live site, project brief).
-- **Highlights section** (award, certifications, current project, GPA): `Website/Assets/James Tiono CV.pdf`.
+Smooth scrolling uses [Lenis](https://github.com/darkroomengineering/lenis) (MIT), loaded from jsDelivr on desktop only.

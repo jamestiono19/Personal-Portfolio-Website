@@ -1,69 +1,81 @@
-// check.mjs — the site's "build" check (there is no bundler: the site is
-// static). Run from the repo root:   node tools/check.mjs
-//
-//  1. every JS file parses (node --check)
-//  2. js/data/projects.js matches its schema: categories are known, every
-//     highlight names a source, pending projects carry no figures
-//  3. every cover width/format listed in the data exists on disk
-//  4. every local src/href/srcset in index.html and url() in CSS resolves
-import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { execFileSync } from "node:child_process";
+#!/usr/bin/env node
+/* ============================================================
+   check.mjs — the site's "build": there is no bundler, so this
+   is the gate that must pass before a push.
+
+   1. Every JS module parses.
+   2. scripts/projects.js matches its schema: known categories,
+      every required field filled, every highlight carries a
+      source, no empty slots.
+   3. Every cover/chart file exists.
+   4. Every local src / href / srcset / url() in index.html and
+      the stylesheets resolves to a real file.
+
+   Usage: node tools/check.mjs        (exit code 1 on any error)
+   ============================================================ */
+
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { execFileSync } from "node:child_process";
 
-const site = resolve(dirname(new URL(import.meta.url).pathname), "..", "Website");
-let errors = 0;
-const fail = (m) => { errors++; console.error("✗", m); };
-const ok = (m) => console.log("✓", m);
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "Website");
+const errors = [];
+const fail = (msg) => errors.push(msg);
 
-// 1. syntax
-const jsFiles = [];
-const walk = (d) => readdirSync(d).forEach((f) => { const p = join(d, f); statSync(p).isDirectory() ? walk(p) : p.endsWith(".js") && !p.includes("/vendor/") && jsFiles.push(p); });
-walk(join(site, "js"));
-for (const f of jsFiles) {
-  try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); } catch (e) { fail(`syntax: ${f}\n${e.stderr}`); }
+// 1. Modules parse
+for (const f of readdirSync(join(root, "scripts")).filter((f) => f.endsWith(".js"))) {
+  try { execFileSync(process.execPath, ["--check", join(root, "scripts", f)], { stdio: "pipe" }); }
+  catch (e) { fail(`scripts/${f} does not parse: ${e.stderr}`); }
 }
-ok(`${jsFiles.length} modules parse`);
 
-// 2. data schema
-const src = readFileSync(join(site, "js/data/projects.js"), "utf8");
-const { projects, CATEGORY_LABELS } = await import("data:text/javascript," + encodeURIComponent(src));
+// 2. Data schema
+const { PROJECTS, CATEGORIES } = await import(pathToFileURL(join(root, "scripts", "projects.js")).href);
+const required = ["slug", "title", "year", "role", "duration", "status", "narration", "problem", "solution"];
 const slugs = new Set();
-for (const p of projects) {
-  const where = `project "${p.slug}"`;
-  for (const k of ["slug", "title", "category", "role", "duration", "cover", "narration", "problem", "solution", "links", "stack", "highlights"]) {
-    if (p[k] === undefined) fail(`${where}: missing ${k}`);
-  }
-  if (slugs.has(p.slug)) fail(`${where}: duplicate slug`); slugs.add(p.slug);
-  if (!p.category.length) fail(`${where}: no category`);
-  p.category.forEach((c) => CATEGORY_LABELS[c] || fail(`${where}: unknown category ${c}`));
-  p.highlights.forEach((h, i) => {
-    if (!h.label || !h.value || !h.context) fail(`${where}: highlight ${i} incomplete`);
-    if (!h.source) fail(`${where}: highlight "${h.label}" has no source`);
+for (const p of PROJECTS) {
+  const at = `project "${p.slug || p.title}"`;
+  required.forEach((k) => { if (!String(p[k] ?? "").trim()) fail(`${at}: empty ${k}`); });
+  if (slugs.has(p.slug)) fail(`${at}: duplicate slug`);
+  slugs.add(p.slug);
+  if (!p.category?.length) fail(`${at}: no category`);
+  p.category?.forEach((c) => { if (!CATEGORIES[c]) fail(`${at}: unknown category "${c}"`); });
+  if (!p.stack?.length) fail(`${at}: empty stack`);
+  if (!p.highlights?.length) fail(`${at}: no highlights`);
+  p.highlights?.forEach((h, i) => {
+    ["label", "value", "context", "source"].forEach((k) => {
+      if (!String(h[k] ?? "").trim()) fail(`${at}: highlight ${i + 1} has no ${k}`);
+    });
   });
-  if (p.chart && !p.chart.source) fail(`${where}: chart has no source`);
-  if (p.pending && (p.highlights.length || p.chart)) fail(`${where}: pending projects must not show figures`);
-  if (!p.pending && p.highlights.length < 3) fail(`${where}: needs at least 3 highlights`);
-  // 3. cover files
-  for (const w of p.cover.widths) for (const ext of ["webp", "avif"]) {
-    const f = join(site, p.cover.base.replace("./", "") + `-${w}.${ext}`);
-    if (!existsSync(f)) fail(`${where}: missing cover ${f}`);
+  [p.cover, p.chart].filter(Boolean).forEach((img) => {
+    [img.src, img.webp].filter(Boolean).forEach((src) => {
+      if (!existsSync(join(root, src))) fail(`${at}: missing image ${src}`);
+    });
+    if (!img.alt?.trim()) fail(`${at}: image without alt text`);
+  });
+}
+
+// 3/4. Local references in HTML and CSS
+const refs = (text) => {
+  const out = [];
+  for (const m of text.matchAll(/(?:src|href)="([^"]+)"/g)) out.push(m[1]);
+  for (const m of text.matchAll(/(?:srcset|imagesrcset)="([^"]+)"/g))
+    m[1].split(",").forEach((part) => out.push(part.trim().split(/\s+/)[0]));
+  for (const m of text.matchAll(/url\(['"]?([^'")]+)['"]?\)/g)) out.push(m[1]);
+  return out.filter((r) => r && !/^(https?:|mailto:|data:|#|%23)/.test(r));
+};
+const check = (file, base) => {
+  for (const r of refs(readFileSync(file, "utf8"))) {
+    const path = join(base, decodeURI(r.split(/[?#]/)[0]));
+    if (!existsSync(path)) fail(`${file.replace(root, "Website")}: broken reference ${r}`);
   }
-}
-ok(`${projects.length} projects valid (${projects.filter((p) => p.pending).length} pending)`);
+};
+check(join(root, "index.html"), root);
+for (const f of readdirSync(join(root, "styles"))) check(join(root, "styles", f), join(root, "styles"));
 
-// 4. local references
-const html = readFileSync(join(site, "index.html"), "utf8");
-const refs = new Set();
-for (const m of html.matchAll(/(?:src|href|srcset|imagesrcset)="([^"]+)"/g)) {
-  m[1].split(",").forEach((part) => { const u = part.trim().split(/\s+/)[0]; if (u.startsWith("./")) refs.add(u); });
+if (errors.length) {
+  console.error(`✗ ${errors.length} problem(s):\n  ` + errors.join("\n  "));
+  process.exit(1);
 }
-for (const m of html.matchAll(/"\.\/Assets\/scenery\/" \+ "([^ "]+)/g)) refs.add("./Assets/scenery/" + m[1]);
-for (const css of readdirSync(join(site, "css"))) {
-  const text = readFileSync(join(site, "css", css), "utf8");
-  for (const m of text.matchAll(/url\("?(\.\.\/[^")]+)"?\)/g)) refs.add("./" + m[1].slice(3));
-}
-for (const r of refs) if (!existsSync(join(site, decodeURIComponent(r.replace("./", ""))))) fail(`missing file referenced: ${r}`);
-ok(`${refs.size} local references resolve`);
-
-if (errors) { console.error(`\n${errors} problem(s)`); process.exit(1); }
-console.log("\nAll checks passed.");
+const highlights = PROJECTS.reduce((n, p) => n + p.highlights.length, 0);
+console.log(`✓ ${PROJECTS.length} projects, ${highlights} sourced highlights, all modules parse, all local references resolve`);
