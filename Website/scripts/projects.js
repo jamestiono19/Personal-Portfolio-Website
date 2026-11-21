@@ -1,5 +1,5 @@
 /* ============================================================
-   projects.js — the single source of truth for the Work section.
+   projects.js: the single source of truth for the Work section.
 
    Every card, filter count, counter and footer link is rendered
    from this array. Adding a project = adding one entry.
@@ -69,7 +69,7 @@ export const PROJECTS = [
     category: ["deep-learning", "machine-learning"],
     subtag: "Reinforcement learning",
     year: "2026",
-    role: "Lead developer · 10 of 11 commits",
+    role: "Developer · 10 of 11 commits",
     duration: "Course final project",
     status: "Steps 1–11 of 14 complete",
     featured: true,
@@ -110,7 +110,7 @@ export const PROJECTS = [
     category: ["app-development"],
     subtag: "Product · Data",
     year: "2026",
-    role: "Team member · Group 7 of four",
+    role: "Group 7 of four · built Explore and venue discovery",
     duration: "Venture Creation project",
     status: "Live demo",
     cover: {
@@ -169,14 +169,14 @@ export const PROJECTS = [
     links: [],
     stack: ["Python", "PyTorch", "IndoBERT", "scikit-learn", "Sastrawi", "BeautifulSoup"],
     highlights: [
-      { label: "Corpus", value: "5,995 articles", context: "Five classes, about 1,200 each, collected 20 Jun – 23 Sep 2026", source: "data/processed/corpus_build_report.csv" },
+      { label: "Corpus", value: "5,995 articles", context: "Five Detik.com sections, about 1,200 each, published 20 Jun to 23 Sep 2026", source: "data/processed/corpus_build_report.csv" },
       { label: "Best classifier", value: "0.9546 macro-F1", context: "IndoBERT (indobert-base-p1), 900 test articles", source: "data/results/04_indobert_summary.json" },
       { label: "From scratch", value: "0.9413 macro-F1", context: "BiLSTM; a learning rate of 0.003 beat 0.001 in all four paired settings", source: "data/results/03_bilstm_summary.json · 03_bilstm_grid.csv" },
       { label: "Context length", value: "128 ≈ 256 tokens", context: "Validation F1 0.9467 vs 0.9466 for IndoBERT, so the shorter input was kept", source: "data/results/04_indobert_grid.csv" },
       { label: "Vocabulary", value: "57,499 → 43,293", context: "Words before and after topic-view filtering; 25,634 words stemmed", source: "data/processed/preprocess.log" },
       { label: "Topics found", value: "37", context: "NMF per class; Esports was the most coherent (NPMI 0.87)", source: "data/results/06_topic_keywords.csv" },
       { label: "Hardest pair", value: "News ↔ Finance", context: "16 of IndoBERT's 41 test errors were swaps between these two; Sports was easiest (F1 0.99)", source: "data/results/04_indobert_predictions.csv" },
-      { label: "Summary coverage", value: "1.00 vs 0.10–0.38", context: "Topic coverage in all five classes: topic-aware summaries vs the centroid baseline", source: "data/results/07_summary_evaluation.csv" },
+      { label: "Summary coverage", value: "1.00 vs 0.10–0.375", context: "Topic coverage in all five classes: topic-aware summaries vs the centroid baseline", source: "data/results/07_summary_evaluation.csv" },
       { label: "ROUGE-1 F1 (News)", value: "0.289", context: "Against 0.170 random and 0.151 lead; in Sports the centroid baseline scored higher (0.268 vs 0.255)", source: "data/results/07_summary_evaluation.csv" },
     ],
     chart: {
@@ -191,7 +191,7 @@ export const PROJECTS = [
     category: ["analytics"],
     subtag: "Healthcare data",
     year: "2026",
-    role: "Team Penjelajah Sejarah",
+    role: "One of three · team Penjelajah Sejarah",
     duration: "Competition",
     status: "Submitted · write-up, slides and video",
     cover: {
@@ -202,7 +202,7 @@ export const PROJECTS = [
     narration:
       "Why do chronic patients drop out of care? We linked millions of clinical encounters to social-determinant survey answers and followed the patients who never came back. Most of them were never screened for hardship, almost none were contacted, and the ones who were screened reported hardship far more often than returning patients.",
     problem:
-      "Chronic patients who stop returning leave little trace. Of 6,292 chronic dropouts, 5,819 had no hardship survey answers at all.",
+      "Chronic patients who stop returning leave little trace. A dropout here is a patient with exactly one encounter in the whole dataset; of 6,292 chronic dropouts, 5,819 had no hardship survey answers at all.",
     solution:
       "Emergency or urgent visits rose from 31.4% to 53.4% of visits as paying for basics went from \u201cnot hard at all\u201d to \u201cvery hard\u201d.",
     solutionLabel: "Insight",
@@ -215,7 +215,7 @@ export const PROJECTS = [
       { label: "Never screened", value: "92.5%", context: "5,819 of 6,292 chronic dropouts had no hardship survey data", source: "test1.ipynb" },
       { label: "No outreach", value: "99.9%", context: "6,288 of 6,292 chronic dropouts had no outreach on record", source: "test1.ipynb" },
       { label: "Hardship gap", value: "47.1% vs 18.1%", context: "Any hardship among screened dropouts vs returning patients", source: "test1.ipynb" },
-      { label: "Crisis visits", value: "31.4% → 53.4%", context: "Emergency or urgent share, from \u201cnot hard at all\u201d to \u201cvery hard\u201d", source: "ASADATAFEST.ipynb" },
+      { label: "Crisis visits", value: "31.4% → 53.4%", context: "Share of answered encounters that were emergency, urgent or ED visits, from \u201cnot hard at all\u201d to \u201cvery hard\u201d to pay for basics", source: "ASADATAFEST.ipynb" },
       { label: "Largest hardship gap", value: "36.6% vs 9.5%", context: "Food insecurity among screened dropouts vs returning patients", source: "test1.ipynb" },
       { label: "Outreach blind spot", value: "0.1% vs 6.4%", context: "Chronic dropouts were contacted less often than non-chronic ones (4 of 6,292 vs 2,966 of 46,088)", source: "test1.ipynb" },
     ],
@@ -256,9 +256,10 @@ export const PROJECTS = [
       { label: "Best CV R²", value: "0.681", context: "Lasso, 5-fold cross-validation (± 0.046)", source: "artifacts/model_comparison.csv" },
       { label: "Test error", value: "MAE 3.58", context: "Body-fat percentage points on the 30% hold-out", source: "artifacts/model_comparison.csv" },
       { label: "Strongest input", value: "r = 0.81", context: "Abdomen circumference, ahead of chest (0.70) and hip (0.63)", source: "artifacts/eda/strong_correlations.csv" },
+      { label: "Hold-out R²", value: "0.590", context: "Lasso on the 30% test split. Random forest scored higher there (0.638); Lasso was picked on cross-validation", source: "artifacts/model_comparison.csv" },
       { label: "Overfitting check", value: "0.865 → 0.641", context: "Random forest train vs validation R², so the simpler model won", source: "artifacts/model_comparison.csv" },
       { label: "Leakage guard", value: "Density dropped", context: "Body fat is computed from density (r = 0.99), so it was excluded as an input", source: "notebook/mlopsbodyfat.ipynb · strong_correlations.csv" },
-      { label: "Model weight", value: "8.19 vs 1.87", context: "Abdomen's Lasso coefficient against the next largest input, wrist", source: "models/coefficients.csv" },
+      { label: "Model weight", value: "8.19 vs 1.87", context: "Absolute Lasso coefficients: abdomen against the next largest input, wrist (negative)", source: "models/coefficients.csv" },
     ],
     chart: {
       src: "./Assets/projects/bodyfat-abdomen.webp",

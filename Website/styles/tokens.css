@@ -8,34 +8,39 @@
 
 :root {
   /* ── Colour ─────────────────────────────────────────────── */
-  --ink-950: #0a0e0d;          /* page base, deepest charcoal */
-  --ink-900: #0f1513;
-  --ink-850: #131b18;
-  --ink-800: #18221f;          /* raised surface */
-  --canopy-700: #1d2c28;       /* pre-dawn forest teal */
-  --canopy-600: #263a34;
-  --canopy-500: #34504a;
+  --ink-950: #0c1a17;          /* page base: deep forest, almost black */
+  --ink-900: #10211d;
+  --ink-850: #142722;
+  --ink-800: #1a2f29;          /* raised surface */
+  --canopy-700: #173a30;       /* forest */
+  --canopy-600: #243f3a;       /* teal shadow */
+  --canopy-500: #3a5a50;
 
-  --bone-50:  #f4efe6;
-  --bone-100: #ece5d8;         /* primary text on dark */
-  --bone-300: #c9c0b0;         /* secondary text */
-  --fog-400:  #8d9a93;         /* tertiary text, labels (AA on ink-950) */
+  --bone-50:  #f3f0e8;         /* bone: light surfaces, headline text */
+  --bone-100: #ebe6da;         /* primary text on dark */
+  --bone-300: #c6bfb0;         /* secondary text */
+  --fog-400:  #8f9c94;         /* tertiary text, labels (AA on ink-950) */
+  --mist-200: #e4e1d8;         /* warm mist: secondary light surface */
+  --earth-500: #82796a;        /* muted earth */
+  --earth-700: #5a5246;        /* labels on light surfaces (AA on bone) */
+  --charcoal: #171b19;         /* text on light surfaces */
 
-  --gold-300: #ecca8f;
-  --gold-400: #dcab5f;         /* the single accent */
-  --gold-500: #b98838;
+  --gold-300: #dcc08f;
+  --gold-400: #c7a36a;         /* sunrise gold, the single accent */
+  --gold-500: #a8844a;
 
-  --hairline:        rgba(236, 229, 216, 0.12);
-  --hairline-strong: rgba(236, 229, 216, 0.22);
-  --gold-line:       rgba(220, 171, 95, 0.55);
+  --hairline:        rgba(235, 230, 218, 0.12);
+  --hairline-strong: rgba(235, 230, 218, 0.22);
+  --gold-line:       rgba(199, 163, 106, 0.6);
 
-  --glass:        rgba(15, 21, 19, 0.58);
-  --glass-strong: rgba(12, 17, 15, 0.78);
+  --glass:        rgba(13, 30, 26, 0.58);
+  --glass-strong: rgba(11, 25, 22, 0.8);
   --glass-blur:   16px;
+  --paper:        rgba(243, 240, 232, 0.86);
 
   /* Scrims keep text at AA contrast over photography */
-  --scrim-bottom: linear-gradient(180deg, rgba(10, 14, 13, 0) 0%, rgba(10, 14, 13, 0.55) 55%, rgba(10, 14, 13, 0.92) 100%);
-  --scrim-left:   linear-gradient(90deg, rgba(10, 14, 13, 0.82) 0%, rgba(10, 14, 13, 0.4) 55%, rgba(10, 14, 13, 0) 100%);
+  --scrim-bottom: linear-gradient(180deg, rgba(12, 26, 23, 0) 0%, rgba(12, 26, 23, 0.55) 55%, rgba(12, 26, 23, 0.92) 100%);
+  --scrim-left:   linear-gradient(90deg, rgba(12, 26, 23, 0.82) 0%, rgba(12, 26, 23, 0.4) 55%, rgba(12, 26, 23, 0) 100%);
 
   /* ── Type ───────────────────────────────────────────────── */
   --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
@@ -77,7 +82,7 @@
   --r-1: 4px;
   --r-2: 8px;
   --r-3: 12px;
-  --shadow-inner: inset 0 1px 0 rgba(236, 229, 216, 0.06), inset 0 0 0 1px var(--hairline);
+  --shadow-inner: inset 0 1px 0 rgba(235, 230, 218, 0.06), inset 0 0 0 1px var(--hairline);
   --shadow-lift: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
 
   /* ── Motion ─────────────────────────────────────────────── */

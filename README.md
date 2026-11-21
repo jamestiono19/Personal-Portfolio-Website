@@ -13,7 +13,7 @@ cd Website
 python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-The intro plays once per browser session. Add `?intro` to the URL to force it, or `?nointro` to skip it.
+The intro (an aerial canopy that parts while the camera drops into the forest) plays once per browser session and lasts about 3.4 s. It shows only the scene and the name. Add `?intro` to the URL to force it, or `?nointro` to skip it. With reduced motion it is a short fade.
 
 ## Check it
 
@@ -21,7 +21,7 @@ The intro plays once per browser session. Add `?intro` to the URL to force it, o
 node tools/check.mjs
 ```
 
-Parses every module and validates `scripts/projects.js`: known categories, no empty fields, a source on every highlight, alt text on every image, and every cover and chart file present. It also resolves every local `src`, `href`, `srcset` and `url()`. Run it before every push.
+Parses every module and validates `scripts/projects.js`: known categories, no empty fields, a source on every highlight, alt text on every image, and every cover and chart file present. It also resolves every local `src`, `href`, `srcset` and `url()`, and checks that every `data-hl` figure quoted outside the Work section points at a real highlight. Run it before every push.
 
 ## Layout
 
@@ -35,7 +35,7 @@ Website/
     projects.js         THE project data (typed with JSDoc). Cards, filters, counters,
                         the hero card and the footer list are all rendered from it
     render.js           builds the cards, filter tabs and counters from projects.js
-    motion.js           gateway, reveals, parallax/dolly, light traces, cursor, tilt, Lenis
+    motion.js           intro canopy, reveals, parallax/dolly, light traces, cursor, tilt, Lenis
     app.js              entry point: render, navigation, contact form (mailto), motion
   Assets/
     photos/             licensed photographs (AVIF + WebP, 960/1600/2400 w), see CREDITS.md
@@ -46,8 +46,10 @@ tools/
 
 ## Adding a project
 
-Add one entry to `PROJECTS` in `Website/scripts/projects.js`. Every highlight needs a `source`: the file, notebook, run or page the figure came from. Counts, filter tabs and the footer list update on their own.
+Add one entry to `PROJECTS` in `Website/scripts/projects.js`. Every highlight needs a `source`: the file, notebook, run or page the figure came from. Counts, filter tabs, the hero figures and the footer list update on their own. To quote a highlight elsewhere on the page, use `data-hl="slug:Label"` (value) or `data-hl-src="slug:Label"` (source).
 
 ## Data rule
 
 Every figure on the site was read from the project's own files or live page. Nothing is estimated or rounded up. If a figure can't be traced to a source, it doesn't go on the site.
+
+Anything that could not be traced to a source is listed in `NEEDS_CONFIRMATION.md`.
