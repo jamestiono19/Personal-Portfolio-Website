@@ -1,98 +1,119 @@
 /* ============================================================
-   tokens.css: design tokens for the whole site.
+   tokens.css: fonts, palette, type scale, space and motion.
 
-   Palette: pre-dawn forest teal and charcoal for the shadows,
-   bone for text, one warm sunrise gold for accents. Nothing
-   else is allowed to introduce a new colour.
+   The world supplies the materials (plaster, timber, slate,
+   gold leaf, banner cloth, ivy, lantern light). Nothing else
+   introduces a colour. Gold is the single accent.
    ============================================================ */
+
+/* ── Fonts: self-hosted WOFF2, Latin subset, OFL-1.1 ──────────
+   Grenze Gotisch: display (variable weight, 100 to 900)
+   Grenze:         project titles, H3, large figures (600, 700)
+   Alegreya:       reading text (400, 400 italic, 600)
+   Alegreya Sans:  captions and form text (400, 400 italic)
+   Alegreya Sans SC: labels (500), nav and buttons (700)
+   Each face has a metric-matched local fallback so the swap
+   does not shift the layout. */
+@font-face { font-family: "Grenze Gotisch"; src: url("../Assets/fonts/grenze-gotisch-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Grenze"; src: url("../Assets/fonts/grenze-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Grenze"; src: url("../Assets/fonts/grenze-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("../Assets/fonts/alegreya-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("../Assets/fonts/alegreya-400i.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("../Assets/fonts/alegreya-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Alegreya Sans"; src: url("../Assets/fonts/alegreya-sans-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Alegreya Sans"; src: url("../Assets/fonts/alegreya-sans-400i.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Alegreya Sans SC"; src: url("../Assets/fonts/alegreya-sans-sc-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Alegreya Sans SC"; src: url("../Assets/fonts/alegreya-sans-sc-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+@font-face { font-family: "Gotisch Fallback"; src: local("Georgia"), local("Times New Roman"); size-adjust: 92%; ascent-override: 110%; descent-override: 38%; line-gap-override: 0%; }
+@font-face { font-family: "Grenze Fallback"; src: local("Georgia"), local("Times New Roman"); size-adjust: 87%; ascent-override: 110%; descent-override: 38%; line-gap-override: 0%; }
+@font-face { font-family: "Alegreya Fallback"; src: local("Georgia"), local("Times New Roman"); size-adjust: 100%; ascent-override: 101.6%; descent-override: 34.5%; line-gap-override: 0%; }
+@font-face { font-family: "Alegreya Sans Fallback"; src: local("Arial"), local("Helvetica"); size-adjust: 85%; ascent-override: 106%; descent-override: 35%; line-gap-override: 0%; }
+@font-face { font-family: "Alegreya Sans SC Fallback"; src: local("Arial"), local("Helvetica"); size-adjust: 94%; ascent-override: 96%; descent-override: 32%; line-gap-override: 0%; }
 
 :root {
   /* ── Colour ─────────────────────────────────────────────── */
-  --ink-950: #0c1a17;          /* page base: deep forest, almost black */
-  --ink-900: #10211d;
-  --ink-850: #142722;
-  --ink-800: #1a2f29;          /* raised surface */
-  --canopy-700: #173a30;       /* forest */
-  --canopy-600: #243f3a;       /* teal shadow */
-  --canopy-500: #3a5a50;
+  --plaster: #E6D9BC;          /* reading panels only */
+  --plaster-hi: #F0E6CF;       /* lit edge of a panel, input fields */
+  --plaster-deep: #D6C49E;     /* panel edges, ruled lines */
+  --timber: #46301F;           /* frames, brackets, text on plaster */
+  --timber-mid: #6B4A30;
+  --timber-dark: #2E1F14;      /* desk, deep frames */
+  --slate: #2A2723;            /* stone surfaces, footer, gate */
+  --slate-mid: #3A3530;
+  --slate-deep: #1C1A17;       /* warm near-black, never #000 */
+  --stone-text: #E9E0CC;       /* text on stone */
+  --stone-muted: #B9AE98;      /* secondary text on stone (AA on --slate) */
+  --ink-muted: #5E4A38;        /* secondary text on plaster (AA on --plaster) */
 
-  --bone-50:  #f3f0e8;         /* bone: light surfaces, headline text */
-  --bone-100: #ebe6da;         /* primary text on dark */
-  --bone-300: #c6bfb0;         /* secondary text */
-  --fog-400:  #8f9c94;         /* tertiary text, labels (AA on ink-950) */
-  --mist-200: #e4e1d8;         /* warm mist: secondary light surface */
-  --earth-500: #82796a;        /* muted earth */
-  --earth-700: #5a5246;        /* labels on light surfaces (AA on bone) */
-  --charcoal: #171b19;         /* text on light surfaces */
+  --dome-gold: #C8922A;        /* the single accent */
+  --gold-ink: #8F6519;         /* gold dark enough for text on plaster */
+  --banner: #A8392B;           /* banners and the wax seal */
+  --banner-deep: #7E2A20;
+  --sky: #78A9CC;
+  --ivy: #5D7A3A;
+  --lantern: #E39B3C;          /* light sources only */
 
-  --gold-300: #dcc08f;
-  --gold-400: #c7a36a;         /* sunrise gold, the single accent */
-  --gold-500: #a8844a;
-
-  --hairline:        rgba(235, 230, 218, 0.12);
-  --hairline-strong: rgba(235, 230, 218, 0.22);
-  --gold-line:       rgba(199, 163, 106, 0.6);
-
-  --glass:        rgba(13, 30, 26, 0.58);
-  --glass-strong: rgba(11, 25, 22, 0.8);
-  --glass-blur:   16px;
-  --paper:        rgba(243, 240, 232, 0.86);
-
-  /* Scrims keep text at AA contrast over photography */
-  --scrim-bottom: linear-gradient(180deg, rgba(12, 26, 23, 0) 0%, rgba(12, 26, 23, 0.55) 55%, rgba(12, 26, 23, 0.92) 100%);
-  --scrim-left:   linear-gradient(90deg, rgba(12, 26, 23, 0.82) 0%, rgba(12, 26, 23, 0.4) 55%, rgba(12, 26, 23, 0) 100%);
+  /* Category heraldry: one colour per discipline, reused on the
+     filter, the project tag and the project frame. */
+  --cat-analytics: #3C6A8C;
+  --cat-machine-learning: #A8392B;
+  --cat-deep-learning: #5D7A3A;
+  --cat-text-mining: #8F6519;
+  --cat-app-development: #6B4A30;
 
   /* ── Type ───────────────────────────────────────────────── */
-  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --font-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --font-display: "Grenze Gotisch", "Gotisch Fallback", Georgia, serif;
+  --font-title: "Grenze", "Grenze Fallback", Georgia, serif;
+  --font-body: "Alegreya", "Alegreya Fallback", Georgia, serif;
+  --font-sans: "Alegreya Sans", "Alegreya Sans Fallback", Arial, sans-serif;
+  --font-label: "Alegreya Sans SC", "Alegreya Sans SC Fallback", Arial, sans-serif;
 
-  --fs-mono:  0.75rem;                                   /* 12px data labels */
-  --fs-small: 0.875rem;
-  --fs-body:  1rem;
-  --fs-lead:  clamp(1.0625rem, 0.98rem + 0.35vw, 1.25rem);
-  --fs-h4:    clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-  --fs-h3:    clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
-  --fs-h2:    clamp(2.5rem, 1.8rem + 3.2vw, 4.75rem);
-  --fs-h1:    clamp(3rem, 1.6rem + 6.4vw, 8rem);
-  --fs-statement: clamp(1.75rem, 1.2rem + 2.4vw, 3.25rem);
+  --fs-h1: clamp(3rem, 8vw, 7.5rem);
+  --fs-h2: clamp(2.25rem, 4.5vw, 4rem);
+  --fs-h3: 1.75rem;
+  --fs-statement: clamp(1.75rem, 1.1rem + 2.6vw, 3.25rem);
+  --fs-figure: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+  --fs-lead: 1.25rem;
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-label: 0.8125rem;
 
-  --track-display: -0.02em;
-  --track-mono: 0.06em;
-  --lh-tight: 0.95;
-  --lh-body: 1.6;
+  --lh-display: 1;
+  --lh-h2: 1.06;
+  --lh-h3: 1.15;
+  --lh-body: 1.58;
+  --lh-label: 1.4;
 
-  /* ── Space (8 px grid) ──────────────────────────────────── */
-  --s-1: 0.5rem;   /* 8  */
-  --s-2: 1rem;     /* 16 */
-  --s-3: 1.5rem;   /* 24 */
-  --s-4: 2rem;     /* 32 */
-  --s-5: 2.5rem;   /* 40 */
-  --s-6: 3rem;     /* 48 */
-  --s-8: 4rem;     /* 64 */
-  --s-10: 5rem;    /* 80 */
-  --s-12: 6rem;    /* 96 */
-  --s-16: 8rem;    /* 128 */
+  --w-display: 850;
+  --w-h2: 700;
+  --track-label: 0.04em;
+  --measure: 65ch;
 
-  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  /* ── Space: an 8 px grid, used by role, not one padding for all */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 2.5rem;
+  --s-6: 3rem;
+  --s-8: 4rem;
+  --s-10: 5rem;
+  --s-12: 6rem;
+  --s-16: 8rem;
+  --gutter: clamp(1rem, 0.4rem + 2.8vw, 3rem);
   --max-w: 1320px;
-  --section-pad: clamp(5rem, 3rem + 7vw, 10rem);
+  --section-pad: clamp(4.5rem, 2.5rem + 7vw, 9rem);
 
-  /* ── Shape ──────────────────────────────────────────────── */
-  --r-1: 4px;
-  --r-2: 8px;
-  --r-3: 12px;
-  --shadow-inner: inset 0 1px 0 rgba(235, 230, 218, 0.06), inset 0 0 0 1px var(--hairline);
-  --shadow-lift: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
+  /* ── Materials ──────────────────────────────────────────── */
+  --edge-plaster: 0 1px 0 rgba(255, 248, 230, 0.6) inset, 0 -2px 0 rgba(70, 48, 31, 0.12) inset;
+  --cast-near: 0 2px 0 rgba(28, 26, 23, 0.35), 0 14px 28px -12px rgba(28, 26, 23, 0.55);
+  --cast-far: 0 24px 48px -24px rgba(28, 26, 23, 0.6);
+  --iron: #241F1B;
 
   /* ── Motion ─────────────────────────────────────────────── */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --t-fast: 180ms;
-  --t-med: 420ms;
-  --t-slow: 900ms;
-  --stagger: 70ms;
-
-  /* Scroll-driven values, written by app.js */
-  --dawn: 0;       /* 0 = pre-dawn at the top, 1 = morning at the bottom */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-swing: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-quick: 180ms;
+  --dur: 360ms;
 }

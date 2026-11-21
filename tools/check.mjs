@@ -81,9 +81,34 @@ for (const m of html.matchAll(/data-hl(?:-src)?="([^"]+)"/g)) {
 }
 for (const f of readdirSync(join(root, "styles"))) check(join(root, "styles", f), join(root, "styles"));
 
+// 6. Credentials: every entry names its file; logos only where one exists locally
+const { CREDENTIALS, GROUPS } = await import(pathToFileURL(join(root, "scripts", "credentials.js")).href);
+for (const c of CREDENTIALS) {
+  const at = `credential "${c.title}"`;
+  ["title", "summary", "file"].forEach((k) => { if (!String(c[k] ?? "").trim()) fail(`${at}: empty ${k}`); });
+  if (!GROUPS[c.group]) fail(`${at}: unknown group "${c.group}"`);
+  if (!c.provider?.name) fail(`${at}: no provider name`);
+  if (c.provider?.logo && !existsSync(join(root, c.provider.logo))) fail(`${at}: missing logo ${c.provider.logo}`);
+  if (c.provider?.logo && !c.provider.logoAlt) fail(`${at}: logo without alt text`);
+}
+
+// 7. House style: banned faces and the typographic tells listed in design-system.md
+const banned = /\b(Inter|Geist|Instrument Serif|Fraunces|Cormorant|Playfair|Cinzel|MedievalSharp|Uncial Antiqua|Pirata One)\b/;
+const texts = {
+  "index.html": html,
+  ...Object.fromEntries(readdirSync(join(root, "styles")).map((f) => [`styles/${f}`, readFileSync(join(root, "styles", f), "utf8")])),
+  "scripts/projects.js": readFileSync(join(root, "scripts", "projects.js"), "utf8"),
+  "scripts/credentials.js": readFileSync(join(root, "scripts", "credentials.js"), "utf8"),
+};
+for (const [name, text] of Object.entries(texts)) {
+  if (banned.test(text)) fail(`${name}: uses a banned typeface (${text.match(banned)[0]})`);
+  if (!name.startsWith("styles/") && /\u00B7|\u2192|\u2194|\u2248/.test(text)) fail(`${name}: contains a middle dot or arrow character`);
+  if (/fonts\.googleapis|cdn\.jsdelivr|unpkg\.com/.test(text)) fail(`${name}: loads from a third-party CDN; self-host instead`);
+}
+
 if (errors.length) {
   console.error(`✗ ${errors.length} problem(s):\n  ` + errors.join("\n  "));
   process.exit(1);
 }
 const highlights = PROJECTS.reduce((n, p) => n + p.highlights.length, 0);
-console.log(`✓ ${PROJECTS.length} projects, ${highlights} sourced highlights, all modules parse, all local references resolve`);
+console.log(`✓ ${PROJECTS.length} projects, ${highlights} sourced highlights, ${CREDENTIALS.length} credentials, all modules parse, all local references resolve, house style holds`);
