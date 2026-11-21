@@ -3,53 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>James Tiono - Building ideas into intelligent experiences</title>
-  <meta name="description" content="James Tiono, Computer Science student at BINUS University. Data analytics, machine learning and app development, with the figures behind each project.">
-  <meta name="theme-color" content="#0c1a17">
+  <title>James Tiono, data and machine learning portfolio</title>
+  <meta name="description" content="James Tiono, Computer Science student at BINUS University. Data analytics, machine learning, deep learning and app development, with the source file behind every figure.">
+  <meta name="theme-color" content="#2A2723">
   <link rel="canonical" href="https://jamestiono-porto.vercel.app/">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://jamestiono-porto.vercel.app/">
-  <meta property="og:title" content="James Tiono - Building ideas into intelligent experiences">
-  <meta property="og:description" content="Data analytics, machine learning and app development. Eight projects, each with the figures behind it.">
+  <meta property="og:title" content="James Tiono, data and machine learning portfolio">
+  <meta property="og:description" content="Eight projects in analytics, machine learning, deep learning, text mining and app development, each with the figures behind it.">
   <meta property="og:image" content="https://jamestiono-porto.vercel.app/Assets/og-cover.jpg">
-  <meta property="og:image:alt" content="A misty forest path at first light">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A painted medieval market lane in afternoon sun, with bunting overhead and a town gate at the far end">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="James Tiono - Building ideas into intelligent experiences">
-  <meta name="twitter:description" content="Data analytics, machine learning and app development. Eight projects, each with the figures behind it.">
+  <meta name="twitter:title" content="James Tiono, data and machine learning portfolio">
+  <meta name="twitter:description" content="Eight projects in analytics, machine learning, deep learning, text mining and app development, each with the figures behind it.">
   <meta name="twitter:image" content="https://jamestiono-porto.vercel.app/Assets/og-cover.jpg">
 
   <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml">
 
-  <!-- The canopy opens the gateway; the forest path is shared by the gateway and the hero -->
-  <link rel="preload" as="image" type="image/avif"
-        href="./Assets/photos/canopy-1600.avif"
-        imagesrcset="./Assets/photos/canopy-960.avif 960w, ./Assets/photos/canopy-1600.avif 1600w"
+  <link rel="preload" href="./Assets/fonts/grenze-gotisch-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./Assets/fonts/alegreya-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" type="image/avif" fetchpriority="high"
+        href="./Assets/scene/sky-1600.avif"
+        imagesrcset="./Assets/scene/sky-960.avif 960w, ./Assets/scene/sky-1600.avif 1600w, ./Assets/scene/sky-2400.avif 2400w"
         imagesizes="100vw">
-  <link rel="preload" as="image" type="image/avif"
-        href="./Assets/photos/path-1600.avif"
-        imagesrcset="./Assets/photos/path-960.avif 960w, ./Assets/photos/path-1600.avif 1600w, ./Assets/photos/path-2400.avif 2400w"
-        imagesizes="100vw" fetchpriority="high">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
   <link rel="stylesheet" href="./styles/tokens.css">
   <link rel="stylesheet" href="./styles/site.css">
 
   <script>
-    /* Runs before first paint: arm motion classes and decide on the gateway.
-       The gateway shows once per session; ?intro forces it, ?nointro skips it.
-       If the module script never boots, everything is released after 5 s. */
+    /* Runs before first paint. The gate shows once per session;
+       ?intro forces it, ?nointro skips it. If the module never boots,
+       the gate is released after 6 s so the page is never stuck. */
     (function () {
       var d = document.documentElement, q = location.search, seen = false;
       try { seen = sessionStorage.getItem("jt-gate") === "1"; } catch (e) {}
-      d.classList.add("js-motion");
+      d.classList.add("js");
       if ((seen || /nointro/.test(q)) && !/[?&]intro\b/.test(q)) d.classList.add("no-gate");
       else d.classList.add("gate-on");
       setTimeout(function () {
-        if (!window.__jt) { d.classList.add("no-gate"); d.classList.remove("gate-on", "js-motion"); document.body.classList.remove("is-locked"); }
-      }, 5000);
+        if (!window.__jt) { d.classList.remove("gate-on"); d.classList.add("no-gate"); }
+      }, 6000);
     })();
   </script>
   <noscript><style>.gate, .cursor { display: none !important; }</style></noscript>
@@ -57,338 +53,307 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ── Atmosphere (decorative) ─────────────────────────── -->
-  <div class="scene" aria-hidden="true">
-    <div class="scene__layer scene__layer--dawn" style="background-image:url('./Assets/photos/valley-1600.webp')"></div>
-    <div class="scene__layer scene__layer--morning" style="background-image:url('./Assets/photos/rays-1600.webp')"></div>
-    <div class="scene__veil"></div>
-    <div class="scene__fog"></div>
-    <canvas class="scene__traces"></canvas>
-    <div class="scene__grain"></div>
-  </div>
-
-  <!-- ── Gateway: an aerial canopy parts and the camera drops through it ──
-       Only the scene and the title. No bar, counter, button or hint. -->
-  <div class="gate" id="gate" aria-hidden="true">
-    <div class="gate__world">
-      <picture>
-        <source type="image/avif" srcset="./Assets/photos/path-960.avif 960w, ./Assets/photos/path-1600.avif 1600w, ./Assets/photos/path-2400.avif 2400w" sizes="100vw">
-        <img src="./Assets/photos/path-1600.webp" alt="" width="1600" height="1067">
-      </picture>
-    </div>
-    <div class="gate__mist"></div>
-    <div class="gate__canopy gate__canopy--l">
-      <picture>
-        <source type="image/avif" srcset="./Assets/photos/canopy-960.avif 960w, ./Assets/photos/canopy-1600.avif 1600w" sizes="100vw">
-        <img src="./Assets/photos/canopy-1600.webp" alt="" width="1600" height="1200">
-      </picture>
-    </div>
-    <div class="gate__canopy gate__canopy--r">
-      <picture>
-        <source type="image/avif" srcset="./Assets/photos/canopy-960.avif 960w, ./Assets/photos/canopy-1600.avif 1600w" sizes="100vw">
-        <img src="./Assets/photos/canopy-1600.webp" alt="" width="1600" height="1200">
-      </picture>
-    </div>
-    <div class="gate__bloom"></div>
-    <div class="gate__grain"></div>
-    <div class="gate__title">
-      <p class="gate__eyebrow">Portfolio, 2026</p>
-      <p class="gate__name">James <em>Tiono</em></p>
-      <p class="gate__sub">Data, models and the interfaces around them</p>
-    </div>
-  </div>
-
-  <!-- ── Navigation ─────────────────────────────────────── -->
-  <header class="nav glass">
-    <a class="nav__brand" href="#home" aria-label="James Tiono, back to top">
-      <svg class="nav__mark" viewBox="0 0 64 64" aria-hidden="true">
-        <rect x="1" y="1" width="62" height="62" rx="10" fill="none" stroke="#c7a36a" stroke-opacity=".55"/>
-        <path d="M17 20h15M24.5 20v19.5a6.5 6.5 0 0 1-11.5 4M34 20h15M41.5 20v26" fill="none" stroke="#ebe6da" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- ── Castle gate: the loading screen and the way in ─────────
+       Progress is real: each step of the portcullis is a preload
+       milestone (fonts, then each painted layer of the hero). -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-name" aria-describedby="gate-status">
+    <div class="gate__rig">
+      <div class="gate__light" aria-hidden="true"></div>
+      <div class="gate__door gate__door--l" aria-hidden="true">
+        <picture>
+          <source type="image/avif" srcset="./Assets/scene/gate-door-l-960.avif 960w, ./Assets/scene/gate-door-l-1600.avif 1600w, ./Assets/scene/gate-door-l-2400.avif 2400w" sizes="100vw">
+          <img src="./Assets/scene/gate-door-l-1600.webp" srcset="./Assets/scene/gate-door-l-960.webp 960w, ./Assets/scene/gate-door-l-1600.webp 1600w, ./Assets/scene/gate-door-l-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350">
+        </picture>
+      </div>
+      <div class="gate__door gate__door--r" aria-hidden="true">
+        <picture>
+          <source type="image/avif" srcset="./Assets/scene/gate-door-r-960.avif 960w, ./Assets/scene/gate-door-r-1600.avif 1600w, ./Assets/scene/gate-door-r-2400.avif 2400w" sizes="100vw">
+          <img src="./Assets/scene/gate-door-r-1600.webp" srcset="./Assets/scene/gate-door-r-960.webp 960w, ./Assets/scene/gate-door-r-1600.webp 1600w, ./Assets/scene/gate-door-r-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350">
+        </picture>
+      </div>
+      <svg class="gate__portcullis" viewBox="0 0 2400 1350" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <clipPath id="arch"><path d="M806 1350V600a394 394 0 0 1 788 0v750z"/></clipPath>
+          <pattern id="grille" width="88" height="88" patternUnits="userSpaceOnUse" x="806">
+            <rect x="34" width="20" height="88" fill="#1e1b18"/>
+            <rect y="34" width="88" height="16" fill="#2a2622"/>
+            <rect x="38" width="5" height="88" fill="#4d4640"/>
+          </pattern>
+        </defs>
+        <g clip-path="url(#arch)">
+          <g class="gate__grille">
+            <rect x="806" y="180" width="788" height="1170" fill="url(#grille)"/>
+            <path d="M840 1350l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36zm88 0l14 36 14-36z" fill="#1e1b18" transform="translate(0 -36)"/>
+          </g>
+        </g>
       </svg>
-      <span class="nav__name">James Tiono</span>
-    </a>
+      <div class="gate__wall" aria-hidden="true">
+        <picture>
+          <source type="image/avif" srcset="./Assets/scene/gate-wall-960.avif 960w, ./Assets/scene/gate-wall-1600.avif 1600w, ./Assets/scene/gate-wall-2400.avif 2400w" sizes="100vw">
+          <img src="./Assets/scene/gate-wall-1600.webp" srcset="./Assets/scene/gate-wall-960.webp 960w, ./Assets/scene/gate-wall-1600.webp 1600w, ./Assets/scene/gate-wall-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350">
+        </picture>
+        <span class="torch torch--l"><i></i></span>
+        <span class="torch torch--r"><i></i></span>
+      </div>
+    </div>
+
+    <div class="gate__ui">
+      <p class="gate__name" id="gate-name">James Tiono</p>
+      <p class="gate__count" aria-hidden="true"><span data-gate-count>00</span></p>
+      <p class="gate__status" id="gate-status" role="status" aria-live="polite">Loading the town</p>
+      <p class="gate__prompt" data-gate-prompt hidden>
+        <button type="button" class="gate__enter" data-gate-enter>Enter</button>
+        <span>Click, scroll or press Enter</span>
+      </p>
+    </div>
+    <button type="button" class="gate__skip" data-gate-skip>Skip intro</button>
+  </div>
+
+  <!-- ── Navigation ──────────────────────────────────────────── -->
+  <header class="nav">
+    <a class="nav__brand" href="#home" aria-label="James Tiono, back to top">James Tiono</a>
     <nav aria-label="Primary">
       <ul class="nav__links">
-        <li><a class="nav__link" href="#home">Home</a></li>
         <li><a class="nav__link" href="#about">About</a></li>
         <li><a class="nav__link" href="#work">Work</a></li>
-        <li><a class="nav__link" href="#credentials">Record</a></li>
+        <li><a class="nav__link" href="#credentials">Credentials</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
-        <li aria-hidden="true" class="nav__pill"></li>
       </ul>
     </nav>
-    <a class="btn btn--gold nav__cta" href="#contact" data-magnetic>Write to me
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-    <button type="button" class="nav__burger" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
+    <a class="nav__cv" href="./Assets/James Tiono CV.pdf" download>Download CV</a>
+    <button type="button" class="nav__burger" aria-expanded="false" aria-controls="menu"><span class="sr-only">Menu</span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
   </header>
 
-  <div class="menu" id="menu" aria-hidden="true">
-    <a href="#home">Home</a>
+  <div class="menu" id="menu" aria-label="Menu">
     <a href="#about">About</a>
     <a href="#work">Work</a>
-    <a href="#credentials">Record</a>
+    <a href="#credentials">Credentials</a>
     <a href="#contact">Contact</a>
-    <p class="mono">jamestiono02@gmail.com</p>
+    <a href="./Assets/James Tiono CV.pdf" download>Download CV</a>
   </div>
 
   <main id="main" tabindex="-1">
 
-    <!-- ── Hero ─────────────────────────────────────────── -->
+    <!-- ── Hero: the market lane, looking towards the gate ──────── -->
     <section class="hero" id="home" aria-labelledby="hero-title">
-      <div class="hero__photo" aria-hidden="true">
-        <picture>
-          <source type="image/avif" srcset="./Assets/photos/path-960.avif 960w, ./Assets/photos/path-1600.avif 1600w, ./Assets/photos/path-2400.avif 2400w" sizes="100vw">
-          <source type="image/webp" srcset="./Assets/photos/path-960.webp 960w, ./Assets/photos/path-1600.webp 1600w, ./Assets/photos/path-2400.webp 2400w" sizes="100vw">
-          <img src="./Assets/photos/path-1600.webp" alt="" width="1600" height="1067" fetchpriority="high" decoding="async">
-        </picture>
-      </div>
-
-      <div class="wrap hero__grid">
-        <p class="hero__chip glass mono rv">Data Analytics · Machine Learning · App Development</p>
-        <h1 class="hero__title rv-mask" id="hero-title" data-lines>
-          <span class="ln">Building ideas</span>
-          <span class="ln">into <em>intelligent</em></span>
-          <span class="ln">experiences.</span>
-        </h1>
-
-        <div class="hero__low">
-          <div class="rv" style="--i:2" id="featured"></div>
-          <div class="hero__desc rv" style="--i:3">
-            <p>I turn raw data into models, analyses and products that someone can use. Below is the work, with the numbers that came out of it.</p>
-            <div class="hero__actions">
-              <a class="btn btn--gold" href="#work" data-magnetic>Explore projects
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-              <a class="btn btn--line" href="./Assets/James Tiono CV.pdf" download data-magnetic>Download CV
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v8M4.5 7.5 8 11l3.5-3.5M3 13h10"/></svg></a>
-            </div>
-          </div>
+      <div class="scene" aria-hidden="true">
+        <div class="scene__layer scene__layer--sky" data-depth="0.08">
+          <picture>
+            <source type="image/avif" srcset="./Assets/scene/sky-960.avif 960w, ./Assets/scene/sky-1600.avif 1600w, ./Assets/scene/sky-2400.avif 2400w" sizes="100vw">
+            <img src="./Assets/scene/sky-1600.webp" srcset="./Assets/scene/sky-960.webp 960w, ./Assets/scene/sky-1600.webp 1600w, ./Assets/scene/sky-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350" fetchpriority="high" data-milestone="sky">
+          </picture>
+        </div>
+        <div class="birds"><i></i><i></i><i></i><i></i></div>
+        <div class="scene__layer scene__layer--far" data-depth="0.16">
+          <picture>
+            <source type="image/avif" srcset="./Assets/scene/far-960.avif 960w, ./Assets/scene/far-1600.avif 1600w, ./Assets/scene/far-2400.avif 2400w" sizes="100vw">
+            <img src="./Assets/scene/far-1600.webp" srcset="./Assets/scene/far-960.webp 960w, ./Assets/scene/far-1600.webp 1600w, ./Assets/scene/far-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350" data-milestone="far">
+          </picture>
+        </div>
+        <div class="scene__layer scene__layer--mid" data-depth="0.3">
+          <picture>
+            <source type="image/avif" srcset="./Assets/scene/mid-960.avif 960w, ./Assets/scene/mid-1600.avif 1600w, ./Assets/scene/mid-2400.avif 2400w" sizes="100vw">
+            <img src="./Assets/scene/mid-1600.webp" srcset="./Assets/scene/mid-960.webp 960w, ./Assets/scene/mid-1600.webp 1600w, ./Assets/scene/mid-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350" data-milestone="mid">
+          </picture>
+        </div>
+        <div class="scene__shafts"></div>
+        <div class="scene__layer scene__layer--near" data-depth="0.5">
+          <picture>
+            <source type="image/avif" srcset="./Assets/scene/near-960.avif 960w, ./Assets/scene/near-1600.avif 1600w, ./Assets/scene/near-2400.avif 2400w" sizes="100vw">
+            <img src="./Assets/scene/near-1600.webp" srcset="./Assets/scene/near-960.webp 960w, ./Assets/scene/near-1600.webp 1600w, ./Assets/scene/near-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="1350" data-milestone="near">
+          </picture>
+        </div>
+        <div class="scene__mist"></div>
+        <!-- The nearest string of bunting, strung across the top edge.
+             It sways with scroll speed; the lanterns warm when the
+             pointer comes near. -->
+        <svg class="bunting" viewBox="0 0 1600 150" preserveAspectRatio="none">
+          <path class="bunting__cord" d="M-10 18 Q800 104 1610 30" fill="none"/>
+          <g class="bunting__flags"></g>
+        </svg>
+        <div class="lanterns">
+          <span class="lantern" style="--x:24%;--drop:5.2rem"><i></i></span>
+          <span class="lantern" style="--x:57%;--drop:6.6rem"><i></i></span>
         </div>
       </div>
 
-      <div class="wrap">
-        <dl class="stats glass rv" style="--i:4">
-          <div class="stat"><dt class="mono">Projects</dt><dd data-count="all">08</dd></div>
-          <div class="stat"><dt class="mono">Disciplines</dt><dd data-count="domains">05</dd></div>
-          <div class="stat"><dt class="mono">Studying</dt><dd>CS at BINUS</dd></div>
-          <div class="stat"><dt class="mono">Sourced figures</dt><dd data-count="highlights">49</dd></div>
+      <div class="hero__inner">
+        <h1 class="hero__title" id="hero-title" data-enter>Building ideas into intelligent experiences.</h1>
+
+        <div class="hero__panel" data-enter>
+          <p class="hero__lead">I&rsquo;m James Tiono, a Computer Science student at BINUS University. I turn raw data into models, analyses and products that people can use, and every figure on this page names the file it came from.</p>
+          <div class="hero__actions">
+            <a class="btn btn--gold" href="#work">Explore projects</a>
+            <a class="btn btn--timber" href="#contact">Start a project</a>
+            <a class="btn btn--line" href="./Assets/James Tiono CV.pdf" download>Download CV</a>
+          </div>
+        </div>
+
+        <aside class="sign" id="featured" aria-label="Featured project" data-enter></aside>
+      </div>
+
+      <dl class="ledger-strip" aria-label="The portfolio in figures" data-enter>
+        <div><dt>Projects</dt><dd data-count="all">8</dd></div>
+        <div><dt>Disciplines</dt><dd data-count="domains">5</dd></div>
+        <div><dt>Sourced findings</dt><dd data-count="highlights">58</dd></div>
+        <div><dt>Credentials on file</dt><dd data-count="credentials">9</dd></div>
+      </dl>
+    </section>
+
+    <!-- ── Statement ─────────────────────────────────────────── -->
+    <section class="statement" aria-labelledby="statement-text">
+      <div class="statement__inner">
+        <p class="statement__text" id="statement-text" data-light>Raw data rarely answers anything on its own. Scraped articles, clinical records and simulated traffic only become useful once they are cleaned, modelled and put in front of the person who has to decide.</p>
+        <dl class="statement__ledger" aria-label="The raw material behind three projects">
+          <div>
+            <dt>Scraped news articles</dt>
+            <dd class="fig" data-hl="text-mining:Corpus">5,995 articles</dd>
+            <dd class="src" data-hl-src="text-mining:Corpus">data/processed/corpus_build_report.csv</dd>
+          </div>
+          <div>
+            <dt>Clinical encounters</dt>
+            <dd class="fig" data-hl="datafest-2026:Encounters">7,675,801</dd>
+            <dd class="src" data-hl-src="datafest-2026:Encounters">test1.ipynb</dd>
+          </div>
+          <div>
+            <dt>Held-out traffic simulations</dt>
+            <dd class="fig">100 episodes</dd>
+            <dd class="src">results/eval/final_test_summary_table.csv</dd>
+          </div>
         </dl>
       </div>
     </section>
 
-    <!-- ── Statement: the view from above, on a light panel ───── -->
-    <section class="aerial" aria-label="Statement">
-      <div class="aerial__photo" aria-hidden="true">
-        <picture>
-          <source type="image/avif" srcset="./Assets/photos/edge-960.avif 960w, ./Assets/photos/edge-1600.avif 1600w, ./Assets/photos/edge-2400.avif 2400w" sizes="100vw">
-          <img src="./Assets/photos/edge-1600.webp" srcset="./Assets/photos/edge-960.webp 960w, ./Assets/photos/edge-1600.webp 1600w, ./Assets/photos/edge-2400.webp 2400w" sizes="100vw" alt="" width="1600" height="1173" loading="lazy" decoding="async">
-        </picture>
-      </div>
-      <div class="wrap aerial__inner">
-        <div class="paper rv">
-          <p class="paper__label mono">From above</p>
-          <p class="statement__text">
-            <span class="st-a">Raw data rarely answers anything on its own.</span>
-            <span class="st-b">Scraped articles, clinical records and simulated traffic only become useful once they are cleaned, modelled and put in front of the person who has to decide.</span>
-          </p>
-        </div>
-        <ul class="tags" aria-label="The raw material behind three of the projects">
-          <li class="tag rv" style="--i:1"><span class="mono">Scraped articles</span><strong data-hl="text-mining:Corpus">5,995 articles</strong><span data-hl-src="text-mining:Corpus">data/processed/corpus_build_report.csv</span></li>
-          <li class="tag rv" style="--i:2"><span class="mono">Clinical encounters</span><strong data-hl="datafest-2026:Encounters">7,675,801</strong><span data-hl-src="datafest-2026:Encounters">test1.ipynb</span></li>
-          <li class="tag rv" style="--i:3"><span class="mono">Held-out traffic runs</span><strong>100 episodes</strong><span>SUMO, seeds 80 to 99, five demand regimes</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ── About ────────────────────────────────────────── -->
-    <section class="section about" id="about" aria-labelledby="about-title" data-frame>
-      <div class="wrap" data-dolly>
-        <div class="about__head">
-          <div>
-            <p class="eyebrow mono rv">01 · About</p>
-            <h2 class="h2 rv-mask" id="about-title" data-lines><span class="ln">A little</span><span class="ln">about <em>me</em></span></h2>
+    <!-- ── About: an open book on the desk ─────────────────────── -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="about__inner">
+        <h2 class="h2 about__title" id="about-title">About</h2>
+        <div class="book">
+          <div class="book__page book__page--left">
+            <figure class="portrait">
+              <picture>
+                <source srcset="./Assets/Hero.webp" type="image/webp">
+                <img src="./Assets/Hero.jpeg" alt="Portrait of James Tiono" width="719" height="900" loading="lazy" decoding="async">
+              </picture>
+              <figcaption>James Tiono, Computer Science, BINUS University</figcaption>
+            </figure>
           </div>
-          <p class="rv">I study Computer Science at BINUS University and work across data analytics, machine learning and application development. I prefer projects that end in something usable: a model behind an app, an analysis that changes a decision, a tool a group opens from one link.</p>
-        </div>
-
-        <div class="bento">
-          <figure class="tile tile--portrait glass rv">
-            <picture>
-              <source srcset="./Assets/Hero.webp" type="image/webp">
-              <img src="./Assets/Hero.jpeg" alt="Portrait of James Tiono" width="719" height="900" loading="lazy" decoding="async">
-            </picture>
-            <figcaption class="mono"><span>James Tiono</span><span>BINUS · CS</span></figcaption>
-          </figure>
-
-          <div class="tile tile--quote glass lit rv" style="--i:1">
-            <h3 class="mono">Working principle</h3>
-            <blockquote>&ldquo;Curiosity inspires idea, learning builds skill, and action turns it into <em>impact</em>.&rdquo;</blockquote>
-            <p>Each project below starts from a question I could not answer yet, and ends with a figure I can point to.</p>
-          </div>
-
-          <div class="tile tile--focus glass lit rv" style="--i:2">
-            <h3 class="mono">Focus areas</h3>
-            <ul class="focus">
-              <li><span class="mono">01</span><strong>Data Analytics</strong><span>Finding the pattern in large, messy records</span></li>
-              <li><span class="mono">02</span><strong>Machine Learning</strong><span>From regression to reinforcement learning</span></li>
-              <li><span class="mono">03</span><strong>App Development</strong><span>Interfaces that put the work in people&rsquo;s hands</span></li>
-            </ul>
-          </div>
-
-          <div class="tile tile--stack glass lit rv" style="--i:3">
-            <h3 class="mono">Technical stack</h3>
-            <ul class="chips">
-              <li class="chip">Python</li><li class="chip">pandas</li><li class="chip">SQL</li>
-              <li class="chip">scikit-learn</li><li class="chip">PyTorch</li><li class="chip">MLflow</li>
-              <li class="chip">Streamlit</li><li class="chip">Next.js</li><li class="chip">TypeScript</li>
-              <li class="chip">Supabase</li><li class="chip">Unity · C#</li><li class="chip">Figma</li>
-            </ul>
-          </div>
-
-          <div class="tile tile--edu glass lit rv" style="--i:4">
-            <h3 class="mono">Education</h3>
-            <div class="edu">
-              <span class="edu__mark" aria-hidden="true">B</span>
-              <div><strong>BINUS University</strong><span>B.S. Computer Science</span></div>
-            </div>
+          <div class="book__page book__page--right">
+            <p class="about__text">I study Computer Science at BINUS University and work across data analytics, machine learning and application development. I prefer projects that end in something usable: a model behind an app, an analysis that changes a decision, a tool a group opens from one link. Most of my work starts as a question I can&rsquo;t answer yet and ends as a figure I can point to, together with the notebook or result file that produced it.</p>
+            <dl class="facts">
+              <div><dt>Studying</dt><dd>B.S. Computer Science, BINUS University</dd></div>
+              <div><dt>Works in</dt><dd>Data analytics, machine learning, deep learning, text mining and app development</dd></div>
+              <div><dt>Tools</dt><dd>Python, pandas, SQL, scikit-learn, PyTorch, MLflow, Streamlit, Next.js, TypeScript, Supabase, Unity with C#, and Figma</dd></div>
+            </dl>
+            <blockquote class="inscription">
+              <p>&ldquo;Curiosity inspires idea, learning builds skill, and action turns it into impact.&rdquo;</p>
+            </blockquote>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Work: rendered from scripts/projects.js ──────── -->
-    <section class="section work" id="work" aria-labelledby="work-title">
-      <div class="wrap">
-        <div class="work__head">
-          <div>
-            <p class="eyebrow mono rv">02 · Work</p>
-            <h2 class="h2 rv-mask" id="work-title" data-lines><span class="ln">Selected <em>work</em></span></h2>
-          </div>
-          <div class="rv">
-            <p><span data-count="all" data-words>eight</span> projects across <span data-count="domains" data-words>five</span> disciplines. Every figure is tagged with the notebook, result file or page it came from.</p>
-            <div class="filters" id="filters" role="group" aria-label="Filter projects by discipline"></div>
-            <p class="filters__status mono" id="filter-status" aria-live="polite"></p>
-          </div>
-        </div>
-        <div class="projects" id="projects"></div>
-        <noscript><p class="projects__empty">The project list needs JavaScript. Source code and links are on <a class="textlink" href="https://github.com/jamestiono19">GitHub</a>.</p></noscript>
+    <!-- ── Work: the guild hall, rendered from scripts/projects.js ─ -->
+    <section class="work" id="work" aria-labelledby="work-title">
+      <div class="work__inner">
+        <header class="work__head">
+          <h2 class="h2" id="work-title">Work</h2>
+          <p class="work__intro"><span data-count="all" data-words>Eight</span> projects across <span data-count="domains" data-words>five</span> disciplines. Each one ends with the findings that came out of it, and every finding names the notebook, result file or page it was read from.</p>
+          <div class="filters" id="filters" role="group" aria-label="Filter projects by discipline"></div>
+          <p class="filters__status" id="filter-status" aria-live="polite"></p>
+        </header>
+        <div class="boards" id="projects"></div>
+        <noscript><p class="boards__empty">The project list needs JavaScript. Source code and links are on <a href="https://github.com/jamestiono19">GitHub</a>.</p></noscript>
       </div>
     </section>
 
-    <!-- ── Record: real credentials only ─────────────────── -->
-    <section class="section" id="credentials" aria-labelledby="cred-title" data-frame>
-      <div class="wrap" data-dolly>
-        <p class="eyebrow mono rv">03 · Record</p>
-        <h2 class="h2 rv-mask" id="cred-title" data-lines style="margin:var(--s-2) 0 var(--s-6)"><span class="ln">Credentials and <em>record</em></span></h2>
-        <div class="creds">
-          <figure class="creds__photo wipe">
-            <picture>
-              <source type="image/avif" srcset="./Assets/photos/ridge-960.avif 960w, ./Assets/photos/ridge-1600.avif 1600w" sizes="(max-width: 860px) 100vw, 40vw">
-              <img src="./Assets/photos/ridge-960.webp" srcset="./Assets/photos/ridge-960.webp 960w, ./Assets/photos/ridge-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 40vw" alt="A forested hill from above, with a red-earth clearing and morning fog behind it" width="960" height="539" loading="lazy" decoding="async">
-            </picture>
-            <figcaption>
-              <span class="mono">Now · 2026</span>
-              <strong>Semester five at BINUS, with course projects shipped as working software.</strong>
-            </figcaption>
-          </figure>
-          <ul class="creds__list">
-            <li class="cred glass lit rv"><span class="mono">May 2026 · Competition</span><div><h3>ASA DataFest BINUS 2026</h3><p>Certificate of participation, team PenjelajahSejarah. Final project submitted on why chronic patients drop out of care, built on 7,675,801 encounters.</p></div></li>
-            <li class="cred glass lit rv" style="--i:1"><span class="mono">Mar 2026 · Certification</span><div><h3>Microsoft Azure AI Fundamentals</h3><p>Microsoft Elevate AI training (AI-900T00-A), 15 hours with a demonstration of learning, plus the self-paced Azure AI Basic Fundamental course.</p></div></li>
-            <li class="cred glass lit rv" style="--i:2"><span class="mono">Aug 2026 · Certification</span><div><h3>HackerRank Python (Basic)</h3><p>Passed the HackerRank skill certification test.</p></div></li>
-            <li class="cred glass lit rv" style="--i:3"><span class="mono">Certificates of excellence</span><div><h3>Databases for Developers</h3><p>Foundations (98%) and Next Level (98%), and Get Started with PL/SQL Table Functions (100%).</p></div></li>
-            <li class="cred glass lit rv" style="--i:4"><span class="mono">Feb 2026 · Recognition</span><div><h3>Duta Bahasa BINUS 2026</h3><p>Finalist, awarded by BINUS University&rsquo;s Character Building Development Center.</p></div></li>
-            <li class="cred glass lit rv" style="--i:5"><span class="mono">Ongoing · Degree</span><div><h3>BINUS University</h3><p>Undergraduate, B.S. Computer Science.</p></div></li>
-          </ul>
-        </div>
+    <!-- ── Credentials: rendered from scripts/credentials.js ────── -->
+    <section class="creds" id="credentials" aria-labelledby="cred-title">
+      <div class="creds__inner">
+        <header class="creds__head">
+          <h2 class="h2" id="cred-title">Credentials</h2>
+          <p>Certificates and records on file, with the issuer, date and ID exactly as printed. Where a provider offers public verification, the link goes straight to it.</p>
+        </header>
+        <div class="creds__groups" id="credential-groups"></div>
       </div>
     </section>
 
-    <!-- ── Contact ──────────────────────────────────────── -->
-    <section class="section contact" id="contact" aria-labelledby="contact-title" data-frame>
-      <div class="wrap" data-dolly>
-        <p class="eyebrow mono rv">04 · Contact</p>
-        <div class="contact__grid">
-          <div>
-            <h2 class="contact__title rv-mask" id="contact-title" data-lines><span class="ln">Write to</span><span class="ln"><em>me</em>.</span></h2>
-            <p class="contact__intro rv" style="margin-top:var(--s-3)">Have a project, a dataset or a question in mind? Write to me. I read every message and reply from my own address.</p>
-            <div class="details rv">
-              <a href="mailto:jamestiono02@gmail.com"><span class="mono">Email</span><span>jamestiono02@gmail.com</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
-              <a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer"><span class="mono">GitHub</span><span>jamestiono19</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
-              <a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer"><span class="mono">LinkedIn</span><span>James Tiono</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
-              <a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer"><span class="mono">Instagram</span><span>james_tiono</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
-            </div>
+    <!-- ── Contact: a letter, sealed with wax ──────────────────── -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="contact__inner">
+        <form class="letter" id="contact-form" novalidate aria-labelledby="contact-title">
+          <h2 class="h2 letter__title" id="contact-title">Contact</h2>
+          <p class="letter__intro">Have a project, a dataset or a question? Write it here. Sending opens your email app with the letter ready, addressed to me.</p>
+          <p class="letter__to"><span class="letter__label">To</span> James Tiono</p>
+          <div class="field">
+            <label for="f-name">Your name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+            <span class="field__error" id="e-name"></span>
           </div>
-
-          <form class="form glass lit rv" id="contact-form" novalidate aria-labelledby="form-title">
-            <p class="mono" id="form-title" style="color:var(--fog-400)">Write a message · all fields required</p>
-            <div class="form__row">
-              <div class="field">
-                <label class="mono" for="f-name">Your name</label>
-                <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
-                <span class="field__error" id="e-name"></span>
-              </div>
-              <div class="field">
-                <label class="mono" for="f-email">Your email</label>
-                <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
-                <span class="field__error" id="e-email"></span>
-              </div>
-            </div>
-            <div class="field">
-              <label class="mono" for="f-message">Your message</label>
-              <textarea id="f-message" name="message" required aria-describedby="e-message"></textarea>
-              <span class="field__error" id="e-message"></span>
-            </div>
-            <div class="form__foot">
-              <p>Opens your email app with the message ready to send.</p>
-              <button class="btn btn--gold" type="submit" data-magnetic>Send message
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
-            </div>
+          <div class="field">
+            <label for="f-email">Your email, for my reply</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+            <span class="field__error" id="e-email"></span>
+          </div>
+          <div class="field">
+            <label for="f-message">Your message</label>
+            <textarea id="f-message" name="message" rows="6" required aria-describedby="e-message"></textarea>
+            <span class="field__error" id="e-message"></span>
+          </div>
+          <div class="letter__foot">
+            <button class="seal" type="submit">
+              <span class="seal__wax" aria-hidden="true">
+                <svg viewBox="0 0 100 100"><use href="#monogram"/></svg>
+              </span>
+              <span class="seal__label">Send message</span>
+            </button>
             <p class="form__feedback" role="status" aria-live="polite"></p>
-          </form>
-        </div>
+          </div>
+        </form>
+
+        <aside class="addresses" aria-label="Other ways to reach me">
+          <h3>Or write directly</h3>
+          <dl>
+            <div><dt>Email</dt><dd><a href="mailto:jamestiono02@gmail.com">jamestiono02@gmail.com</a></dd></div>
+            <div><dt>GitHub</dt><dd><a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer">jamestiono19<span class="sr-only"> (opens in a new tab)</span></a></dd></div>
+            <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer">James Tiono<span class="sr-only"> (opens in a new tab)</span></a></dd></div>
+            <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer">james_tiono<span class="sr-only"> (opens in a new tab)</span></a></dd></div>
+          </dl>
+        </aside>
       </div>
     </section>
   </main>
 
-  <!-- ── Footer ─────────────────────────────────────────── -->
+  <!-- ── Footer: the town at dusk ─────────────────────────────── -->
   <footer class="footer">
-    <div class="footer__photo" aria-hidden="true">
+    <div class="footer__town" aria-hidden="true">
       <picture>
-        <source type="image/avif" srcset="./Assets/photos/valley-960.avif 960w, ./Assets/photos/valley-1600.avif 1600w, ./Assets/photos/valley-2400.avif 2400w" sizes="100vw">
-        <img src="./Assets/photos/valley-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async">
+        <source type="image/avif" srcset="./Assets/scene/dusk-1200.avif 1200w, ./Assets/scene/dusk-2400.avif 2400w" sizes="100vw">
+        <img src="./Assets/scene/dusk-1200.webp" srcset="./Assets/scene/dusk-1200.webp 1200w, ./Assets/scene/dusk-2400.webp 2400w" sizes="100vw" alt="" width="2400" height="800" loading="lazy" decoding="async">
       </picture>
     </div>
-    <div class="wrap">
+    <div class="footer__inner">
       <div class="footer__cols">
         <div class="footer__lead">
-          <a class="nav__brand" href="#home"><span class="nav__name">James Tiono</span></a>
-          <p>Computer Science at BINUS University. Data analytics, machine learning and app development.</p>
-          <div class="socials">
-            <a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1.3-4-2-6-2.5M15 21v-3.5a3 3 0 0 0-.9-2.4c3-.3 6-1.4 6-6.5a5 5 0 0 0-1.4-3.5 4.7 4.7 0 0 0-.1-3.5s-1.1-.3-3.6 1.4a12.4 12.4 0 0 0-6.5 0C6 1.3 4.9 1.6 4.9 1.6a4.7 4.7 0 0 0-.1 3.5A5 5 0 0 0 3.4 8.6c0 5.1 3 6.2 6 6.5a3 3 0 0 0-.9 2.4V21"/></svg></a>
-            <a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg></a>
-            <a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg></a>
-            <a href="mailto:jamestiono02@gmail.com" aria-label="Email">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
-          </div>
+          <p>Computer Science at BINUS University. Data analytics, machine learning, deep learning and app development.</p>
+          <p><a href="mailto:jamestiono02@gmail.com">jamestiono02@gmail.com</a></p>
         </div>
-        <nav aria-label="Footer: navigate">
-          <h2 class="mono">Navigate</h2>
+        <nav aria-label="Footer: sections">
+          <h2>Sections</h2>
           <ul>
-            <li><a href="#home">Home</a></li><li><a href="#about">About</a></li>
-            <li><a href="#work">Work</a></li><li><a href="#credentials">Record</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#credentials">Credentials</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
         <nav aria-label="Footer: projects">
-          <h2 class="mono">Projects</h2>
+          <h2>Projects</h2>
           <ul id="footer-projects"></ul>
         </nav>
-        <nav aria-label="Footer: connect">
-          <h2 class="mono">Connect</h2>
+        <nav aria-label="Footer: elsewhere">
+          <h2>Elsewhere</h2>
           <ul>
-            <li><a href="mailto:jamestiono02@gmail.com">Email</a></li>
             <li><a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer">GitHub</a></li>
             <li><a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             <li><a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
@@ -396,18 +361,20 @@
           </ul>
         </nav>
       </div>
-      <span class="wordmark" aria-hidden="true">James Tiono</span>
-      <div class="footer__bar mono">
+      <p class="wordmark" aria-hidden="true" data-text="James Tiono"></p>
+      <div class="footer__bar">
         <span>&copy; <span data-year>2026</span> James Tiono</span>
-        <span>Photographs credited in <a href="https://github.com/jamestiono19/Personal-Portfolio-Website/blob/main/CREDITS.md" target="_blank" rel="noopener noreferrer">CREDITS.md</a></span>
+        <span>Artwork, typefaces and logos are credited in <a href="https://github.com/jamestiono19/Personal-Portfolio-Website/blob/main/CREDITS.md" target="_blank" rel="noopener noreferrer">CREDITS.md</a></span>
       </div>
     </div>
   </footer>
 
-  <a class="totop glass" href="#home" aria-label="Back to top">
-    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4"/></svg></a>
+  <div class="cursor" aria-hidden="true"></div>
 
-  <div class="cursor" aria-hidden="true"><div class="cursor__glow"></div><div class="cursor__dot"></div></div>
+  <!-- The JT monogram, drawn from Grenze Gotisch outlines (also the favicon). -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="monogram" viewBox="0 0 100 100"><path d="M26.368631856591605 82.01167391198163Q24.830020026376204 82.01167391198163 21.539100278415475 81.2851072143799Q18.248180530454746 80.55854051677818 15.0 79.96019147169442V73.89122258584476Q16.196698090167537 73.89122258584476 18.119962877936793 73.89122258584476Q20.043227665706052 73.89122258584476 21.795535583451375 73.8057441508328Q23.547843501196695 73.72026571582083 24.146192546280467 73.63478728080887Q25.513847506471937 73.37835197577296 26.069457334049723 71.58330484052166Q26.62506716162751 69.78825770527035 26.75328481414546 67.56581839495921Q26.88150246666341 65.34337908464806 26.88150246666341 63.9757241244566V24.91207932398769L21.325404190885557 22.946075318712445V17.98832608801836H45.43032286426025V22.946075318712445L39.87422458848239 24.91207932398769V65.68529282469594Q39.87422458848239 67.65129682997117 38.8057441508328 69.83099692277634Q37.73726371318321 72.01069701558148 36.02769501294387 74.14765789088065Q34.318126312704536 76.28461876617983 32.43760074244126 78.07966590143114Q30.55707517217799 79.87471303668245 28.932984906950615 80.94319347433205Q27.308894641723242 82.01167391198163 26.368631856591605 82.01167391198163Z"/><path d="M49.5264494700337 69.95921457529428V65.00146534460019L56.02281053094319 63.03546133932496V24.82660088897572L48.500708249890096 25.510428369071455L47.47496702974649 35.59688370048356H41.064084403848966L39.95286474869339 17.98832608801836H85.0L83.88878034484442 35.59688370048356H77.4778977189469L76.45215649880329 25.510428369071455L68.9300542177502 24.82660088897572V62.864504469301025L75.59737214868363 64.83050847457626V69.95921457529428Z"/></symbol>
+  </svg>
 
   <script type="module" src="./scripts/app.js"></script>
 </body>
