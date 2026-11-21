@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>James Tiono - Building ideas into intelligent experiences</title>
   <meta name="description" content="James Tiono, Computer Science student at BINUS University. Data analytics, machine learning and app development, with the figures behind each project.">
-  <meta name="theme-color" content="#0a0e0d">
+  <meta name="theme-color" content="#0c1a17">
   <link rel="canonical" href="https://jamestiono-porto.vercel.app/">
 
   <meta property="og:type" content="website">
@@ -21,7 +21,11 @@
 
   <link rel="icon" href="./Assets/favicon.svg" type="image/svg+xml">
 
-  <!-- Hero photo: preloaded so the gateway and the hero share one decoded image -->
+  <!-- The canopy opens the gateway; the forest path is shared by the gateway and the hero -->
+  <link rel="preload" as="image" type="image/avif"
+        href="./Assets/photos/canopy-1600.avif"
+        imagesrcset="./Assets/photos/canopy-960.avif 960w, ./Assets/photos/canopy-1600.avif 1600w, ./Assets/photos/canopy-2400.avif 2400w"
+        imagesizes="100vw">
   <link rel="preload" as="image" type="image/avif"
         href="./Assets/photos/path-1600.avif"
         imagesrcset="./Assets/photos/path-960.avif 960w, ./Assets/photos/path-1600.avif 1600w, ./Assets/photos/path-2400.avif 2400w"
@@ -48,7 +52,7 @@
       }, 5000);
     })();
   </script>
-  <noscript><style>.gate, .gate-skip, .cursor { display: none !important; }</style></noscript>
+  <noscript><style>.gate, .cursor { display: none !important; }</style></noscript>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -63,7 +67,8 @@
     <div class="scene__grain"></div>
   </div>
 
-  <!-- ── Gateway: curtain rolls up, camera pushes through the doorway ── -->
+  <!-- ── Gateway: an aerial canopy parts and the camera drops through it ──
+       Only the scene and the title. No bar, counter, button or hint. -->
   <div class="gate" id="gate" aria-hidden="true">
     <div class="gate__world">
       <picture>
@@ -71,45 +76,34 @@
         <img src="./Assets/photos/path-1600.webp" alt="" width="1600" height="1067">
       </picture>
     </div>
-    <div class="gate__door">
-      <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="wall-tex" patternUnits="userSpaceOnUse" width="160" height="100">
-            <image href="./Assets/photos/moss-960.webp" width="160" height="100" preserveAspectRatio="xMidYMid slice"/>
-          </pattern>
-        </defs>
-        <!-- A wall with an arched opening (even-odd fill leaves the arch empty) -->
-        <path class="wall" fill-rule="evenodd" d="M-400 -400H560V500H-400Z M70 80V46a10 10 0 0 1 20 0V80Z"/>
-        <path fill="url(#wall-tex)" opacity="0.16" fill-rule="evenodd" d="M-400 -400H560V500H-400Z M70 80V46a10 10 0 0 1 20 0V80Z"/>
-        <path class="edge" d="M70 80V46a10 10 0 0 1 20 0V80"/>
-      </svg>
+    <div class="gate__mist"></div>
+    <div class="gate__canopy gate__canopy--l">
+      <picture>
+        <source type="image/avif" srcset="./Assets/photos/canopy-960.avif 960w, ./Assets/photos/canopy-1600.avif 1600w, ./Assets/photos/canopy-2400.avif 2400w" sizes="100vw">
+        <img src="./Assets/photos/canopy-1600.webp" alt="" width="1600" height="1200">
+      </picture>
+    </div>
+    <div class="gate__canopy gate__canopy--r">
+      <picture>
+        <source type="image/avif" srcset="./Assets/photos/canopy-960.avif 960w, ./Assets/photos/canopy-1600.avif 1600w, ./Assets/photos/canopy-2400.avif 2400w" sizes="100vw">
+        <img src="./Assets/photos/canopy-1600.webp" alt="" width="1600" height="1200">
+      </picture>
     </div>
     <div class="gate__bloom"></div>
-    <!-- Loading curtain: a graded photograph and a short title, nothing else -->
-    <div class="gate__curtain">
-      <div class="gate__photo">
-        <picture>
-          <source type="image/avif" srcset="./Assets/photos/rays-960.avif 960w, ./Assets/photos/rays-1600.avif 1600w" sizes="100vw">
-          <img src="./Assets/photos/rays-960.webp" srcset="./Assets/photos/rays-960.webp 960w, ./Assets/photos/rays-1600.webp 1600w" sizes="100vw" alt="" width="960" height="640" decoding="async">
-        </picture>
-      </div>
-      <div class="gate__scrim"></div>
-      <div class="gate__grain"></div>
-      <div class="gate__center">
-        <p class="gate__eyebrow mono">Portfolio · 2026</p>
-        <p class="gate__name">James <em>Tiono</em></p>
-        <p class="gate__sub mono">Data · Models · Interfaces</p>
-      </div>
+    <div class="gate__grain"></div>
+    <div class="gate__title">
+      <p class="gate__eyebrow">Portfolio, 2026</p>
+      <p class="gate__name">James <em>Tiono</em></p>
+      <p class="gate__sub">Data, models and the interfaces around them</p>
     </div>
   </div>
-  <button type="button" class="gate-skip btn btn--line" id="gate-skip">Skip intro</button>
 
   <!-- ── Navigation ─────────────────────────────────────── -->
   <header class="nav glass">
     <a class="nav__brand" href="#home" aria-label="James Tiono, back to top">
       <svg class="nav__mark" viewBox="0 0 64 64" aria-hidden="true">
-        <rect x="1" y="1" width="62" height="62" rx="10" fill="none" stroke="#dcab5f" stroke-opacity=".55"/>
-        <path d="M17 20h15M24.5 20v19.5a6.5 6.5 0 0 1-11.5 4M34 20h15M41.5 20v26" fill="none" stroke="#ece5d8" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="1" y="1" width="62" height="62" rx="10" fill="none" stroke="#c7a36a" stroke-opacity=".55"/>
+        <path d="M17 20h15M24.5 20v19.5a6.5 6.5 0 0 1-11.5 4M34 20h15M41.5 20v26" fill="none" stroke="#ebe6da" stroke-width="2.5" stroke-linecap="round"/>
       </svg>
       <span class="nav__name">James Tiono</span>
     </a>
@@ -123,7 +117,7 @@
         <li aria-hidden="true" class="nav__pill"></li>
       </ul>
     </nav>
-    <a class="btn btn--gold nav__cta" href="#contact" data-magnetic>Start a project
+    <a class="btn btn--gold nav__cta" href="#contact" data-magnetic>Write to me
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
     <button type="button" class="nav__burger" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
   </header>
@@ -150,7 +144,7 @@
       </div>
 
       <div class="wrap hero__grid">
-        <p class="hero__chip glass mono rv"><i aria-hidden="true"></i>Data Analytics · Machine Learning · App Development</p>
+        <p class="hero__chip glass mono rv">Data Analytics · Machine Learning · App Development</p>
         <h1 class="hero__title rv-mask" id="hero-title" data-lines>
           <span class="ln">Building ideas</span>
           <span class="ln">into <em>intelligent</em></span>
@@ -176,19 +170,32 @@
           <div class="stat"><dt class="mono">Projects</dt><dd data-count="all">08</dd></div>
           <div class="stat"><dt class="mono">Disciplines</dt><dd data-count="domains">05</dd></div>
           <div class="stat"><dt class="mono">Studying</dt><dd>CS at BINUS</dd></div>
-          <div class="stat"><dt class="mono">Status</dt><dd><span class="pulse" aria-hidden="true"></span>Open for collaboration</dd></div>
+          <div class="stat"><dt class="mono">Sourced figures</dt><dd data-count="highlights">49</dd></div>
         </dl>
       </div>
     </section>
 
-    <!-- ── Statement ────────────────────────────────────── -->
-    <section class="section statement" aria-label="Statement">
-      <div class="wrap" data-dolly>
-        <p class="statement__text">
-          <span class="st-a">Raw data rarely answers anything on its own.</span>
-          <span class="st-b">Scraped articles, clinical records and simulated traffic only become useful once they are cleaned, modelled and put in front of the person who has to decide.</span>
-        </p>
-        <span class="statement__trace mono" aria-hidden="true">source → clean → model → interface</span>
+    <!-- ── Statement: the view from above, on a light panel ───── -->
+    <section class="aerial" aria-label="Statement">
+      <div class="aerial__photo" aria-hidden="true">
+        <picture>
+          <source type="image/avif" srcset="./Assets/photos/edge-960.avif 960w, ./Assets/photos/edge-1600.avif 1600w, ./Assets/photos/edge-2400.avif 2400w" sizes="100vw">
+          <img src="./Assets/photos/edge-1600.webp" srcset="./Assets/photos/edge-960.webp 960w, ./Assets/photos/edge-1600.webp 1600w, ./Assets/photos/edge-2400.webp 2400w" sizes="100vw" alt="" width="1600" height="1173" loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <div class="wrap aerial__inner">
+        <div class="paper rv">
+          <p class="paper__label mono">From above</p>
+          <p class="statement__text">
+            <span class="st-a">Raw data rarely answers anything on its own.</span>
+            <span class="st-b">Scraped articles, clinical records and simulated traffic only become useful once they are cleaned, modelled and put in front of the person who has to decide.</span>
+          </p>
+        </div>
+        <ul class="tags" aria-label="The raw material behind three of the projects">
+          <li class="tag rv" style="--i:1"><span class="mono">Scraped articles</span><strong data-hl="text-mining:Corpus">5,995 articles</strong><span data-hl-src="text-mining:Corpus">data/processed/corpus_build_report.csv</span></li>
+          <li class="tag rv" style="--i:2"><span class="mono">Clinical encounters</span><strong data-hl="datafest-2026:Encounters">7,675,801</strong><span data-hl-src="datafest-2026:Encounters">test1.ipynb</span></li>
+          <li class="tag rv" style="--i:3"><span class="mono">Held-out traffic runs</span><strong>100 episodes</strong><span>SUMO, seeds 80 to 99, five demand regimes</span></li>
+        </ul>
       </div>
     </section>
 
@@ -198,7 +205,7 @@
         <div class="about__head">
           <div>
             <p class="eyebrow mono rv">01 · About</p>
-            <h2 class="h2 rv-mask" id="about-title" data-lines><span class="ln">Where curiosity</span><span class="ln"><em>begins</em></span></h2>
+            <h2 class="h2 rv-mask" id="about-title" data-lines><span class="ln">A little</span><span class="ln">about <em>me</em></span></h2>
           </div>
           <p class="rv">I study Computer Science at BINUS University and work across data analytics, machine learning and application development. I prefer projects that end in something usable: a model behind an app, an analysis that changes a decision, a tool a group opens from one link.</p>
         </div>
@@ -275,8 +282,8 @@
         <div class="creds">
           <figure class="creds__photo wipe">
             <picture>
-              <source type="image/avif" srcset="./Assets/photos/rays-960.avif 960w, ./Assets/photos/rays-1600.avif 1600w" sizes="(max-width: 860px) 100vw, 40vw">
-              <img src="./Assets/photos/rays-960.webp" alt="Morning light falling through fog between tall trees" width="960" height="640" loading="lazy" decoding="async">
+              <source type="image/avif" srcset="./Assets/photos/ridge-960.avif 960w, ./Assets/photos/ridge-1600.avif 1600w" sizes="(max-width: 860px) 100vw, 40vw">
+              <img src="./Assets/photos/ridge-960.webp" srcset="./Assets/photos/ridge-960.webp 960w, ./Assets/photos/ridge-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 40vw" alt="A forested hill from above, with a red-earth clearing and morning fog behind it" width="960" height="539" loading="lazy" decoding="async">
             </picture>
             <figcaption>
               <span class="mono">Now · 2026</span>
@@ -301,14 +308,13 @@
         <p class="eyebrow mono rv">04 · Contact</p>
         <div class="contact__grid">
           <div>
-            <h2 class="contact__title rv-mask" id="contact-title" data-lines><span class="ln">Let&rsquo;s build</span><span class="ln">something <em>worth</em></span><span class="ln">remembering.</span></h2>
+            <h2 class="contact__title rv-mask" id="contact-title" data-lines><span class="ln">Write to</span><span class="ln"><em>me</em>.</span></h2>
             <p class="contact__intro rv" style="margin-top:var(--s-3)">Have a project, a dataset or a question in mind? Write to me. I read every message and reply from my own address.</p>
             <div class="details rv">
               <a href="mailto:jamestiono02@gmail.com"><span class="mono">Email</span><span>jamestiono02@gmail.com</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
               <a href="https://github.com/jamestiono19" target="_blank" rel="noopener noreferrer"><span class="mono">GitHub</span><span>jamestiono19</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
               <a href="https://www.linkedin.com/in/james-tiono-8752b730b/" target="_blank" rel="noopener noreferrer"><span class="mono">LinkedIn</span><span>James Tiono</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
               <a href="https://www.instagram.com/james_tiono/" target="_blank" rel="noopener noreferrer"><span class="mono">Instagram</span><span>james_tiono</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>
-              <div><span class="mono">Status</span><span><span class="pulse" aria-hidden="true"></span>Open for collaboration</span></div>
             </div>
           </div>
 

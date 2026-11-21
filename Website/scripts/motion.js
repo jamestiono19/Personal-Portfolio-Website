@@ -1,5 +1,5 @@
 /* ============================================================
-   motion.js — every moving part of the site.
+   motion.js: every moving part of the site.
 
    Two rules keep it coherent:
    1. Things that enter (reveals, the gateway) use one easing,
@@ -20,22 +20,25 @@ const EASE_IN_OUT = "cubic-bezier(0.65, 0, 0.35, 1)";
 const EASE_IN = "cubic-bezier(0.7, 0, 0.84, 0)";
 
 /* ── Gateway ──────────────────────────────────────────────────
-   Hold: a graded photograph and the title, no counter or bar.
-         It stays at least HOLD_MIN ms (long enough to read the
-         title) and until the hero photo is ready (max 2.5 s).
-   Then, or on any key / click / wheel / touch:
-   0.0 s  the grained curtain rolls up and away      (1.1 s)
-   0.5 s  the camera pushes through the doorway      (1.7 s)
-   0.5 s  the world behind settles from zoomed-out   (2.0 s)
-   0.9 s  sunrise bloom floods the opening           (1.6 s)
-   2.05 s the gate fades, hero copy staggers in      (0.45 s)
-   Reduced motion: a shorter hold, then the gate fades. */
+   Hold: a dark aerial canopy and the title. No counter, bar,
+         button or hint. It stays HOLD_MIN ms (long enough to
+         read the name) and until the hero photo is ready
+         (never longer than 2.4 s).
+   Then:
+   0.00 s  the title lifts and fades                      (0.6 s)
+   0.10 s  the canopy parts along its seam; the halves
+           slide out and grow as the camera drops         (1.6 s)
+   0.25 s  mist rises through the opening, then thins     (1.6 s)
+   0.35 s  the forest below sharpens and settles          (1.8 s)
+   0.45 s  sunrise blooms in the gap                      (1.3 s)
+   1.55 s  the gate fades, hero copy staggers in          (0.4 s)
+   About 3.4 s in total. A key, click, wheel or touch starts
+   the move early; nothing on screen asks for it.
+   Reduced motion: a short hold, then a plain fade. */
 export function runGate({ onDone } = {}) {
   const gate = document.getElementById("gate");
-  const skip = document.getElementById("gate-skip");
   const finish = () => {
     if (gate) gate.classList.add("is-done");
-    if (skip) skip.classList.add("is-gone");
     html.classList.remove("gate-on");
     document.body.classList.remove("is-locked");
     try { sessionStorage.setItem("jt-gate", "1"); } catch (_) { /* private mode */ }
@@ -44,28 +47,21 @@ export function runGate({ onDone } = {}) {
   if (!gate || html.classList.contains("no-gate")) { finish(); return; }
 
   document.body.classList.add("is-locked");
-  const curtain = gate.querySelector(".gate__curtain");
-  const door = gate.querySelector(".gate__door");
+  const left = gate.querySelector(".gate__canopy--l");
+  const right = gate.querySelector(".gate__canopy--r");
   const world = gate.querySelector(".gate__world img");
+  const mist = gate.querySelector(".gate__mist");
   const bloom = gate.querySelector(".gate__bloom");
+  const title = gate.querySelector(".gate__title");
 
-  // The curtain photo fades in only once decoded, so it never pops in half-drawn.
-  const photo = gate.querySelector(".gate__photo img");
-  if (photo) {
-    const show = () => photo.classList.add("is-ready");
-    if (photo.complete && photo.naturalWidth) show();
-    else photo.addEventListener("load", show, { once: true });
-  }
-
-  // Leave the curtain once the title has been seen AND the hero photo is ready.
-  const HOLD_MIN = reduced ? 700 : 1900;
+  const HOLD_MIN = reduced ? 600 : 1500;
   let entered = false, autoTimer;
   const heroReady = new Promise((resolve) => {
     const heroImg = document.querySelector(".hero__photo img");
     if (!heroImg || heroImg.complete) return resolve();
     heroImg.addEventListener("load", resolve, { once: true });
     heroImg.addEventListener("error", resolve, { once: true });
-    setTimeout(resolve, 2500);
+    setTimeout(resolve, 2400);
   });
   const held = new Promise((resolve) => { autoTimer = setTimeout(resolve, HOLD_MIN); });
   Promise.all([heroReady, held]).then(() => enter());
@@ -77,29 +73,39 @@ export function runGate({ onDone } = {}) {
     removeInputs();
 
     if (reduced || !gate.animate) {
-      const a = gate.animate ? gate.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, easing: "linear", fill: "forwards" }) : null;
+      const a = gate.animate ? gate.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, easing: "linear", fill: "forwards" }) : null;
       a ? a.finished.then(finish, finish) : finish();
       return;
     }
     const o = { fill: "forwards" };
-    curtain.animate([
-      { transform: "translate3d(0,0,0)" },
-      { transform: "perspective(1400px) translate3d(0,-38%,0) rotateX(7deg)", offset: 0.45 },
-      { transform: "perspective(1400px) translate3d(0,-112%,0) rotateX(12deg)" },
-    ], { ...o, duration: 1100, easing: EASE_IN_OUT });
-    door.animate([
-      { transform: "scale(1)" },
-      { transform: "scale(1.12)", offset: 0.3 },
-      { transform: "scale(16)" },
-    ], { ...o, duration: 1700, delay: 500, easing: EASE_IN });
+    const narrow = innerWidth < 700;
+    title.animate([
+      { opacity: 1, transform: "none" },
+      { opacity: 0, transform: "translate3d(0,-18px,0) scale(1.04)" },
+    ], { ...o, duration: 600, easing: EASE_IN });
+    left.animate([
+      { transform: "translate3d(0,0,0) scale(1)" },
+      { transform: "translate3d(-3%,0,0) scale(1.04)", offset: 0.22 },
+      { transform: `translate3d(${narrow ? -80 : -62}%,0,0) scale(1.7)` },
+    ], { ...o, duration: 1600, delay: 100, easing: EASE_IN_OUT });
+    right.animate([
+      { transform: "translate3d(0,0,0) scale(1)" },
+      { transform: "translate3d(3%,0,0) scale(1.04)", offset: 0.22 },
+      { transform: `translate3d(${narrow ? 80 : 62}%,0,0) scale(1.7)` },
+    ], { ...o, duration: 1600, delay: 100, easing: EASE_IN_OUT });
+    mist.animate([
+      { opacity: 0, transform: "translate3d(0,12%,0)" },
+      { opacity: 1, transform: "translate3d(0,0,0)", offset: 0.4 },
+      { opacity: 0, transform: "translate3d(0,-10%,0) scale(1.2)" },
+    ], { ...o, duration: 1600, delay: 250, easing: "ease-out" });
     world.animate([
-      { transform: "scale(1.22)", filter: "blur(6px) brightness(0.7)" },
+      { transform: "scale(1.25)", filter: "blur(8px) brightness(0.6)" },
       { transform: "scale(1)", filter: "blur(0px) brightness(1)" },
-    ], { ...o, duration: 2000, delay: 500, easing: EASE_OUT });
-    bloom.animate([{ opacity: 0 }, { opacity: 0.85, offset: 0.55 }, { opacity: 0 }], { ...o, duration: 1600, delay: 900, easing: "ease-in-out" });
-    // Release the hero copy a little before the gate is fully gone, so it reads as one move.
-    setTimeout(() => html.classList.remove("gate-on"), 1750);
-    gate.animate([{ opacity: 1 }, { opacity: 0 }], { ...o, duration: 450, delay: 2050, easing: "linear" })
+    ], { ...o, duration: 1800, delay: 350, easing: EASE_OUT });
+    bloom.animate([{ opacity: 0 }, { opacity: 0.75, offset: 0.5 }, { opacity: 0 }], { ...o, duration: 1300, delay: 450, easing: "ease-in-out" });
+    // Release the hero copy just before the gate is gone, so it reads as one move.
+    setTimeout(() => html.classList.remove("gate-on"), 1400);
+    gate.animate([{ opacity: 1 }, { opacity: 0 }], { ...o, duration: 400, delay: 1550, easing: "linear" })
       .finished.then(finish, finish);
   }
 
@@ -108,14 +114,6 @@ export function runGate({ onDone } = {}) {
   const inputs = [["keydown", onKey], ["pointerdown", onAny], ["wheel", onAny], ["touchmove", onAny]];
   inputs.forEach(([t, f]) => window.addEventListener(t, f, { passive: true }));
   function removeInputs() { inputs.forEach(([t, f]) => window.removeEventListener(t, f)); }
-
-  if (skip) skip.addEventListener("click", (e) => {
-    e.stopPropagation();
-    entered = true; removeInputs(); clearTimeout(autoTimer);
-    gate.getAnimations({ subtree: true }).forEach((a) => a.cancel());
-    finish();
-    document.getElementById("main")?.focus({ preventScroll: true });
-  });
 }
 
 /* ── Reveals + section frames ─────────────────────────────── */
@@ -167,7 +165,7 @@ function prepareStatement() {
   const el = document.querySelector(".statement__text");
   const tail = el && el.querySelector(".st-b");
   if (!tail) return null;
-  if (reduced) return null; // keep full brightness for contrast
+  if (reduced) return null; // keep full contrast
   const words = tail.textContent.trim().split(/\s+/);
   tail.innerHTML = words.map((w) => `<span class="w is-muted">${w}</span>`).join(" ");
   return { el, words: [...tail.querySelectorAll(".w")] };
@@ -176,6 +174,7 @@ function prepareStatement() {
 /* ── Scroll loop: dawn, parallax, dolly, statement ───────── */
 export function bindScroll() {
   const hero = document.querySelector(".hero__photo img");
+  const aerial = document.querySelector(".aerial__photo img");
   const layers = [...document.querySelectorAll(".scene__layer")];
   const dollies = [...document.querySelectorAll("[data-dolly]")];
   const statement = prepareStatement();
@@ -191,6 +190,14 @@ export function bindScroll() {
 
     if (!reduced) {
       if (hero && y < vh * 1.2) hero.style.transform = `translate3d(0, ${(y * 0.22).toFixed(1)}px, 0)`;
+      if (aerial) {
+        const r = aerial.parentElement.parentElement.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < vh) {
+          // Seen from above: the ground drifts slower than the page and the camera sinks a little.
+          const p = clamp((vh - r.top) / (vh + r.height));
+          aerial.style.transform = `translate3d(0, ${((p - 0.5) * -60).toFixed(1)}px, 0) scale(${(1.12 - p * 0.08).toFixed(4)})`;
+        }
+      }
       layers.forEach((l, i) => { l.style.transform = `translate3d(0, ${(-dawn * (3 + i * 3)).toFixed(2)}%, 0) scale(1.04)`; });
       dollies.forEach((d) => {
         const r = d.getBoundingClientRect();

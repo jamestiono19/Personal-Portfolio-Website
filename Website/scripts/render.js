@@ -1,5 +1,5 @@
 /* ============================================================
-   render.js — builds every data-driven part of the page from
+   render.js: builds every data-driven part of the page from
    projects.js: project cards, filter tabs, counters, the hero
    featured card and the footer project list.
    ============================================================ */
@@ -92,7 +92,7 @@ function card(p, i, total) {
     <div class="highlights">
       <div class="highlights__head mono">
         <span>Highlights · ${pad(p.highlights.length)} findings</span>
-        <span>Each figure is tagged with the file it came from</span>
+        <span>Under each figure: the file it was read from</span>
       </div>
       <ul class="hl-grid${chart ? "" : " hl-grid--wide"}">${p.highlights.map(highlight).join("")}</ul>
       ${chart}
@@ -135,10 +135,21 @@ export function renderAll(root = document) {
   const pick = PROJECTS.find((p) => p.featured) || PROJECTS[0];
   if (feat && pick) feat.innerHTML = featured(pick);
 
+  const figures = PROJECTS.reduce((n, p) => n + p.highlights.length, 0);
   root.querySelectorAll("[data-count]").forEach((el) => {
-    const n = el.dataset.count === "domains" ? domainCount() : counts[el.dataset.count] ?? 0;
+    const key = el.dataset.count;
+    const n = key === "domains" ? domainCount() : key === "highlights" ? figures : counts[key] ?? 0;
     el.textContent = el.hasAttribute("data-words") ? WORDS[n] || String(n) : pad(n);
   });
+
+  // Figures quoted outside the Work section are read from the same highlights.
+  const findHl = (ref) => {
+    const [slug, label] = ref.split(":");
+    const p = PROJECTS.find((x) => x.slug === slug);
+    return p && p.highlights.find((h) => h.label === label);
+  };
+  root.querySelectorAll("[data-hl]").forEach((el) => { const h = findHl(el.dataset.hl); if (h) el.textContent = h.value; });
+  root.querySelectorAll("[data-hl-src]").forEach((el) => { const h = findHl(el.dataset.hlSrc); if (h) el.textContent = h.source; });
 
   const foot = root.querySelector("#footer-projects");
   if (foot) foot.innerHTML = PROJECTS.map((p) => `<li><a href="#p-${esc(p.slug)}">${esc(p.title)}</a></li>`).join("");

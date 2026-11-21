@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ============================================================
-   check.mjs — the site's "build": there is no bundler, so this
+   check.mjs: the site's "build": there is no bundler, so this
    is the gate that must pass before a push.
 
    1. Every JS module parses.
@@ -58,7 +58,7 @@ for (const p of PROJECTS) {
 // 3/4. Local references in HTML and CSS
 const refs = (text) => {
   const out = [];
-  for (const m of text.matchAll(/(?:src|href)="([^"]+)"/g)) out.push(m[1]);
+  for (const m of text.matchAll(/(?<![\w-])(?:src|href)="([^"]+)"/g)) out.push(m[1]);
   for (const m of text.matchAll(/(?:srcset|imagesrcset)="([^"]+)"/g))
     m[1].split(",").forEach((part) => out.push(part.trim().split(/\s+/)[0]));
   for (const m of text.matchAll(/url\(['"]?([^'")]+)['"]?\)/g)) out.push(m[1]);
@@ -71,6 +71,14 @@ const check = (file, base) => {
   }
 };
 check(join(root, "index.html"), root);
+
+// 5. Figures quoted outside the Work section must point at a real highlight
+const html = readFileSync(join(root, "index.html"), "utf8");
+for (const m of html.matchAll(/data-hl(?:-src)?="([^"]+)"/g)) {
+  const [slug, label] = m[1].split(":");
+  const p = PROJECTS.find((x) => x.slug === slug);
+  if (!p || !p.highlights.some((h) => h.label === label)) fail(`index.html: data-hl "${m[1]}" matches no highlight`);
+}
 for (const f of readdirSync(join(root, "styles"))) check(join(root, "styles", f), join(root, "styles"));
 
 if (errors.length) {

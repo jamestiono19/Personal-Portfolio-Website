@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- JT monogram: bone strokes on charcoal, one gold hairline -->
-  <rect width="64" height="64" rx="12" fill="#0a0e0d"/>
-  <rect x="4.5" y="4.5" width="55" height="55" rx="8" fill="none" stroke="#dcab5f" stroke-opacity=".6"/>
-  <path d="M17 20h15M24.5 20v19.5a6.5 6.5 0 0 1-11.5 4M34 20h15M41.5 20v26" fill="none" stroke="#ece5d8" stroke-width="3" stroke-linecap="round"/>
+  <!-- JT monogram: bone strokes on deep forest, one sunrise-gold hairline -->
+  <rect width="64" height="64" rx="12" fill="#0c1a17"/>
+  <rect x="4.5" y="4.5" width="55" height="55" rx="8" fill="none" stroke="#c7a36a" stroke-opacity=".7"/>
+  <path d="M17 20h15M24.5 20v19.5a6.5 6.5 0 0 1-11.5 4M34 20h15M41.5 20v26" fill="none" stroke="#f3f0e8" stroke-width="3" stroke-linecap="round"/>
 </svg>

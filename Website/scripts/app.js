@@ -1,5 +1,5 @@
 /* ============================================================
-   app.js — entry point. Renders the data-driven parts, then
+   app.js: entry point. Renders the data-driven parts, then
    wires navigation, the contact form and the motion layer.
    ============================================================ */
 
