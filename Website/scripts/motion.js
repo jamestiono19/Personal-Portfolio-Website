@@ -20,14 +20,16 @@ const EASE_IN_OUT = "cubic-bezier(0.65, 0, 0.35, 1)";
 const EASE_IN = "cubic-bezier(0.7, 0, 0.84, 0)";
 
 /* ── Gateway ──────────────────────────────────────────────────
-   0.0 s  counter 000 → 100 while the hero photo decodes
-   on input (or 0.7 s after 100):
+   Hold: a graded photograph and the title, no counter or bar.
+         It stays at least HOLD_MIN ms (long enough to read the
+         title) and until the hero photo is ready (max 2.5 s).
+   Then, or on any key / click / wheel / touch:
    0.0 s  the grained curtain rolls up and away      (1.1 s)
    0.5 s  the camera pushes through the doorway      (1.7 s)
    0.5 s  the world behind settles from zoomed-out   (2.0 s)
    0.9 s  sunrise bloom floods the opening           (1.6 s)
    2.05 s the gate fades, hero copy staggers in      (0.45 s)
-   Reduced motion: the counter runs faster and the gate fades. */
+   Reduced motion: a shorter hold, then the gate fades. */
 export function runGate({ onDone } = {}) {
   const gate = document.getElementById("gate");
   const skip = document.getElementById("gate-skip");
@@ -42,45 +44,36 @@ export function runGate({ onDone } = {}) {
   if (!gate || html.classList.contains("no-gate")) { finish(); return; }
 
   document.body.classList.add("is-locked");
-  const count = gate.querySelector("#gate-count");
-  const bar = gate.querySelector(".gate__bar");
   const curtain = gate.querySelector(".gate__curtain");
   const door = gate.querySelector(".gate__door");
   const world = gate.querySelector(".gate__world img");
   const bloom = gate.querySelector(".gate__bloom");
 
-  // Progress follows time, but holds at 90 until the hero photo is ready (max 2.5 s).
-  let ready = false;
-  const heroImg = document.querySelector(".hero__photo img");
-  const markReady = () => { ready = true; };
-  if (!heroImg || heroImg.complete) markReady();
-  else { heroImg.addEventListener("load", markReady, { once: true }); heroImg.addEventListener("error", markReady, { once: true }); }
-  setTimeout(markReady, 2500);
+  // The curtain photo fades in only once decoded, so it never pops in half-drawn.
+  const photo = gate.querySelector(".gate__photo img");
+  if (photo) {
+    const show = () => photo.classList.add("is-ready");
+    if (photo.complete && photo.naturalWidth) show();
+    else photo.addEventListener("load", show, { once: true });
+  }
 
-  const runFor = reduced ? 600 : 1400;
-  const t0 = performance.now();
-  let progress = 0, entered = false, autoTimer;
-
-  const paint = () => {
-    const shown = Math.round(progress);
-    if (count) count.textContent = String(shown).padStart(3, "0");
-    if (bar) bar.style.setProperty("--p", (progress / 100).toFixed(3));
-  };
-  const tick = (now) => {
-    if (entered) return;
-    const target = clamp((now - t0) / runFor) * 100;
-    progress = ready ? target : Math.min(target, 90);
-    paint();
-    if (progress < 100) requestAnimationFrame(tick);
-    else autoTimer = setTimeout(enter, 700);
-  };
-  requestAnimationFrame(tick);
+  // Leave the curtain once the title has been seen AND the hero photo is ready.
+  const HOLD_MIN = reduced ? 700 : 1900;
+  let entered = false, autoTimer;
+  const heroReady = new Promise((resolve) => {
+    const heroImg = document.querySelector(".hero__photo img");
+    if (!heroImg || heroImg.complete) return resolve();
+    heroImg.addEventListener("load", resolve, { once: true });
+    heroImg.addEventListener("error", resolve, { once: true });
+    setTimeout(resolve, 2500);
+  });
+  const held = new Promise((resolve) => { autoTimer = setTimeout(resolve, HOLD_MIN); });
+  Promise.all([heroReady, held]).then(() => enter());
 
   function enter() {
     if (entered) return;
     entered = true;
     clearTimeout(autoTimer);
-    progress = 100; paint();
     removeInputs();
 
     if (reduced || !gate.animate) {

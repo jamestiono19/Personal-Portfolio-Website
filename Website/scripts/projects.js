@@ -96,6 +96,7 @@ export const PROJECTS = [
       { label: "Throughput", value: "672.76 vs 671.05", context: "Vehicles per episode: the gain did not come from serving fewer cars", source: "results/eval/test_dqn_full_s100.json" },
       { label: "Seed stability", value: "20.23–20.55 s", context: "Three training seeds (42, 100, 2026) on the test split", source: "results/eval/test_dqn_full_s*.json" },
       { label: "Ablation", value: "20.94 s", context: "Masking the four waiting-time inputs costs 0.63 s of mean wait", source: "results/eval/test_dqn_ablation_nowait_s100.json" },
+      { label: "Where it still loses", value: "12.60 s vs 12.22 s", context: "On unbalanced demand the queue rule edges out the DQN; error analysis flags switches away from a platoon still queuing", source: "results/eval/final_test_summary_table.csv · error_analysis_report.json" },
     ],
     chart: {
       src: "./Assets/projects/traffic-learning.webp",
@@ -109,7 +110,7 @@ export const PROJECTS = [
     category: ["app-development"],
     subtag: "Product · Data",
     year: "2026",
-    role: "Contributor · place discovery and community features",
+    role: "Team member · Group 7 of four",
     duration: "Venture Creation project",
     status: "Live demo",
     cover: {
@@ -118,7 +119,7 @@ export const PROJECTS = [
       width: 430, height: 932, kind: "screen",
     },
     narration:
-      "Groups lose time deciding where to eat. CommonGround (\u201cSatu link. Semua jawab. Tiga pilihan pas.\u201d, one link, everyone answers, three right choices) sends one link to the group chat, collects each member's limits privately, and returns at most three places that break nobody's limits. No account is needed. I built the Explore and place pages, the place forum and the moderation page, and replaced the dummy seed with discovered venue data.",
+      "Groups lose time deciding where to eat. CommonGround (\u201cSatu link. Semua jawab. Tiga pilihan pas.\u201d, one link, everyone answers, three right choices) sends one link to the group chat, collects each member's limits privately, and returns at most three places that break nobody's limits. No account is needed. Built as a four-person Venture Creation team, it also maps places to eat around three BINUS campuses from OpenStreetMap data.",
     problem:
       "In a group chat, the loudest preference wins or nobody decides. Budget, diet and travel limits are rarely said out loud.",
     solution:
@@ -135,7 +136,8 @@ export const PROJECTS = [
       { label: "Group size", value: "2–8 members", context: "Answers due in 3, 5 or 10 minutes, with one 5-minute extension", source: "packages/shared/src/index.ts" },
       { label: "Hard limits", value: "10 / 20 / 30 min", context: "Travel limit choices; budget Rp20,000–100,000 in Rp5,000 steps", source: "packages/shared/src/index.ts" },
       { label: "Venue data", value: "470 + 10", context: "OpenStreetMap draft places near campus plus chain branches", source: "data/places-draft-osm.csv · data/places-chains.csv" },
-      { label: "Test cases", value: "175", context: "Engine, shared validation and database tests run in CI", source: "packages/**/*.test.ts" },
+      { label: "Discovery area", value: "3 campuses", context: "BINUS Anggrek, Syahdan and Kijang, each searched within a 1,000 m radius", source: "data/campus-anchors.json" },
+      { label: "Privacy", value: "30 min", context: "Answers are readable only by their owner and deleted 30 minutes after the room locks", source: "docs/PRD.md (F2.6)" },
     ],
     chart: {
       src: "./Assets/projects/commonground-jelajah.webp",
@@ -173,7 +175,8 @@ export const PROJECTS = [
       { label: "Context length", value: "128 ≈ 256 tokens", context: "Validation F1 0.9467 vs 0.9466 for IndoBERT, so the shorter input was kept", source: "data/results/04_indobert_grid.csv" },
       { label: "Vocabulary", value: "57,499 → 43,293", context: "Words before and after topic-view filtering; 25,634 words stemmed", source: "data/processed/preprocess.log" },
       { label: "Topics found", value: "37", context: "NMF per class; Esports was the most coherent (NPMI 0.87)", source: "data/results/06_topic_keywords.csv" },
-      { label: "Summary coverage", value: "1.00 vs 0.125", context: "Share of News topics covered: topic-aware vs centroid baseline", source: "data/results/07_summary_evaluation.csv" },
+      { label: "Hardest pair", value: "News ↔ Finance", context: "16 of IndoBERT's 41 test errors were swaps between these two; Sports was easiest (F1 0.99)", source: "data/results/04_indobert_predictions.csv" },
+      { label: "Summary coverage", value: "1.00 vs 0.10–0.38", context: "Topic coverage in all five classes: topic-aware summaries vs the centroid baseline", source: "data/results/07_summary_evaluation.csv" },
       { label: "ROUGE-1 F1 (News)", value: "0.289", context: "Against 0.170 random and 0.151 lead; in Sports the centroid baseline scored higher (0.268 vs 0.255)", source: "data/results/07_summary_evaluation.csv" },
     ],
     chart: {
@@ -213,6 +216,8 @@ export const PROJECTS = [
       { label: "No outreach", value: "99.9%", context: "6,288 of 6,292 chronic dropouts had no outreach on record", source: "test1.ipynb" },
       { label: "Hardship gap", value: "47.1% vs 18.1%", context: "Any hardship among screened dropouts vs returning patients", source: "test1.ipynb" },
       { label: "Crisis visits", value: "31.4% → 53.4%", context: "Emergency or urgent share, from \u201cnot hard at all\u201d to \u201cvery hard\u201d", source: "ASADATAFEST.ipynb" },
+      { label: "Largest hardship gap", value: "36.6% vs 9.5%", context: "Food insecurity among screened dropouts vs returning patients", source: "test1.ipynb" },
+      { label: "Outreach blind spot", value: "0.1% vs 6.4%", context: "Chronic dropouts were contacted less often than non-chronic ones (4 of 6,292 vs 2,966 of 46,088)", source: "test1.ipynb" },
     ],
     chart: {
       src: "./Assets/projects/datafest-outreach.webp",
@@ -252,6 +257,8 @@ export const PROJECTS = [
       { label: "Test error", value: "MAE 3.58", context: "Body-fat percentage points on the 30% hold-out", source: "artifacts/model_comparison.csv" },
       { label: "Strongest input", value: "r = 0.81", context: "Abdomen circumference, ahead of chest (0.70) and hip (0.63)", source: "artifacts/eda/strong_correlations.csv" },
       { label: "Overfitting check", value: "0.865 → 0.641", context: "Random forest train vs validation R², so the simpler model won", source: "artifacts/model_comparison.csv" },
+      { label: "Leakage guard", value: "Density dropped", context: "Body fat is computed from density (r = 0.99), so it was excluded as an input", source: "notebook/mlopsbodyfat.ipynb · strong_correlations.csv" },
+      { label: "Model weight", value: "8.19 vs 1.87", context: "Abdomen's Lasso coefficient against the next largest input, wrist", source: "models/coefficients.csv" },
     ],
     chart: {
       src: "./Assets/projects/bodyfat-abdomen.webp",
@@ -342,11 +349,12 @@ export const PROJECTS = [
     links: [
       { label: "View prototype", href: "https://www.figma.com/proto/iarMFBCaKiP1DYb6ab7NQ2/LinkVestor?node-id=13-310&t=Jz6dqvdizMlXJt9G-1", kind: "prototype" },
     ],
-    stack: ["Figma", "SwiftUI", "Firebase"],
+    stack: ["Figma", "SwiftUI", "Firebase", "MongoDB", "REST API"],
     highlights: [
-      { label: "Core features", value: "4", context: "Security, live dashboard, verified UMKM, alerts", source: "Project brief" },
-      { label: "App tabs", value: "4", context: "Home, Discover, Activity and Wallet", source: "Project brief" },
-      { label: "User groups", value: "2", context: "UMKM owners and investors", source: "Project brief" },
+      { label: "Core features", value: "4", context: "Secure and trusted, real-time dashboard, verified UMKM, smart notifications", source: "Project board (Assets/Linkvestor.png)" },
+      { label: "App tabs", value: "4", context: "Home, Discover, Activity and Wallet", source: "Project board (Assets/Linkvestor.png)" },
+      { label: "Quick actions", value: "4", context: "Invest, Portfolio, Watchlist and Profile from the home screen", source: "Project board (Assets/Linkvestor.png)" },
+      { label: "User groups", value: "2", context: "UMKM owners and investors", source: "Project board (Assets/Linkvestor.png)" },
     ],
   },
 ];

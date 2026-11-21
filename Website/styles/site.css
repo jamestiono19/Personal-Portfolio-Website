@@ -559,22 +559,40 @@ section { position: relative; }
 .gate__curtain::before { content: ""; position: absolute; inset: 0; opacity: 0.12; background-image: inherit; }
 .gate__curtain::after {
   /* the rolled edge: a cylinder of paper at the bottom of the sheet */
-  content: ""; position: absolute; left: 0; right: 0; bottom: -28px; height: 56px;
+  content: ""; position: absolute; left: 0; right: 0; bottom: -56px; height: 56px; /* below the fold at rest, rolls into view as the sheet lifts */
   background: linear-gradient(180deg, #0b0f0e 0%, #2a3531 38%, #5d6a63 50%, #222b28 64%, #070a09 100%);
   box-shadow: 0 18px 30px rgba(0, 0, 0, 0.6);
   border-radius: 0 0 28px 28px / 0 0 16px 16px;
 }
 .gate__grain { position: absolute; inset: -50%; opacity: 0.1; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: grain 1.2s steps(6) infinite; }
-.gate__top, .gate__bottom { position: relative; display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); color: var(--fog-400); }
-.gate__center { position: relative; display: grid; place-items: center; align-content: center; gap: var(--s-3); text-align: center; }
-.gate__mono { width: clamp(72px, 10vw, 112px); height: auto; }
-.gate__name { font-family: var(--font-display); font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem); letter-spacing: -0.01em; color: var(--bone-50); }
-.gate__count { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--bone-300); letter-spacing: 0.1em; }
-.gate__count b { color: var(--gold-300); font-weight: 500; }
-.gate__bar { width: min(240px, 60vw); height: 1px; background: var(--hairline); overflow: hidden; }
-.gate__bar i { display: block; height: 100%; background: var(--gold-400); transform-origin: left; transform: scaleX(var(--p, 0)); }
-.gate__cues { display: flex; gap: var(--s-3); }
-.gate__bottom { padding-right: 132px; } /* keeps clear of the fixed Skip intro button */
+/* Loading curtain: a slow-drifting, darkly graded photograph under one title.
+   No counter, no progress bar. The photo fades in once decoded, so a slow
+   network still shows the plain dark curtain rather than a blank frame. */
+.gate__photo { position: absolute; inset: -4%; overflow: hidden; }
+.gate__photo img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%;
+  filter: saturate(0.72) brightness(0.68) contrast(1.05) sepia(0.18) hue-rotate(-8deg);
+  opacity: 0; transition: opacity 0.9s var(--ease-out);
+  animation: gate-drift 9s var(--ease-out) both;
+}
+.gate__photo img.is-ready { opacity: 1; }
+.gate__scrim {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 50% at 50% 50%, rgba(11, 15, 14, 0.25), rgba(11, 15, 14, 0.82) 80%),
+    linear-gradient(180deg, rgba(11, 15, 14, 0.55), rgba(11, 15, 14, 0.15) 45%, rgba(11, 15, 14, 0.7));
+}
+.gate__center { position: relative; grid-row: 2; display: grid; place-items: center; align-content: center; gap: var(--s-2); text-align: center; }
+.gate__center > * { opacity: 0; animation: gate-rise 1.1s var(--ease-out) forwards; }
+.gate__center > :nth-child(2) { animation-delay: 0.12s; }
+.gate__center > :nth-child(3) { animation-delay: 0.3s; }
+.gate__eyebrow, .gate__sub { font-size: var(--fs-small); letter-spacing: 0.16em; text-transform: uppercase; color: var(--bone-300); }
+.gate__name { font-family: var(--font-display); font-size: clamp(2.75rem, 1.6rem + 6vw, 6.5rem); line-height: 1; letter-spacing: -0.02em; color: var(--bone-50); }
+.gate__name em { font-style: italic; color: var(--gold-300); }
+.gate__sub { display: flex; align-items: center; gap: var(--s-2); }
+.gate__sub::before, .gate__sub::after { content: ""; width: 32px; height: 1px; background: var(--gold-line); }
+@keyframes gate-drift { from { transform: scale(1.1) translate3d(0, 1.5%, 0); } to { transform: scale(1) translate3d(0, 0, 0); } }
+@keyframes gate-rise { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
 .gate-skip { position: fixed; right: var(--gutter); bottom: var(--s-4); z-index: 101; }
 .gate-skip.is-gone { display: none; }
 .gate-on .nav, .gate-on .totop { opacity: 0; }
@@ -643,7 +661,8 @@ main:focus { outline: none; }
   .details a, .details div { grid-template-columns: 90px 1fr auto; }
   .footer__cols { grid-template-columns: 1fr; }
   .tile { padding: var(--s-3); }
-  .gate__cues span:nth-child(n + 3) { display: none; }
+  .gate__sub { letter-spacing: 0.1em; }
+  .gate__sub::before, .gate__sub::after { width: 18px; }
 }
 
 /* ── Reduced motion: no transforms, no loops, plain fades ── */

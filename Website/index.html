@@ -85,22 +85,20 @@
       </svg>
     </div>
     <div class="gate__bloom"></div>
+    <!-- Loading curtain: a graded photograph and a short title, nothing else -->
     <div class="gate__curtain">
-      <div class="gate__grain"></div>
-      <div class="gate__top mono"><span>James Tiono</span><span>Portfolio · 2026</span></div>
-      <div class="gate__center">
-        <svg class="gate__mono" viewBox="0 0 64 64" aria-hidden="true">
-          <rect x="1" y="1" width="62" height="62" rx="10" fill="none" stroke="#dcab5f" stroke-opacity=".55"/>
-          <path d="M17 20h15M24.5 20v19.5a6.5 6.5 0 0 1-11.5 4" fill="none" stroke="#ece5d8" stroke-width="2" stroke-linecap="round"/>
-          <path d="M34 20h15M41.5 20v26" fill="none" stroke="#ece5d8" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <p class="gate__name">Entering the work</p>
-        <p class="gate__count"><b id="gate-count">000</b> / 100</p>
-        <div class="gate__bar"><i></i></div>
+      <div class="gate__photo">
+        <picture>
+          <source type="image/avif" srcset="./Assets/photos/rays-960.avif 960w, ./Assets/photos/rays-1600.avif 1600w" sizes="100vw">
+          <img src="./Assets/photos/rays-960.webp" srcset="./Assets/photos/rays-960.webp 960w, ./Assets/photos/rays-1600.webp 1600w" sizes="100vw" alt="" width="960" height="640" decoding="async">
+        </picture>
       </div>
-      <div class="gate__bottom mono">
-        <div class="gate__cues"><span>Enter</span><span>Click</span><span>Scroll</span><span>Press Enter</span></div>
-        <span>Data · Models · Interfaces</span>
+      <div class="gate__scrim"></div>
+      <div class="gate__grain"></div>
+      <div class="gate__center">
+        <p class="gate__eyebrow mono">Portfolio · 2026</p>
+        <p class="gate__name">James <em>Tiono</em></p>
+        <p class="gate__sub mono">Data · Models · Interfaces</p>
       </div>
     </div>
   </div>
@@ -273,7 +271,7 @@
     <section class="section" id="credentials" aria-labelledby="cred-title" data-frame>
       <div class="wrap" data-dolly>
         <p class="eyebrow mono rv">03 · Record</p>
-        <h2 class="h2 rv-mask" id="cred-title" data-lines style="margin:var(--s-2) 0 var(--s-6)"><span class="ln">What I have <em>shipped</em></span></h2>
+        <h2 class="h2 rv-mask" id="cred-title" data-lines style="margin:var(--s-2) 0 var(--s-6)"><span class="ln">Credentials and <em>record</em></span></h2>
         <div class="creds">
           <figure class="creds__photo wipe">
             <picture>
@@ -286,10 +284,12 @@
             </figcaption>
           </figure>
           <ul class="creds__list">
-            <li class="cred glass lit rv"><span class="mono">2026 · Competition</span><div><h3>ASA DataFest 2026</h3><p>Team Penjelajah Sejarah. Write-up, slides and video on why chronic patients drop out of care, built on 7,675,801 encounters.</p></div></li>
-            <li class="cred glass lit rv" style="--i:1"><span class="mono">2026 · Deep Learning</span><div><h3>Adaptive Traffic Lights</h3><p>A DQN signal controller that cut mean wait by 43.5% against the PKJI 2023 fixed plan over 100 held-out test episodes.</p></div></li>
-            <li class="cred glass lit rv" style="--i:2"><span class="mono">2026 · Product</span><div><h3>CommonGround</h3><p>Group decision app from the Venture Creation course, live on Vercel. I built the Explore, place and moderation pages.</p></div></li>
-            <li class="cred glass lit rv" style="--i:3"><span class="mono">Ongoing · Degree</span><div><h3>BINUS University</h3><p>Undergraduate, B.S. Computer Science.</p></div></li>
+            <li class="cred glass lit rv"><span class="mono">May 2026 · Competition</span><div><h3>ASA DataFest BINUS 2026</h3><p>Certificate of participation, team PenjelajahSejarah. Final project submitted on why chronic patients drop out of care, built on 7,675,801 encounters.</p></div></li>
+            <li class="cred glass lit rv" style="--i:1"><span class="mono">Mar 2026 · Certification</span><div><h3>Microsoft Azure AI Fundamentals</h3><p>Microsoft Elevate AI training (AI-900T00-A), 15 hours with a demonstration of learning, plus the self-paced Azure AI Basic Fundamental course.</p></div></li>
+            <li class="cred glass lit rv" style="--i:2"><span class="mono">Aug 2026 · Certification</span><div><h3>HackerRank Python (Basic)</h3><p>Passed the HackerRank skill certification test.</p></div></li>
+            <li class="cred glass lit rv" style="--i:3"><span class="mono">Certificates of excellence</span><div><h3>Databases for Developers</h3><p>Foundations (98%) and Next Level (98%), and Get Started with PL/SQL Table Functions (100%).</p></div></li>
+            <li class="cred glass lit rv" style="--i:4"><span class="mono">Feb 2026 · Recognition</span><div><h3>Duta Bahasa BINUS 2026</h3><p>Finalist, awarded by BINUS University&rsquo;s Character Building Development Center.</p></div></li>
+            <li class="cred glass lit rv" style="--i:5"><span class="mono">Ongoing · Degree</span><div><h3>BINUS University</h3><p>Undergraduate, B.S. Computer Science.</p></div></li>
           </ul>
         </div>
       </div>
